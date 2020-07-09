@@ -26,13 +26,26 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        fshkwindow.cpp
+        fshkwindow.cpp \
+    classlehrling.cpp \
+    classbetrieb.cpp \
+    formbetrieb.cpp \
+    formlehrling.cpp \
+    formbetriebliste.cpp
 
 HEADERS += \
-        fshkwindow.h
+        fshkwindow.h \
+    classlehrling.h \
+    classbetrieb.h \
+    formbetrieb.h \
+    formlehrling.h \
+    formbetriebliste.h
 
 FORMS += \
-        fshkwindow.ui
+        fshkwindow.ui \
+    formbetrieb.ui \
+    formlehrling.ui \
+    formbetriebliste.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

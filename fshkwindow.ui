@@ -30,7 +30,16 @@
     <addaction name="actionInfo"/>
     <addaction name="actionBeenden"/>
    </widget>
+   <widget class="QMenu" name="menuDaten">
+    <property name="title">
+     <string>Daten</string>
+    </property>
+    <addaction name="actionBetriebe"/>
+    <addaction name="actionAuszubildende"/>
+    <addaction name="actionProjekte"/>
+   </widget>
    <addaction name="menuProgramm"/>
+   <addaction name="menuDaten"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -49,6 +58,21 @@
   <action name="actionInfo">
    <property name="text">
     <string>&amp;Info</string>
+   </property>
+  </action>
+  <action name="actionBetriebe">
+   <property name="text">
+    <string>&amp;Betriebe</string>
+   </property>
+  </action>
+  <action name="actionAuszubildende">
+   <property name="text">
+    <string>&amp;Auszubildende</string>
+   </property>
+  </action>
+  <action name="actionProjekte">
+   <property name="text">
+    <string>&amp;Projekte</string>
    </property>
   </action>
  </widget>
