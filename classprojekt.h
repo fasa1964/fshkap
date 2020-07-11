@@ -53,6 +53,8 @@ public:
     bool sperrfach() const;
     void setSperrfach(bool sperrfach);
 
+    QString getKey();
+
 private:
 
     QString m_name;

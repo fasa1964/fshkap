@@ -7,6 +7,8 @@
 #include <QMapIterator>
 #include <QFileDialog>
 
+#include <QDebug>
+
 FormProjekt::FormProjekt(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FormProjekt)
@@ -15,6 +17,7 @@ FormProjekt::FormProjekt(QWidget *parent) :
     setFormReadOnly(true);
     changeProjekt = false;
     selectedProjekt = ClassProjekt();
+
 
     connect(ui->closeButton, &QPushButton::clicked, this, &FormProjekt::closeForm);
     connect(ui->createButton, &QPushButton::clicked, this, &FormProjekt::createButtonClicked);
@@ -38,20 +41,17 @@ FormProjekt::~FormProjekt()
     delete ui;
 }
 
-void FormProjekt::updateProjektListe()
+void FormProjekt::updateProjektTable(const QMap<QString, ClassProjekt> &proMap)
 {
-    ui->sortBox->clear();
     ui->projekteTableWidget->clear();
     ui->projekteTableWidget->setColumnCount(3);
-    ui->projekteTableWidget->setRowCount(projektMap().count());
-
-    QStringList sortLabels;
+    ui->projekteTableWidget->setRowCount(proMap.size());
 
     QStringList labels;
     labels << "Nr." << "Name" << "Kennung" ;
     ui->projekteTableWidget->setHorizontalHeaderLabels(labels);
     int row = 0;
-    QMapIterator<QString, ClassProjekt> it(projektMap());
+    QMapIterator<QString, ClassProjekt> it(proMap);
     while (it.hasNext()) {
         it.next();
         ClassProjekt pro = it.value();
@@ -67,9 +67,6 @@ void FormProjekt::updateProjektListe()
         itemName->setFlags(Qt::ItemIsEnabled);
         itemKennung->setFlags(Qt::ItemIsEnabled);
 
-        if(!sortLabels.contains(pro.kennung()))
-            sortLabels << pro.kennung();
-
         row++;
     }
 
@@ -78,14 +75,6 @@ void FormProjekt::updateProjektListe()
     ui->projekteTableWidget->resizeColumnToContents(0);
     ui->projekteTableWidget->resizeColumnToContents(1);
     ui->projekteTableWidget->resizeColumnToContents(2);
-
-    sortLabels << "Alle";
-    sortLabels.sort();
-    ui->sortBox->addItems( sortLabels );
-    connect(ui->sortBox, &QComboBox::currentTextChanged, this, &FormProjekt::sortBoxTextChanged);
-
-    if(!projektMap().isEmpty())
-        setProjektToForm(projektMap().values().first());
 }
 
 void FormProjekt::closeForm()
@@ -98,10 +87,13 @@ void FormProjekt::createButtonClicked()
     QDateTime dt = QDateTime::currentDateTime();
     ui->dateTimeEdit->setDateTime(dt);
 
+
     setFormReadOnly(false);
     ui->nrBox->setFocus();
 
     clearForm();
+    selectedProjekt = ClassProjekt();
+    changeProjekt = false;
     ui->saveButton->setEnabled(true);
     ui->createButton->setEnabled(false);
 }
@@ -118,12 +110,12 @@ void FormProjekt::saveButtonClicked()
     }
 
     if(changeProjekt){
-        QString key = createKey(selectedProjekt);
+        QString key = selectedProjekt.getKey();
         m_projektMap.remove(key);
     }
 
     ClassProjekt projekt = readFromForm();
-    QString key = createKey(projekt);
+    QString key = projekt.getKey();
 
     if(!changeProjekt)
     {
@@ -145,6 +137,9 @@ void FormProjekt::saveButtonClicked()
     setProjektToForm(projekt);
     setFormReadOnly(true);
     setColorTableFragen(Qt::black);
+
+    updateSortBox();
+    updateProjektTable(projektMap());
 
     changeProjekt = false;
 }
@@ -168,12 +163,12 @@ void FormProjekt::changeButtonClicked()
 
 void FormProjekt::deleteButtonClicked()
 {
-    QString key = ui->nameEdit->text()+"."+ui->kennungEdit->text();
-    ClassProjekt projekt = m_projektMap.value(key);
 
-    m_projektMap.remove(key);
+    m_projektMap.remove(selectedProjekt.getKey());
     emit saveProjekte(m_projektMap);
-    updateProjektListe();
+
+    updateProjektTable(projektMap());
+    updateSortBox();
 
     if(projektMap().values().isEmpty()){
         clearForm();
@@ -185,32 +180,11 @@ void FormProjekt::deleteButtonClicked()
 
 }
 
-void FormProjekt::removeFrageClicked()
-{
-
-}
 
 void FormProjekt::openFileButtonClicked()
 {
     QString s = QFileDialog::getOpenFileName(this, tr("Dateipfad"), tr("Dateipfad zum hinterlegtem Dokument!"));
     ui->documentEdit->setText(s);
-
-}
-void FormProjekt::addFrageClicked()
-{
-    int row = ui->fragenTableWidget->rowCount();
-    row++;
-    ui->fragenTableWidget->setRowCount(row);
-    ui->fragenTableWidget->setColumnCount(4);
-
-    int nr = row;
-    QString fr = "Frage";
-    QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(nr,10) );
-    QTableWidgetItem *itemFrage = new QTableWidgetItem( fr);
-
-    ui->fragenTableWidget->setItem(row,0, itemNr);
-    ui->fragenTableWidget->setItem(row,1, itemFrage);
-
 }
 
 void FormProjekt::addFrageButtonClicked()
@@ -282,19 +256,16 @@ void FormProjekt::sortBoxTextChanged(const QString &text)
         return;
     }
 
-    QMap<QString, ClassProjekt> pMap;
+    QMap<QString, ClassProjekt> sortMap;
     QMapIterator<QString, ClassProjekt> it(projektMap());
     while (it.hasNext()) {
         it.next();
         if(it.value().kennung() == text)
-            pMap.insert(it.key(), it.value());
-
+            sortMap.insert(it.key(), it.value());
     }
 
-    if(!pMap.isEmpty()){
-        updateProjektTable(pMap);
-        setProjektToForm(pMap.values().first());
-    }
+    if(!sortMap.isEmpty())
+        updateProjektTable(sortMap);
 }
 
 void FormProjekt::setFormReadOnly(bool status)
@@ -380,30 +351,29 @@ void FormProjekt::clearTableFragen()
 
 }
 
-void FormProjekt::editableTableFragen(bool)
-{
-    int rowCount = ui->fragenTableWidget->rowCount();
-    int columnCount = ui->fragenTableWidget->columnCount();
-    //ui->fragenTableWidget->setEnabled(status);
+//void FormProjekt::editableTableFragen(bool)
+//{
+//    int rowCount = ui->fragenTableWidget->rowCount();
+//    int columnCount = ui->fragenTableWidget->columnCount();
 
-    for(int i = 0; i < rowCount; i++)
-    {
-        for(int c = 0; c < columnCount; c++)
-        {
-            QTableWidgetItem *item = ui->fragenTableWidget->item(i,c);
-//            if(status)
-//            {
-                //item->setFlags(Qt::ItemIsSelectable);
-                //item->setFlags(Qt::ItemIsEditable);
-                item->setTextColor(QColor(0,85,127));
+//    for(int i = 0; i < rowCount; i++)
+//    {
+//        for(int c = 0; c < columnCount; c++)
+//        {
+//            QTableWidgetItem *item = ui->fragenTableWidget->item(i,c);
+////            if(status)
+////            {
+//                //item->setFlags(Qt::ItemIsSelectable);
+//                //item->setFlags(Qt::ItemIsEditable);
+//                item->setTextColor(QColor(0,85,127));
 
-           // }
+//           // }
 
-        }
-    }
+//        }
+//    }
 
-    ui->fragenTableWidget->update();
-}
+//    ui->fragenTableWidget->update();
+//}
 
 void FormProjekt::setColorTableFragen(QColor color)
 {
@@ -498,45 +468,21 @@ void FormProjekt::updateFragenTable(const QMap<int, ClassFrage> &fMap)
 
 }
 
-void FormProjekt::updateProjektTable(const QMap<QString, ClassProjekt> &pMap)
+void FormProjekt::updateSortBox()
 {
-    ui->projekteTableWidget->clear();
-    ui->projekteTableWidget->setColumnCount(3);
-    ui->projekteTableWidget->setRowCount(pMap.size());
+    QStringList sortList;
+    sortList << "Alle";
 
-    QStringList labels;
-    labels << "Nr." << "Name" << "Kennung" ;
-    ui->projekteTableWidget->setHorizontalHeaderLabels(labels);
-    int row = 0;
-    QMapIterator<QString, ClassProjekt> it(pMap);
+    QMapIterator<QString, ClassProjekt> it(projektMap());
     while (it.hasNext()) {
         it.next();
-        ClassProjekt pro = it.value();
-        QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(pro.nr(),10));
-        QTableWidgetItem *itemName = new QTableWidgetItem( pro.name() );
-        QTableWidgetItem *itemKennung = new QTableWidgetItem( pro.kennung() );
-
-        ui->projekteTableWidget->setItem(row, 0, itemNr);
-        ui->projekteTableWidget->setItem(row, 1, itemName);
-        ui->projekteTableWidget->setItem(row, 2, itemKennung);
-
-        itemNr->setFlags(Qt::ItemIsEnabled);
-        itemName->setFlags(Qt::ItemIsEnabled);
-        itemKennung->setFlags(Qt::ItemIsEnabled);
-
-        row++;
+        if(!sortList.contains(it.value().kennung()))
+            sortList << it.value().kennung();
     }
 
-    ui->projekteTableWidget->resizeColumnToContents(0);
-    ui->projekteTableWidget->resizeColumnToContents(1);
-    ui->projekteTableWidget->resizeColumnToContents(2);
-
-}
-
-QString FormProjekt::createKey(const ClassProjekt &pro)
-{
-    QString key = pro.name()+"."+pro.kennung();
-    return key;
+    sortList.sort();
+    ui->sortBox->clear();
+    ui->sortBox->addItems(sortList);
 }
 
 QMap<QString, ClassProjekt> FormProjekt::projektMap() const
@@ -547,4 +493,5 @@ QMap<QString, ClassProjekt> FormProjekt::projektMap() const
 void FormProjekt::setProjektMap(const QMap<QString, ClassProjekt> &projektMap)
 {
     m_projektMap = projektMap;
+    updateSortBox();
 }

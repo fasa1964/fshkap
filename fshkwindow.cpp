@@ -23,6 +23,7 @@ FSHKWindow::FSHKWindow(QWidget *parent) :
 
     readDataBetriebe();
     readDataLehrlinge();
+    readDataProjekte();
 
     formbetrieb = new FormBetrieb(this);
     formbetrieb->hide();
@@ -35,10 +36,17 @@ FSHKWindow::FSHKWindow(QWidget *parent) :
     connect(formlehrling, &FormLehrling::saveLehrlingMap , this, &FSHKWindow::saveLehrlingMap);
     connect(formlehrling, &FormLehrling::updateBetriebe , this, &FSHKWindow::updateBetriebe);
 
+
+    formprojekt = new FormProjekt(this);
+    formprojekt->hide();
+    connect(formprojekt, &FormProjekt::saveProjekte, this, &FSHKWindow::saveProjektMap);
+
+
     connect(ui->actionBeenden, &QAction::triggered , this, &FSHKWindow::actionBeendenClicked);
     connect(ui->actionInfo, &QAction::triggered , this, &FSHKWindow::actionInfoClicked);
     connect(ui->actionBetriebe, &QAction::triggered , this, &FSHKWindow::actionBetriebeClicked);
     connect(ui->actionAuszubildende, &QAction::triggered , this, &FSHKWindow::actionAuszubildendeClicked);
+    connect(ui->actionProjekte, &QAction::triggered , this, &FSHKWindow::actionProjekteClicked);
 }
 
 FSHKWindow::~FSHKWindow()
@@ -98,6 +106,32 @@ bool FSHKWindow::saveDataLehrlinge(const QMap<QString, ClassLehrling> &azuMap)
     return true;
 }
 
+bool FSHKWindow::saveDataProjekte(const QMap<QString, ClassProjekt> &pMap)
+{
+    QFile file("Projekte.dat");
+
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        QMessageBox::warning(this,  tr("Fehler Speichern"),
+                     tr("Die Datei -Projekte.dat- lässt sich nicht speichern.\n")+file.errorString());
+        return false;
+    }
+
+    QDataStream out(&file);
+    quint32 magic = 13101964;
+    quint32 version = QDataStream::Qt_5_9;
+    out << magic;
+    out << version;
+    QMapIterator<QString, ClassProjekt> it(pMap);
+    while (it.hasNext()) {
+        it.next();
+        out << it.value();
+    }
+
+    file.close();
+    return true;
+}
+
 
 void FSHKWindow::actionBeendenClicked()
 {
@@ -133,7 +167,11 @@ void FSHKWindow::actionAuszubildendeClicked()
 
 void FSHKWindow::actionProjekteClicked()
 {
-    QMessageBox::information(this, tr("Projekte"), tr("Noch nicht implementiert"));
+    this->takeCentralWidget();
+    formprojekt->show();
+    formprojekt->setProjektMap(projektMap);
+    formprojekt->updateProjektTable(projektMap);
+    setCentralWidget(formprojekt);
 }
 
 // Signal from FormBetrieb
@@ -145,7 +183,7 @@ void FSHKWindow::saveBetriebMap(const QMap<int, ClassBetrieb> &bMap)
     if(ok)
         ui->statusBar->showMessage(tr("Die Datei Betrieb.dat wurde erfolgreich aktualisiert!"), 5000);
     else
-        ui->statusBar->showMessage(tr("Fhler beim Speichern der Datei Betrieb.dat!"), 5000);
+        ui->statusBar->showMessage(tr("Fehler beim Speichern der Datei Betrieb.dat!"), 5000);
 }
 
 void FSHKWindow::betriebRemoved(const ClassBetrieb &betrieb)
@@ -188,7 +226,7 @@ void FSHKWindow::saveLehrlingMap(const QMap<QString, ClassLehrling> &azuMap)
     if(ok)
         ui->statusBar->showMessage(tr("Die Datei Lehrlinge.dat wurde erfolgreich aktualisiert!"), 5000);
     else
-        ui->statusBar->showMessage(tr("Fhler beim Speichern der Datei Lehrlinge.dat!"), 5000);
+        ui->statusBar->showMessage(tr("Fehler beim Speichern der Datei Lehrlinge.dat!"), 5000);
 
 }
 
@@ -224,6 +262,18 @@ void FSHKWindow::updateBetriebe(const QString &betriebName, const ClassLehrling 
     }
 
     saveBetriebMap(betriebMap);
+
+}
+
+// Signal from FormProjekt
+void FSHKWindow::saveProjektMap(const QMap<QString, ClassProjekt> &pMap)
+{
+    bool ok = saveDataProjekte(pMap);
+    projektMap = pMap;
+    if(ok)
+        ui->statusBar->showMessage(tr("Die Datei Projekte.dat wurde erfolgreich aktualisiert!"), 5000);
+    else
+        ui->statusBar->showMessage(tr("Fehler beim Speichern der Datei Projekte.dat!"), 5000);
 
 }
 
@@ -298,6 +348,44 @@ void FSHKWindow::readDataLehrlinge()
         ClassLehrling azubi;
         in >> azubi;
         azubiMap.insert(azubi.getKey(), azubi);
+    }
+
+    file.close();
+}
+
+void FSHKWindow::readDataProjekte()
+{
+    QFile file("Projekte.dat");
+    if(!file.exists())
+        return;
+
+    if(!file.open(QIODevice::ReadOnly))
+    {
+        QMessageBox::warning(this,  tr("Fehler Laden"),
+                     tr("Die Datei -Projekte.dat- lässt sich nicht zum Lesen öffnen.\n")+file.errorString());
+        return;
+    }
+
+    QDataStream in(&file);
+    quint32 magic;
+    quint32 version;
+    in >> magic;
+    if(magic != 13101964){
+        QMessageBox::warning(this, tr("Dateifehler"), tr("Die Datei hat nicht das richtige Format!"));
+        return;
+    }
+
+    in >> version;
+    if(version != QDataStream::Qt_5_9){
+        QMessageBox::warning(this, tr("Dateifehler"), tr("Die Datei hat nicht die richtige Version!"));
+        return;
+    }
+
+    while (!in.atEnd())
+    {
+        ClassProjekt pro;
+        in >> pro;
+        projektMap.insert(pro.getKey(), pro);
     }
 
     file.close();

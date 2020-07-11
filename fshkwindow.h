@@ -9,6 +9,7 @@
 
 #include <formbetrieb.h>
 #include <formlehrling.h>
+#include <formprojekt.h>
 
 
 namespace Ui {
@@ -25,6 +26,7 @@ public:
 
     bool saveDataBetriebe(const QMap<int, ClassBetrieb> &bMap);
     bool saveDataLehrlinge(const QMap<QString, ClassLehrling> &azuMap);
+    bool saveDataProjekte(const QMap<QString, ClassProjekt> &pMap);
 
 private slots:
     void actionBeendenClicked();
@@ -43,6 +45,9 @@ private slots:
     void saveLehrlingMap(const QMap<QString, ClassLehrling> &azuMap);
     void updateBetriebe(const QString &betriebName, const ClassLehrling &azu);
 
+    // Signal from FormProjekt
+    void saveProjektMap(const QMap<QString, ClassProjekt> &pMap);
+
 private:
     Ui::FSHKWindow *ui;
 
@@ -52,8 +57,12 @@ private:
     FormLehrling *formlehrling;
     QMap<QString, ClassLehrling> azubiMap;
 
+    FormProjekt *formprojekt;
+    QMap<QString, ClassProjekt> projektMap;
+
     void readDataBetriebe();
     void readDataLehrlinge();
+    void readDataProjekte();
 
 
     QDateTime lastUpdate(const QString &filename);

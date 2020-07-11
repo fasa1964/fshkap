@@ -145,6 +145,13 @@ void ClassProjekt::setSperrfach(bool sperrfach)
     m_sperrfach = sperrfach;
 }
 
+QString ClassProjekt::getKey()
+{
+    QString key;
+    key = name()+"."+kennung();
+    return key;
+}
+
 
 QDataStream &operator<<(QDataStream &out, const ClassProjekt &dat)
 {

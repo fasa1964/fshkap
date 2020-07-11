@@ -22,7 +22,7 @@ public:
     explicit FormProjekt(QWidget *parent = nullptr);
     ~FormProjekt();
 
-    void updateProjektListe();
+    void updateProjektTable(const QMap<QString, ClassProjekt> &proMap);
 
     QMap<QString, ClassProjekt> projektMap() const;
     void setProjektMap(const QMap<QString, ClassProjekt> &projektMap);
@@ -37,16 +37,15 @@ private slots:
     void saveButtonClicked();
     void changeButtonClicked();
     void deleteButtonClicked();
-    void removeFrageClicked();
     void openFileButtonClicked();
 
-    void addFrageClicked();
     void addFrageButtonClicked();
     void removeFrageButtonClicked();
     void anzahlFragenChanged(int value);
     void projekteTableClicked(QTableWidgetItem *item);
 
     void sortBoxTextChanged(const QString &text);
+
 private:
     Ui::FormProjekt *ui;
     bool changeProjekt;
@@ -58,15 +57,13 @@ private:
     ClassProjekt readFromForm();
 
     void clearTableFragen();
-    void editableTableFragen(bool);
     void setColorTableFragen(QColor color);
 
     void setProjektToForm(const ClassProjekt &pro);
     void clearForm();
     void updateFragenTable(const QMap<int, ClassFrage> &fMap);
-    void updateProjektTable(const QMap<QString, ClassProjekt> &pMap);
+    void updateSortBox();
 
-    QString createKey(const ClassProjekt &pro);
 };
 
 #endif // FORMPROJEKT_H

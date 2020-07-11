@@ -37,6 +37,7 @@
     <addaction name="actionBetriebe"/>
     <addaction name="actionAuszubildende"/>
     <addaction name="actionProjekte"/>
+    <addaction name="actionPruefungen"/>
    </widget>
    <addaction name="menuProgramm"/>
    <addaction name="menuDaten"/>
@@ -73,6 +74,11 @@
   <action name="actionProjekte">
    <property name="text">
     <string>&amp;Projekte</string>
+   </property>
+  </action>
+  <action name="actionPruefungen">
+   <property name="text">
+    <string>Prüfungen</string>
    </property>
   </action>
  </widget>
