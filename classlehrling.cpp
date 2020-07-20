@@ -130,6 +130,16 @@ QString ClassLehrling::getKey() const
     return key;
 }
 
+QMap<QString, ClassSkills> ClassLehrling::getSkillMap() const
+{
+    return m_skillMap;
+}
+
+void ClassLehrling::setSkillMap(const QMap<QString, ClassSkills> &skillMap)
+{
+    m_skillMap = skillMap;
+}
+
 QString ClassLehrling::notiz() const
 {
     return m_notiz;
@@ -140,13 +150,11 @@ void ClassLehrling::setNotiz(const QString &notiz)
     m_notiz = notiz;
 }
 
-
-
 QDataStream &operator<<(QDataStream &out, const ClassLehrling &dat)
 {
     out << dat.nr() << dat.vorname() << dat.nachname() << dat.strasse() <<
            dat.ort() << dat.telefon() << dat.gebDatum() << dat.ausbildungsDatum() <<
-           dat.klasse() << dat.betrieb() << dat.notiz();
+           dat.klasse() << dat.betrieb() << dat.notiz() << dat.getSkillMap();
 
     return out;
 }
@@ -165,9 +173,10 @@ QDataStream &operator>>(QDataStream &in, ClassLehrling &dat)
     QString klasse;
     QString betrieb;
     QString notiz;
+    QMap<QString, ClassSkills> smap;
 
     in >> nr >> vorn >> nachn >> str >> ort >> tel >> gebDatum >>
-        ausbildungsDatum >> klasse >> betrieb >> notiz;
+        ausbildungsDatum >> klasse >> betrieb >> notiz >> smap;
 
     dat.setNr(nr);
     dat.setVorname(vorn);
@@ -180,6 +189,7 @@ QDataStream &operator>>(QDataStream &in, ClassLehrling &dat)
     dat.setKlasse(klasse);
     dat.setBetrieb(betrieb);
     dat.setNotiz(notiz);
+    dat.setSkillMap(smap);
 
     return in;
 }

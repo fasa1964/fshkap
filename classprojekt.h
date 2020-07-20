@@ -55,6 +55,9 @@ public:
 
     QString getKey();
 
+    bool getAusgewertet() const;
+    void setAusgewertet(bool ausgewertet);
+
 private:
 
     QString m_name;
@@ -70,6 +73,7 @@ private:
     QDateTime m_dateTime;
     QString m_createTime;
     bool m_sperrfach;
+    bool m_ausgewertet;
 
 };
 

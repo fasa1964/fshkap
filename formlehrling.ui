@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>896</width>
+    <width>849</width>
     <height>531</height>
    </rect>
   </property>
@@ -68,6 +68,18 @@
    </item>
    <item row="1" column="0">
     <widget class="QFrame" name="frame">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>450</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -75,79 +87,77 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_8">
-      <item row="9" column="3">
-       <spacer name="horizontalSpacer_8">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="1" column="0" colspan="11">
+       <widget class="QLineEdit" name="vornameEdit">
+        <property name="toolTip">
+         <string>Vorname</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
+        <property name="placeholderText">
+         <string>Vorname</string>
         </property>
-       </spacer>
+       </widget>
       </item>
-      <item row="9" column="4">
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="2" column="0" colspan="11">
+       <widget class="QLineEdit" name="nachnameEdit">
+        <property name="toolTip">
+         <string>Nachname</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>101</width>
-          <height>20</height>
-         </size>
+        <property name="placeholderText">
+         <string>Nachname</string>
         </property>
-       </spacer>
+       </widget>
       </item>
-      <item row="9" column="6">
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="6" column="0" colspan="10">
+       <widget class="QLineEdit" name="betriebEdit">
+        <property name="toolTip">
+         <string>Betrieb (optional)</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>110</width>
-          <height>20</height>
-         </size>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
-       </spacer>
+        <property name="placeholderText">
+         <string>Betrieb</string>
+        </property>
+       </widget>
       </item>
-      <item row="6" column="11">
+      <item row="6" column="10">
        <widget class="QToolButton" name="betriebButton">
         <property name="text">
          <string>...</string>
         </property>
        </widget>
       </item>
-      <item row="9" column="1" colspan="2">
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="nrBox">
+        <property name="toolTip">
+         <string>Prüfungsnummer</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>81</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="5" column="8" colspan="4">
-       <widget class="QComboBox" name="klasseBox"/>
-      </item>
-      <item row="4" column="8" colspan="4">
-       <widget class="QLineEdit" name="telefonEdit">
-        <property name="placeholderText">
-         <string>Telefon</string>
+        <property name="maximum">
+         <number>999</number>
         </property>
        </widget>
       </item>
-      <item row="0" column="9" colspan="3">
-       <widget class="QDateEdit" name="ausbildungsDateEdit"/>
+      <item row="3" column="0" colspan="11">
+       <widget class="QLineEdit" name="strasseEdit">
+        <property name="toolTip">
+         <string>Straße</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="placeholderText">
+         <string>Strasse</string>
+        </property>
+       </widget>
       </item>
-      <item row="0" column="6" colspan="3">
+      <item row="0" column="8" colspan="3">
+       <widget class="QDateEdit" name="ausbildungsDateEdit">
+        <property name="toolTip">
+         <string>Start der Ausbildung </string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5" colspan="3">
        <widget class="QLabel" name="label_4">
         <property name="palette">
          <palette>
@@ -187,201 +197,7 @@
          </palette>
         </property>
         <property name="text">
-         <string>Ausbildungs-Datum:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="10" colspan="2">
-       <spacer name="horizontalSpacer_6">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="9" column="7" colspan="2">
-       <spacer name="horizontalSpacer_4">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="9" column="9">
-       <spacer name="horizontalSpacer_5">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>81</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="7" column="6">
-       <widget class="QLabel" name="label_6">
-        <property name="palette">
-         <palette>
-          <active>
-           <colorrole role="WindowText">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>0</red>
-              <green>85</green>
-              <blue>127</blue>
-             </color>
-            </brush>
-           </colorrole>
-          </active>
-          <inactive>
-           <colorrole role="WindowText">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>0</red>
-              <green>85</green>
-              <blue>127</blue>
-             </color>
-            </brush>
-           </colorrole>
-          </inactive>
-          <disabled>
-           <colorrole role="WindowText">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>165</red>
-              <green>167</green>
-              <blue>169</blue>
-             </color>
-            </brush>
-           </colorrole>
-          </disabled>
-         </palette>
-        </property>
-        <property name="text">
-         <string>Prüfungen:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="7" colspan="5">
-       <widget class="QComboBox" name="exameBox"/>
-      </item>
-      <item row="9" column="0">
-       <spacer name="horizontalSpacer_9">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="palette">
-         <palette>
-          <active>
-           <colorrole role="WindowText">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>0</red>
-              <green>85</green>
-              <blue>127</blue>
-             </color>
-            </brush>
-           </colorrole>
-          </active>
-          <inactive>
-           <colorrole role="WindowText">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>0</red>
-              <green>85</green>
-              <blue>127</blue>
-             </color>
-            </brush>
-           </colorrole>
-          </inactive>
-          <disabled>
-           <colorrole role="WindowText">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>165</red>
-              <green>167</green>
-              <blue>169</blue>
-             </color>
-            </brush>
-           </colorrole>
-          </disabled>
-         </palette>
-        </property>
-        <property name="text">
-         <string>Nr:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="12">
-       <widget class="QLineEdit" name="vornameEdit">
-        <property name="placeholderText">
-         <string>Vorname</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="12">
-       <widget class="QLineEdit" name="nachnameEdit">
-        <property name="placeholderText">
-         <string>Nachname</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0" colspan="12">
-       <widget class="QLineEdit" name="strasseEdit">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="placeholderText">
-         <string>Strasse</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0" colspan="8">
-       <widget class="QLineEdit" name="ortEdit">
-        <property name="placeholderText">
-         <string>PLZ / Ort</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0" colspan="8">
-       <widget class="QLineEdit" name="klasseEdit">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="placeholderText">
-         <string>Klasse</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0" colspan="11">
-       <widget class="QLineEdit" name="betriebEdit">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="placeholderText">
-         <string>Betrieb</string>
+         <string>Datum:</string>
         </property>
        </widget>
       </item>
@@ -429,28 +245,74 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QSpinBox" name="nrBox">
-        <property name="maximum">
-         <number>999</number>
+      <item row="5" column="0" colspan="7">
+       <widget class="QLineEdit" name="klasseEdit">
+        <property name="toolTip">
+         <string>Klasse (optional)</string>
         </property>
-       </widget>
-      </item>
-      <item row="8" column="0" colspan="12">
-       <widget class="QTextEdit" name="notizEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
         <property name="placeholderText">
-         <string>Notiz</string>
+         <string>Klasse</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="2" colspan="3">
+      <item row="5" column="7" colspan="4">
+       <widget class="QComboBox" name="klasseBox"/>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="palette">
+         <palette>
+          <active>
+           <colorrole role="WindowText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>0</red>
+              <green>85</green>
+              <blue>127</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </active>
+          <inactive>
+           <colorrole role="WindowText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>0</red>
+              <green>85</green>
+              <blue>127</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </inactive>
+          <disabled>
+           <colorrole role="WindowText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>165</red>
+              <green>167</green>
+              <blue>169</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </disabled>
+         </palette>
+        </property>
+        <property name="text">
+         <string>Nr:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="2" colspan="2">
        <widget class="QDateEdit" name="gebDateEdit">
         <property name="displayFormat">
          <string>dd.MM.yyyy</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="2" colspan="4">
+      <item row="0" column="2" colspan="3">
        <spacer name="horizontalSpacer_7">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -463,11 +325,148 @@
         </property>
        </spacer>
       </item>
+      <item row="9" column="0" colspan="11">
+       <widget class="QTextEdit" name="notizEdit">
+        <property name="toolTip">
+         <string>Notizen über dem Auszubildenden</string>
+        </property>
+        <property name="placeholderText">
+         <string>Notiz</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="5">
+       <widget class="QLineEdit" name="ortEdit">
+        <property name="toolTip">
+         <string>Postleitzahl, Ort</string>
+        </property>
+        <property name="placeholderText">
+         <string>PLZ / Ort</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="5" colspan="6">
+       <widget class="QLineEdit" name="telefonEdit">
+        <property name="toolTip">
+         <string>Telefonnummer</string>
+        </property>
+        <property name="placeholderText">
+         <string>Telefon</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="palette">
+         <palette>
+          <active>
+           <colorrole role="WindowText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>0</red>
+              <green>85</green>
+              <blue>127</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </active>
+          <inactive>
+           <colorrole role="WindowText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>0</red>
+              <green>85</green>
+              <blue>127</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </inactive>
+          <disabled>
+           <colorrole role="WindowText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>165</red>
+              <green>167</green>
+              <blue>169</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </disabled>
+         </palette>
+        </property>
+        <property name="text">
+         <string>AP:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1" colspan="7">
+       <widget class="QComboBox" name="exameBox">
+        <property name="toolTip">
+         <string>Prüfungen die dem Auszubildenden zugeordnet wurde.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="8" colspan="3">
+       <widget class="QPushButton" name="deleteSkillButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="palette">
+         <palette>
+          <active>
+           <colorrole role="ButtonText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>0</red>
+              <green>85</green>
+              <blue>255</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </active>
+          <inactive>
+           <colorrole role="ButtonText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>0</red>
+              <green>85</green>
+              <blue>255</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </inactive>
+          <disabled>
+           <colorrole role="ButtonText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>165</red>
+              <green>167</green>
+              <blue>169</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </disabled>
+         </palette>
+        </property>
+        <property name="toolTip">
+         <string>Löscht selektierte Prüfungen</string>
+        </property>
+        <property name="text">
+         <string>Lösche AP</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
    <item row="1" column="1">
     <widget class="QFrame" name="frame_2">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -600,6 +599,9 @@
       </item>
       <item>
        <widget class="QDateTimeEdit" name="lastChangeEdit">
+        <property name="toolTip">
+         <string>Letze Änderung</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -613,6 +615,9 @@
         <property name="enabled">
          <bool>false</bool>
         </property>
+        <property name="toolTip">
+         <string>Löscht den selektierten Auszubildenden unwiderruflich</string>
+        </property>
         <property name="text">
          <string>&amp;Löschen</string>
         </property>
@@ -623,6 +628,9 @@
         <property name="enabled">
          <bool>false</bool>
         </property>
+        <property name="toolTip">
+         <string>Daten ändern</string>
+        </property>
         <property name="text">
          <string>Än&amp;dern</string>
         </property>
@@ -630,6 +638,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="createButton">
+        <property name="toolTip">
+         <string>Neuen Auszubildenden anlegen</string>
+        </property>
         <property name="text">
          <string>&amp;Neu</string>
         </property>
@@ -677,6 +688,9 @@
           </disabled>
          </palette>
         </property>
+        <property name="toolTip">
+         <string>Speichert den Datensatz</string>
+        </property>
         <property name="text">
          <string>S&amp;peichern</string>
         </property>
@@ -684,6 +698,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="closeButton">
+        <property name="toolTip">
+         <string>Schließt diesen Dialog</string>
+        </property>
         <property name="text">
          <string>&amp;Schließen</string>
         </property>
@@ -711,7 +728,6 @@
   <tabstop>saveButton</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>closeButton</tabstop>
-  <tabstop>exameBox</tabstop>
   <tabstop>createButton</tabstop>
   <tabstop>changeButton</tabstop>
   <tabstop>deleteButton</tabstop>

@@ -228,7 +228,7 @@
          </palette>
         </property>
         <property name="text">
-         <string>Auszubildende;</string>
+         <string>Auszubildende:</string>
         </property>
        </widget>
       </item>

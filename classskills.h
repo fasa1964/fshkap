@@ -38,6 +38,8 @@ public:
     int getWert() const;
     void setWert(int wert);
 
+    QString getKey();
+
 private:
 
     int m_nr;

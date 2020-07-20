@@ -91,6 +91,12 @@ void ClassSkills::setWert(int wert)
     m_wert = wert;
 }
 
+QString ClassSkills::getKey()
+{
+    QString key = name()+"."+kennung();
+    return key;
+}
+
 int ClassSkills::getNr() const
 {
     return m_nr;

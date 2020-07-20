@@ -10,6 +10,9 @@ FormLehrling::FormLehrling(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    model = new QStandardItemModel();
+
+
     setupKlasseMap();
     ui->klasseBox->addItems(klasseMap.keys());
 
@@ -21,12 +24,17 @@ FormLehrling::FormLehrling(QWidget *parent) :
     connect(ui->closeButton, &QPushButton::clicked, this, &FormLehrling::close);
     connect(ui->createButton, &QPushButton::clicked, this, &FormLehrling::createButtonClicked);
     connect(ui->deleteButton, &QPushButton::clicked, this, &FormLehrling::deleteButtonClicked);
+    connect(ui->deleteSkillButton, &QPushButton::clicked, this, &FormLehrling::deleteSkillButtonClicked);
     connect(ui->changeButton, &QPushButton::clicked, this, &FormLehrling::changeButtonClicked);
     connect(ui->saveButton, &QPushButton::clicked, this, &FormLehrling::saveButtonClicked);
     connect(ui->klasseBox, &QComboBox::currentTextChanged , this, &FormLehrling::klasseBoxChanged);
 
+
     connect(ui->azubiTableWidget , &QTableWidget::itemClicked , this, &FormLehrling::azubiItemClicked);
     connect(ui->betriebButton, &QPushButton::clicked, this, &FormLehrling::openBetriebsListe);
+
+    connect(model, SIGNAL(dataChanged ( const QModelIndex&, const QModelIndex&)), this, SLOT(slotchanged(const QModelIndex&, const QModelIndex&)));
+
 }
 
 FormLehrling::~FormLehrling()
@@ -78,6 +86,45 @@ void FormLehrling::deleteButtonClicked()
 
 }
 
+void FormLehrling::deleteSkillButtonClicked()
+{
+    QList<ClassSkills> skillList;
+
+    int rows = ui->exameBox->count();
+    for (int i = 0; i < rows; i++) {
+        if(model->item(i,0)->checkState() == Qt::Checked)
+           skillList << selectedLehrling.getSkillMap().value(model->item(i,0)->text());
+    }
+
+    QString message = "Vom Auszubildenden: " + selectedLehrling.vorname()+"."+selectedLehrling.nachname()+"\n"+
+            "Werden die Prüfungen:\n";
+
+    foreach(ClassSkills s, skillList){
+        message.append(s.getKey());
+        message.append("\n");
+    }
+
+    message.append("unwiderruflich gelöscht?");
+
+
+    int result = QMessageBox::question(this, tr("Löschen der Prüfungen"), message, QMessageBox::Ok | QMessageBox::Cancel);
+    if(result == QMessageBox::Cancel)
+        return;
+
+    QMap<QString, ClassSkills> smap;
+    smap = selectedLehrling.getSkillMap();
+    foreach(ClassSkills s, skillList){
+        smap.remove(s.getKey());
+    }
+
+    selectedLehrling.setSkillMap(smap);
+    m_lehrlingMap.insert(selectedLehrling.getKey(), selectedLehrling);
+    updateLehrlingTable(m_lehrlingMap);
+    setLehrlingToForm(selectedLehrling);
+    ui->deleteSkillButton->setEnabled(false);
+
+}
+
 void FormLehrling::changeButtonClicked()
 {
     changeLehrling = true;
@@ -120,11 +167,12 @@ void FormLehrling::saveButtonClicked()
     }
 
 
-    if(changeLehrling)
-        m_lehrlingMap.remove(selectedLehrling.getKey());
-
-
     ClassLehrling azubi = readFromForm();
+
+    if(changeLehrling){
+        azubi.setSkillMap( selectedLehrling.getSkillMap() );
+        m_lehrlingMap.remove(selectedLehrling.getKey());
+    }
 
     if(m_lehrlingMap.keys().contains(azubi.getKey()) && !changeLehrling)
     {
@@ -169,6 +217,26 @@ void FormLehrling::klasseBoxChanged(const QString &text)
 
 }
 
+
+void FormLehrling::slotchanged(const QModelIndex &index, const QModelIndex &)
+{
+    if(!changeLehrling)
+        return;
+
+    bool select = false;
+    int rows = ui->exameBox->count();
+    for (int i = 0; i < rows; i++) {
+        if(model->item(i,0)->checkState() == Qt::Checked)
+            select = true;
+    }
+
+    if(select)
+       ui->deleteSkillButton->setEnabled(true);
+    else
+       ui->deleteSkillButton->setEnabled(false);
+
+}
+
 void FormLehrling::azubiItemClicked(QTableWidgetItem *item)
 {
     int row = item->row();
@@ -197,6 +265,7 @@ void FormLehrling::azubiItemClicked(QTableWidgetItem *item)
     ui->changeButton->setEnabled(true);
     ui->deleteButton->setEnabled(true);
     ui->createButton->setEnabled(true);
+    ui->deleteSkillButton->setEnabled(false);
 
 }
 
@@ -213,11 +282,11 @@ void FormLehrling::openBetriebsListe()
 void FormLehrling::updateLehrlingTable(const QMap<QString, ClassLehrling> &aMap)
 {
     ui->azubiTableWidget->clear();
-    ui->azubiTableWidget->setColumnCount(5);
+    ui->azubiTableWidget->setColumnCount(4);
     ui->azubiTableWidget->setRowCount(aMap.size());
 
     QStringList headers;
-    headers << "Prüf-Nr." << "Name" << "Klasse" << "Betrieb" << "AP";
+    headers << "Nr." << "Name" << "Klasse" << "Betrieb";
     ui->azubiTableWidget->setHorizontalHeaderLabels(headers);
 
     int row = 0;
@@ -237,10 +306,11 @@ void FormLehrling::updateLehrlingTable(const QMap<QString, ClassLehrling> &aMap)
 
        itemNr->setTextColor(QColor(0,85,127,255));
        itemName->setTextColor(QColor(0,85,127,255));
-       itemNr->setFlags(Qt::ItemIsEnabled);
-       itemName->setFlags(Qt::ItemIsEnabled);
-       itemKlasse->setFlags(Qt::ItemIsEnabled);
-       itemBetrieb->setFlags(Qt::ItemIsEnabled);
+//       itemNr->setFlags(Qt::ItemIsEnabled);
+//       itemName->setFlags(Qt::ItemIsEnabled);
+//       itemName->setFlags(Qt::ItemIsSelectable);
+//       itemKlasse->setFlags(Qt::ItemIsEnabled);
+//       itemBetrieb->setFlags(Qt::ItemIsEnabled);
 
        row++;
     }
@@ -248,7 +318,6 @@ void FormLehrling::updateLehrlingTable(const QMap<QString, ClassLehrling> &aMap)
     ui->azubiTableWidget->resizeColumnToContents(0);
     ui->azubiTableWidget->resizeColumnToContents(1);
     ui->azubiTableWidget->resizeColumnToContents(2);
-    //ui->azubiTableWidget->resizeColumnToContents(3);
 
     createSortMap(aMap);
 }
@@ -325,11 +394,12 @@ void FormLehrling::updateTable(QTableWidget *widget, const QList<ClassLehrling> 
     widget->setColumnCount(4);
 
     QStringList labels;
-    labels << "Pr-Nr." << "Name" << "Klasse" << "Betrieb";
+    labels << "Nr." << "Name" << "Klasse" << "Betrieb";
     widget->setHorizontalHeaderLabels(labels);
 
     int row = 0;
     foreach(ClassLehrling azu, azuList){
+
         QString key = azu.vorname()+"."+azu.nachname();
         QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(azu.nr(),10));
         QTableWidgetItem *itemName = new QTableWidgetItem( key );
@@ -342,10 +412,11 @@ void FormLehrling::updateTable(QTableWidget *widget, const QList<ClassLehrling> 
         widget->setItem(row,3,itemBetrieb);
 
         itemNr->setTextColor(QColor(0,85,127,255));
+        itemNr->setToolTip(tr("Prüfungsnummer"));
         itemName->setTextColor(QColor(0,85,127,255));
-        itemNr->setFlags(Qt::ItemIsEnabled);
-        itemName->setFlags(Qt::ItemIsEnabled);
-        itemBetrieb->setFlags(Qt::ItemIsEnabled);
+//        itemNr->setFlags(Qt::ItemIsEnabled);
+//        itemName->setFlags(Qt::ItemIsEnabled);
+//        itemBetrieb->setFlags(Qt::ItemIsEnabled);
 
         row++;
     }
@@ -353,6 +424,7 @@ void FormLehrling::updateTable(QTableWidget *widget, const QList<ClassLehrling> 
     widget->resizeColumnToContents(0);
     widget->resizeColumnToContents(1);
     widget->resizeColumnToContents(2);
+    widget->resizeColumnToContents(4);
 
     connect(widget, &QTableWidget::itemClicked, this, &FormLehrling::azubiItemClicked);
 }
@@ -390,6 +462,31 @@ void FormLehrling::setLehrlingToForm(const ClassLehrling &azubi)
     ui->betriebEdit->setText( azubi.betrieb());
     ui->gebDateEdit->setDate(azubi.gebDatum());
     ui->notizEdit->setPlainText( azubi.notiz());
+
+    ui->exameBox->clear();
+    model->clear();
+
+    if(azubi.getSkillMap().size() > 0){
+        QStringList apList;
+        int index = 0;
+        foreach(ClassSkills skill, azubi.getSkillMap().values()){
+            apList << skill.getKey();
+            QStandardItem *item = new QStandardItem();
+            item->setText(skill.getKey());
+            item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+            item->setData(Qt::Unchecked, Qt::CheckStateRole);
+            model->insertRow(index, item);
+            index++;
+        }
+
+
+
+        ui->exameBox->setModel(model);
+
+    }
+
+    ui->klasseBox->setCurrentText(azubi.klasse());
+
 }
 
 void FormLehrling::setFormTextColor(QColor color)
@@ -397,6 +494,7 @@ void FormLehrling::setFormTextColor(QColor color)
     QPalette palette;
     palette.setColor(QPalette::Base,Qt::white);
     palette.setColor(QPalette::Text,color);
+    palette.setColor(QPalette::ButtonText,color);
 
     ui->nrBox->setPalette(palette);
     ui->vornameEdit->setPalette(palette);
@@ -409,6 +507,8 @@ void FormLehrling::setFormTextColor(QColor color)
     ui->notizEdit->setPalette(palette);
     ui->klasseEdit->setPalette(palette);
     ui->betriebEdit->setPalette(palette);
+    ui->exameBox->setPalette(palette);
+
 }
 
 void FormLehrling::setFormReadOnly(bool status)
@@ -451,7 +551,6 @@ void FormLehrling::clearForm()
     ui->gebDateEdit->setDate( QDate());
     ui->notizEdit->clear();
     ui->exameBox->clear();
-
 }
 
 QMap<int, ClassBetrieb> FormLehrling::betriebMap() const
@@ -476,8 +575,11 @@ void FormLehrling::setupKlasseMap()
     klasseMap.insert("MAS 23/1", QDate(2023,8,1));
     klasseMap.insert("MAS 24/1", QDate(2024,8,1));
     klasseMap.insert("MAS 25/1", QDate(2025,8,1));
-    klasseMap.insert("MAS 26/1", QDate(2025,8,1));
-    klasseMap.insert("MAS 27/1", QDate(2025,8,1));
+    klasseMap.insert("MAS 26/1", QDate(2026,8,1));
+    klasseMap.insert("MAS 27/1", QDate(2027,8,1));
+    klasseMap.insert("MAS 28/1", QDate(2028,8,1));
+    klasseMap.insert("MAS 29/1", QDate(2029,8,1));
+    klasseMap.insert("MAS 30/1", QDate(2030,8,1));
 }
 
 QMap<QString, ClassLehrling> FormLehrling::lehrlingMap() const

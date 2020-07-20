@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QTableWidgetItem>
 #include <QMap>
+#include <QStandardItemModel>
+#include <QModelIndex>
 
 #include <classlehrling.h>
 #include <formbetriebliste.h>
@@ -37,17 +39,26 @@ signals:
 private slots:
     void createButtonClicked();
     void deleteButtonClicked();
+    void deleteSkillButtonClicked();
     void changeButtonClicked();
     void saveButtonClicked();
 
     void klasseBoxChanged(const QString &text);
-    void azubiItemClicked(QTableWidgetItem *item);
 
+    void slotchanged(const QModelIndex &index, const QModelIndex &);
+
+    void azubiItemClicked(QTableWidgetItem *item);
 
     void openBetriebsListe();
 
+
+
 private:
     Ui::FormLehrling *ui;
+
+    // For the combobox
+    QStandardItemModel *model;
+
 
     bool changeLehrling;
     ClassLehrling selectedLehrling;

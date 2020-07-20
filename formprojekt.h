@@ -29,6 +29,8 @@ public:
 
 signals:
     void saveProjekte(const QMap<QString, ClassProjekt> &proMap);
+    void projektChanged(const ClassProjekt &projekt);
+    void projektAdded(const ClassProjekt &projekt);
     void invalidDateTime();
 
 private slots:

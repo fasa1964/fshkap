@@ -63,14 +63,12 @@ void FormProjekt::updateProjektTable(const QMap<QString, ClassProjekt> &proMap)
         ui->projekteTableWidget->setItem(row, 1, itemName);
         ui->projekteTableWidget->setItem(row, 2, itemKennung);
 
-        itemNr->setFlags(Qt::ItemIsEnabled);
-        itemName->setFlags(Qt::ItemIsEnabled);
-        itemKennung->setFlags(Qt::ItemIsEnabled);
+//        itemNr->setFlags(Qt::ItemIsEnabled);
+//        itemName->setFlags(Qt::ItemIsEnabled);
+//        itemKennung->setFlags(Qt::ItemIsEnabled);
 
         row++;
     }
-
-
 
     ui->projekteTableWidget->resizeColumnToContents(0);
     ui->projekteTableWidget->resizeColumnToContents(1);
@@ -130,6 +128,12 @@ void FormProjekt::saveButtonClicked()
     m_projektMap.insert(key, projekt);
     emit saveProjekte(m_projektMap);
 
+    if(!changeProjekt)
+        emit projektAdded(projekt);
+
+    if(changeProjekt)
+        emit projektChanged(projekt);
+
     ui->saveButton->setEnabled(false);
     ui->createButton->setEnabled(true);
     ui->changeButton->setEnabled(true);
@@ -146,6 +150,9 @@ void FormProjekt::saveButtonClicked()
 
 void FormProjekt::changeButtonClicked()
 {
+    QDateTime dt = QDateTime::currentDateTime();
+    ui->dateTimeEdit->setDateTime(dt);
+
     changeProjekt = true;
     ui->nrBox->setFocus();
     setFormReadOnly(false);
@@ -190,14 +197,19 @@ void FormProjekt::openFileButtonClicked()
 void FormProjekt::addFrageButtonClicked()
 {
     int rowCount = ui->fragenTableWidget->rowCount();
+    ui->anzahlFragenBox->setValue(rowCount+1);
 
     ui->fragenTableWidget->insertRow(rowCount);
 
     QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(rowCount+1,10) );
     QTableWidgetItem *itemFrage = new QTableWidgetItem("Frage");
+    QTableWidgetItem *itemPunkte = new QTableWidgetItem("0");
+    QTableWidgetItem *itemKennung = new QTableWidgetItem("");
 
     ui->fragenTableWidget->setItem(rowCount, 0, itemNr);
     ui->fragenTableWidget->setItem(rowCount, 1, itemFrage);
+    ui->fragenTableWidget->setItem(rowCount, 2, itemPunkte);
+    ui->fragenTableWidget->setItem(rowCount, 3, itemKennung);
 
     itemNr->setTextColor( ui->fragenTableWidget->item(0,1)->textColor() );
     itemFrage->setTextColor( ui->fragenTableWidget->item(0,1)->textColor() );
@@ -208,6 +220,7 @@ void FormProjekt::removeFrageButtonClicked()
 {
     int rowCount = ui->fragenTableWidget->rowCount()-1;
     ui->fragenTableWidget->removeRow(rowCount);
+    ui->anzahlFragenBox->setValue(rowCount);
 }
 
 void FormProjekt::anzahlFragenChanged(int value)
@@ -275,6 +288,7 @@ void FormProjekt::setFormReadOnly(bool status)
     ui->kennungEdit->setReadOnly(status);
     ui->anzahlFragenBox->setReadOnly(status);
     ui->maxPunkteBox->setReadOnly(status);
+    ui->documentEdit->setReadOnly(status);
     ui->addFrageButton->setEnabled(!status);
     ui->removeFrageButton->setEnabled(!status);
     ui->openFilelButton->setEnabled(!status);
@@ -304,11 +318,11 @@ ClassProjekt FormProjekt::readFromForm()
 
     pro.setCreateTime( ui->dateTimeEdit->dateTime().toString("dd.MM.yy hh:mm"));
 
+    // update ClassFragen Map
     int maxpunkte = 0;
-    int rowCount = ui->fragenTableWidget->rowCount();
+    int rowCount = ui->anzahlFragenBox->value(); //ui->fragenTableWidget->rowCount();
 
     QMap<int, ClassFrage> frgMap;
-
     for(int i = 0; i < rowCount; i++)
     {
         ClassFrage frage;
@@ -351,29 +365,6 @@ void FormProjekt::clearTableFragen()
 
 }
 
-//void FormProjekt::editableTableFragen(bool)
-//{
-//    int rowCount = ui->fragenTableWidget->rowCount();
-//    int columnCount = ui->fragenTableWidget->columnCount();
-
-//    for(int i = 0; i < rowCount; i++)
-//    {
-//        for(int c = 0; c < columnCount; c++)
-//        {
-//            QTableWidgetItem *item = ui->fragenTableWidget->item(i,c);
-////            if(status)
-////            {
-//                //item->setFlags(Qt::ItemIsSelectable);
-//                //item->setFlags(Qt::ItemIsEditable);
-//                item->setTextColor(QColor(0,85,127));
-
-//           // }
-
-//        }
-//    }
-
-//    ui->fragenTableWidget->update();
-//}
 
 void FormProjekt::setColorTableFragen(QColor color)
 {

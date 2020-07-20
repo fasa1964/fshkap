@@ -13,6 +13,7 @@ ClassProjekt::ClassProjekt()
     m_document = "";
     m_createTime = "";
     m_sperrfach = false;
+    m_ausgewertet = false;
 }
 
 QString ClassProjekt::name() const
@@ -152,12 +153,22 @@ QString ClassProjekt::getKey()
     return key;
 }
 
+bool ClassProjekt::getAusgewertet() const
+{
+    return m_ausgewertet;
+}
+
+void ClassProjekt::setAusgewertet(bool ausgewertet)
+{
+    m_ausgewertet = ausgewertet;
+}
+
 
 QDataStream &operator<<(QDataStream &out, const ClassProjekt &dat)
 {
     out << dat.nr() << dat.name() << dat.kennung() << dat.anzahlFragen() << dat.maxPunkte() <<
            dat.erreichtePunkte() << dat.ergebnisProzent() << dat.note() << dat.fragenMap() <<
-           dat.document() << dat.dateTime() << dat.createTime() << dat.sperrfach();
+           dat.document() << dat.dateTime() << dat.createTime() << dat.sperrfach() << dat.getAusgewertet();
     return out;
 }
 
@@ -176,9 +187,10 @@ QDataStream &operator>>(QDataStream &in, ClassProjekt &dat)
     QString dts;
     QDateTime dt;
     bool sperr;
+    bool ausgewertet;
 
     in >> nr >> name >> kennung >> anzahlFragen >> maxPunkte >> erreichtePunkte
-       >> ergebnisProzent >> note >> frgMap >> doc >> dt >> dts >> sperr;
+       >> ergebnisProzent >> note >> frgMap >> doc >> dt >> dts >> sperr >> ausgewertet;
 
 
     dat.setNr(nr);
@@ -194,6 +206,7 @@ QDataStream &operator>>(QDataStream &in, ClassProjekt &dat)
     dat.setDateTime(dt);
     dat.setCreateTime(dts);
     dat.setSperrfach(sperr);
+    dat.setAusgewertet(ausgewertet);
 
     return in;
 }

@@ -5,6 +5,8 @@
 #include <QDate>
 #include <QDataStream>
 
+#include <classskills.h>
+
 class ClassLehrling
 {
 public:
@@ -46,6 +48,9 @@ public:
     bool isValid();
     QString getKey() const;
 
+    QMap<QString, ClassSkills> getSkillMap() const;
+    void setSkillMap(const QMap<QString, ClassSkills> &skillMap);
+
 private:
     int m_nr;
     QString m_vorname;
@@ -58,6 +63,8 @@ private:
     QString m_klasse;
     QString m_betrieb;
     QString m_notiz;
+
+    QMap<QString, ClassSkills> m_skillMap;
 
 };
 

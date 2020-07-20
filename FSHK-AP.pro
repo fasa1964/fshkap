@@ -34,7 +34,11 @@ SOURCES += \
     formbetriebliste.cpp \
     classfrage.cpp \
     classprojekt.cpp \
-    formprojekt.cpp
+    formprojekt.cpp \
+    classskills.cpp \
+    formskills.cpp \
+    formzuordnen.cpp \
+    formupdateinformation.cpp
 
 HEADERS += \
         fshkwindow.h \
@@ -45,14 +49,21 @@ HEADERS += \
     formbetriebliste.h \
     classfrage.h \
     classprojekt.h \
-    formprojekt.h
+    formprojekt.h \
+    classskills.h \
+    formskills.h \
+    formzuordnen.h \
+    formupdateinformation.h
 
 FORMS += \
         fshkwindow.ui \
     formbetrieb.ui \
     formlehrling.ui \
     formbetriebliste.ui \
-    formprojekt.ui
+    formprojekt.ui \
+    formskills.ui \
+    formzuordnen.ui \
+    formupdateinformation.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
