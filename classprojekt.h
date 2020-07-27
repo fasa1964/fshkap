@@ -58,6 +58,8 @@ public:
     bool getAusgewertet() const;
     void setAusgewertet(bool ausgewertet);
 
+    void setFragePunkte(int nr, int points);
+
 private:
 
     QString m_name;

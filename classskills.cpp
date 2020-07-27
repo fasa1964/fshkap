@@ -97,6 +97,30 @@ QString ClassSkills::getKey()
     return key;
 }
 
+int ClassSkills::maxPunkte()
+{
+    int maxpunkte = 0;
+    QMapIterator<QString, ClassProjekt> it(projektMap);
+    while (it.hasNext()){
+         it.next();
+         maxpunkte = maxpunkte + it.value().maxPunkte();
+    }
+
+    return maxpunkte;
+}
+
+int ClassSkills::erreichtePunkte()
+{
+    int punkte = 0;
+    QMapIterator<QString, ClassProjekt> it(projektMap);
+    while (it.hasNext()){
+         it.next();
+         punkte = punkte + it.value().erreichtePunkte();
+    }
+
+    return punkte;
+}
+
 int ClassSkills::getNr() const
 {
     return m_nr;

@@ -163,6 +163,13 @@ void ClassProjekt::setAusgewertet(bool ausgewertet)
     m_ausgewertet = ausgewertet;
 }
 
+void ClassProjekt::setFragePunkte(int nr, int points)
+{
+    ClassFrage frg = m_fragenMap.value(nr);
+    frg.setErreichtePunkte(points);
+    m_fragenMap.insert(nr, frg);
+}
+
 
 QDataStream &operator<<(QDataStream &out, const ClassProjekt &dat)
 {

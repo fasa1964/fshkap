@@ -40,6 +40,9 @@ public:
 
     QString getKey();
 
+    int maxPunkte();
+    int erreichtePunkte();
+
 private:
 
     int m_nr;

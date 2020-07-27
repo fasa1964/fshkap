@@ -80,6 +80,7 @@ void FormSkills::createButtonClicked()
 
     ui->nrBox->setFocus();
     ui->countProjekteBox->setValue(0);
+    ui->tabWidget->setCurrentIndex(1);
 
     createSkill = true;
     changeSkill = false;
@@ -164,6 +165,9 @@ void FormSkills::saveButtonClicked()
     m_skillMap.insert(key, skill);
     emit saveSkillsMap( skillMap() );
     setSkillMap(skillMap());
+
+    if(changeSkill)
+        emit skillChanged(skill);
 
     ui->deleteSkillProjektButton->setEnabled(false);
     ui->importProjekteButton->setEnabled(false);

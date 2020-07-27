@@ -51,6 +51,9 @@ public:
     QMap<QString, ClassSkills> getSkillMap() const;
     void setSkillMap(const QMap<QString, ClassSkills> &skillMap);
 
+    bool skillContain(ClassSkills skill);
+//    bool skillIsUpToDate(ClassSkills skill);
+
 private:
     int m_nr;
     QString m_vorname;

@@ -13,6 +13,7 @@
 #include <formprojekt.h>
 #include <formskills.h>
 #include <formzuordnen.h>
+#include <formevaluation.h>
 
 namespace Ui {
 class FSHKWindow;
@@ -40,6 +41,7 @@ private slots:
     void actionSkillsClicked();
 
     void actionZuordnenClicked();
+    void actionAuswertungClicked();
     void actionAktualisierenClicked();
 
 
@@ -59,6 +61,7 @@ private slots:
 
     // Signal from FormSkills
     void saveSkillMap(const QMap<QString, ClassSkills> &sMap);
+    void skillChanged(ClassSkills skill);
 
 private:
     Ui::FSHKWindow *ui;
@@ -77,11 +80,12 @@ private:
 
     FormZuordnen *formzuordnen;
 
+    FormEvaluation *formevaluation;
+
     void readDataBetriebe();
     void readDataLehrlinge();
     void readDataProjekte();
-    void readDataSkills();
-
+    void readDataSkills(); 
 
     QDateTime lastUpdate(const QString &filename);
 

@@ -33,6 +33,7 @@ public:
 
 signals:
     void saveSkillsMap(const QMap<QString, ClassSkills> &skillMap);
+    void skillChanged(ClassSkills skill);
 
 private slots:
     void deleteSkillProjektButtonClicked();

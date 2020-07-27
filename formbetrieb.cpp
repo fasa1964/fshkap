@@ -79,6 +79,12 @@ void FormBetrieb::saveButtonClicked()
 {
     ClassBetrieb betrieb = readFromForm();
 
+    if(betrieb.name().isEmpty() || betrieb.ort().isEmpty() || betrieb.strasse().isEmpty()){
+        QMessageBox::information(this, tr("Betrieb speichern"), tr("Der Name, Straße und Ort vom "
+                                         "Betrieb müssen angegeben werden!"));
+        return;
+    }
+
     if(changeBetrieb && selectedBetrieb.azubiMap().size() > 0)
         betrieb.setAzubiMap( selectedBetrieb.azubiMap());
 

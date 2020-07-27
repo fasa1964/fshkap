@@ -140,6 +140,34 @@ void ClassLehrling::setSkillMap(const QMap<QString, ClassSkills> &skillMap)
     m_skillMap = skillMap;
 }
 
+bool ClassLehrling::skillContain(ClassSkills skill)
+{
+    QMapIterator<QString, ClassSkills> it(getSkillMap());
+    while (it.hasNext()) {
+        it.next();
+        ClassSkills s = it.value();
+        if(s.getKey() == skill.getKey())
+            return true;
+    }
+
+    return false;
+}
+
+//bool ClassLehrling::skillIsUpToDate(ClassSkills skill)
+//{
+//    QMapIterator<QString, ClassSkills> it(getSkillMap());
+//    while (it.hasNext()) {
+//        it.next();
+//        ClassSkills s = it.value();
+//        if(s.getKey() == skill.getKey()){
+//            if(skill.date())
+//            return true;
+//        }
+//    }
+
+//    return false;
+//}
+
 QString ClassLehrling::notiz() const
 {
     return m_notiz;

@@ -59,11 +59,15 @@ FSHKWindow::FSHKWindow(QWidget *parent) :
     formskills = new FormSkills(this);
     formskills->hide();
     connect(formskills, &FormSkills::saveSkillsMap, this, &FSHKWindow::saveSkillMap);
+    connect(formskills, &FormSkills::skillChanged, this, &FSHKWindow::skillChanged);
 
 
     formzuordnen = new FormZuordnen(this);
     formzuordnen->hide();
     connect(formzuordnen, &FormZuordnen::saveAzubiMap, this, &FSHKWindow::saveLehrlingMap);
+
+    formevaluation = new FormEvaluation(this);
+    formevaluation->hide();
 
     connect(ui->actionBeenden, &QAction::triggered , this, &FSHKWindow::actionBeendenClicked);
     connect(ui->actionInfo, &QAction::triggered , this, &FSHKWindow::actionInfoClicked);
@@ -72,6 +76,7 @@ FSHKWindow::FSHKWindow(QWidget *parent) :
     connect(ui->actionProjekte, &QAction::triggered , this, &FSHKWindow::actionProjekteClicked);
     connect(ui->actionPruefungen, &QAction::triggered , this, &FSHKWindow::actionSkillsClicked);
     connect(ui->actionZuordnen, &QAction::triggered , this, &FSHKWindow::actionZuordnenClicked);
+    connect(ui->actionAuswerten , &QAction::triggered , this, &FSHKWindow::actionAuswertungClicked);
 }
 
 FSHKWindow::~FSHKWindow()
@@ -242,6 +247,14 @@ void FSHKWindow::actionZuordnenClicked()
     formzuordnen->setSkillMap(skillsMap);
     formzuordnen->setupSkillSortBox();
     setCentralWidget(formzuordnen);
+}
+
+void FSHKWindow::actionAuswertungClicked()
+{
+    this->takeCentralWidget();
+    formevaluation->show();
+    formevaluation->setAzubiMap(azubiMap);
+    setCentralWidget(formevaluation);
 }
 
 void FSHKWindow::actionAktualisierenClicked()
@@ -431,6 +444,7 @@ void FSHKWindow::projektChanged(const ClassProjekt &pro)
 
 void FSHKWindow::projektAdded(const ClassProjekt &pro)
 {
+    QList<ClassSkills> skillList;
 
     QMapIterator<QString, ClassSkills> it(skillsMap);
     while (it.hasNext()) {
@@ -452,18 +466,50 @@ void FSHKWindow::projektAdded(const ClassProjekt &pro)
             skill.setProjektMap(pMap);
             skillsMap.insert(skill.getKey(), skill);
             saveSkillMap(skillsMap);
+            skillList << skill;
         }
     }
+
+    if(!skillList.isEmpty()){
+        foreach(ClassSkills skill, skillList)
+            skillChanged(skill);
+    }
 }
+
 
 void FSHKWindow::saveSkillMap(const QMap<QString, ClassSkills> &sMap)
 {
     bool ok = saveDataSkills(sMap);
     if(ok)
+    {
         ui->statusBar->showMessage(tr("Die Datei Pruefungen.dat wurde erfolgreich aktualisiert!"), 5000);
+        skillsMap = sMap;
+    }
     else
         ui->statusBar->showMessage(tr("Fehler beim Speichern der Datei Pruefungen.dat!"), 5000);
+}
 
+void FSHKWindow::skillChanged(ClassSkills skill)
+{
+    bool dirty = false;
+    QMapIterator<QString, ClassLehrling> it(azubiMap);
+    while (it.hasNext()) {
+        it.next();
+        ClassLehrling azu = it.value();
+        ui->statusBar->showMessage(tr("Überprüfe ")+it.key(), 2000);
+        if(azu.skillContain(skill))
+        {
+            QMap<QString, ClassSkills> map = azu.getSkillMap();
+            map.insert(skill.getKey(), skill);
+            azu.setSkillMap(map);
+            azubiMap.insert(azu.getKey(), azu);
+            dirty = true;
+            ui->statusBar->showMessage(tr("Aktualisiert ")+it.key(), 2000);
+        }
+    }
+
+    if(dirty)
+        saveLehrlingMap(azubiMap);
 }
 
 void FSHKWindow::readDataBetriebe()
