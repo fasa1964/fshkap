@@ -253,7 +253,9 @@ void FSHKWindow::actionAuswertungClicked()
 {
     this->takeCentralWidget();
     formevaluation->show();
-    formevaluation->setAzubiMap(azubiMap);
+    formevaluation->azubiMap = azubiMap;
+    formevaluation->update();
+//    formevaluation->setAzubiMap(azubiMap);
     setCentralWidget(formevaluation);
 }
 

@@ -15,20 +15,20 @@ FormEvaluation::FormEvaluation(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    dirty = false;
-    selectedAzubi = ClassLehrling();
-    selectedSkill = ClassSkills();
-    selectedProjekt = ClassProjekt();
-    currentSkillMap.clear();
-    currentProjektMap.clear();
-
-//    jahrgangMap.clear();
+//    dirty = false;
+//    selectedAzubi = ClassLehrling();
+//    selectedSkill = ClassSkills();
+//    selectedProjekt = ClassProjekt();
+//    currentSkillMap.clear();
+//    currentProjektMap.clear();
 
 
-    connect(ui->closeButton, &QPushButton::clicked, this, &FormEvaluation::close);
-    connect(ui->azubiListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::azubiListBoxChanged);
-    connect(ui->skillListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::skillListBoxChanged);
-    connect(ui->projektListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::projektListBoxChanged);
+
+
+//    connect(ui->closeButton, &QPushButton::clicked, this, &FormEvaluation::close);
+//    connect(ui->azubiListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::azubiListBoxChanged);
+//    connect(ui->skillListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::skillListBoxChanged);
+//    connect(ui->projektListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::projektListBoxChanged);
 
     //connect(ui->fragenTableWidget, &QTableWidget::cellChanged, this, &FormEvaluation::cellItemClicked);
 }
@@ -38,16 +38,197 @@ FormEvaluation::~FormEvaluation()
     delete ui;
 }
 
-QMap<QString, ClassLehrling> FormEvaluation::azubiMap() const
+void FormEvaluation::update()
 {
-    return m_azubiMap;
+    if(azubiMap.isEmpty()){
+        QMessageBox::information(this, tr("Update"), tr("Keine Daten vorhanden!"));
+        return;
+    }
+
+    setupSortBox();
+
 }
 
-void FormEvaluation::setAzubiMap(QMap<QString, ClassLehrling> azubiMap)
-{
-    m_azubiMap = azubiMap;
+//QMap<QString, ClassLehrling> FormEvaluation::azubiMap() const
+//{
+//    return m_azubiMap;
+//}
 
-    // Setup azubiSortBox
+//void FormEvaluation::setAzubiMap(QMap<QString, ClassLehrling> azubiMap)
+//{
+//    m_azubiMap = azubiMap;
+
+//    // Setup azubiSortBox
+//    QStringList labels;
+//    for(int i = 1; i < 6; i++)
+//    {
+//        if(yearExist(i))
+//        {
+//            QString label = QString::number(i,10)+".Lehrjahr";
+//            if(i > 4)
+//                label = "Nachholer";
+//            labels << label;
+//        }
+//    }
+//    ui->azubiSortBox->clear();
+//    ui->azubiSortBox->addItems(labels);
+//    azubiSortBoxChanged(labels.first());
+//    connect(ui->azubiSortBox, &QComboBox::currentTextChanged, this, &FormEvaluation::azubiSortBoxChanged);
+//}
+
+void FormEvaluation::azubiSortBoxChanged(const QString &text)
+{
+    if(text.isEmpty())
+        return;
+
+//    int jahrgang;
+//    QList<ClassLehrling> jahrgangList;
+//    QStringList azubiLabels;
+
+//    if(text != "Nachholer"){
+//        jahrgang = QString("%1").arg(text[0],1).toInt();
+//        jahrgangList = getAzubiList(jahrgang);
+//    }
+//    if(text == "Nachholer"){
+//        jahrgang = 5;
+//        jahrgangList = getAzubiList(jahrgang);
+//    }
+
+//    foreach(ClassLehrling azu, jahrgangList){
+//        azubiLabels << azu.getKey();
+//    }
+
+//    ui->azubiListBox->clear();
+//    ui->azubiListBox->addItems(azubiLabels);
+//    ui->countAzubiBox->setValue(azubiLabels.size());
+}
+
+//void FormEvaluation::azubiListBoxChanged(const QString &text)
+//{
+
+//    if(dirty){
+//        int result = QMessageBox::question(this, tr("Daten speichern"), tr("Daten haben sich geändert!\n"
+//                      "Wenn sie nicht speichern, gehen die Daten verloren!"), QMessageBox::Save | QMessageBox::Cancel);
+//        if(result == QMessageBox::Cancel)
+//            return;
+
+
+//    }
+
+//    selectedAzubi = azubiMap().value(text);
+//    currentSkillMap = selectedAzubi.getSkillMap();
+
+//    ui->nrBox->setValue(selectedAzubi.nr());
+//    ui->azuNameEdit->setText(selectedAzubi.vorname()+"."+selectedAzubi.nachname());
+
+
+//    QList<ClassSkills> skillList;
+//    QStringList skillLabels;
+//    skillList = getSkillList(selectedAzubi);
+
+//    foreach(ClassSkills skill, skillList){
+//        skillLabels << skill.getKey();
+//    }
+
+//    ui->skillListBox->clear();
+//    ui->skillListBox->addItems(skillLabels);
+//    ui->countSkillBox->setValue(skillLabels.size());
+
+//}
+
+//void FormEvaluation::skillListBoxChanged(const QString &text)
+//{
+//    selectedSkill = currentSkillMap.value(text);
+//    currentProjektMap = selectedSkill.getProjektMap();
+
+//    QList<ClassProjekt> projektList;
+//    projektList = getProjektList(selectedSkill);
+
+//    QStringList labels;
+//    foreach(ClassProjekt pro, projektList)
+//        labels << pro.getKey();
+
+//    ui->projektListBox->clear();
+//    ui->projektListBox->addItems(labels);
+//    ui->countProjektBox->setValue(labels.size());
+//}
+
+//void FormEvaluation::projektListBoxChanged(const QString &text)
+//{
+//    selectedProjekt = currentProjektMap.value(text);
+//    ui->projektNameEdit->setText(selectedProjekt.name());
+//    setupFragenTable(selectedProjekt);
+
+//    double prozent = selectedProjekt.ergebnisProzent();
+
+
+//    if(prozent < 50)
+//        setTextColor(ui->projektProzentBox, Qt::darkRed);
+//    else
+//        setTextColor(ui->projektProzentBox, Qt::darkGreen);
+
+//    ui->projektProzentBox->setValue(prozent);
+
+//}
+
+//void FormEvaluation::fragenTableCellChanged(int , int )
+//{
+//    int maxPunkte = selectedProjekt.maxPunkte();
+//    double punkte = 0.0;
+//    for(int i = 0; i < ui->fragenTableWidget->rowCount(); i++){
+//        punkte = punkte + ui->fragenTableWidget->item(i,2)->text().toDouble();
+//        selectedProjekt.setFragePunkte(i, ui->fragenTableWidget->item(i,2)->text().toInt());
+//    }
+
+//    double prozent = punkte * 100 / maxPunkte;
+
+//    if(prozent >= 50.0)
+//        setTextColor(ui->projektProzentBox, Qt::darkGreen);
+//    else
+//        setTextColor(ui->projektProzentBox, Qt::darkRed);
+
+//    ui->projektProzentBox->setValue(prozent);
+
+
+//    updateAzubi( qFloor( punkte ), prozent);
+
+//    selectedProjekt.setErreichtePunkte( qFloor( punkte) );
+//    selectedProjekt.setErgebnisProzent(prozent);
+
+//    currentProjektMap.insert(selectedProjekt.getKey(), selectedProjekt);
+//    currentSkillMap.insert(selectedSkill.getKey(), selectedSkill);
+//    selectedAzubi.setSkillMap(currentSkillMap);
+//    m_azubiMap.insert(selectedAzubi.getKey(), selectedAzubi);
+
+//    dirty = true;
+//    ui->saveButton->setEnabled(true);
+
+//    qDebug() << m_azubiMap.value("Farschad.Saberi.1").getSkillMap().values().first().getProjektMap().values().first().erreichtePunkte();
+//    qDebug() << m_azubiMap.value("Farschad.Saberi.1").getSkillMap().values().first().getProjektMap().values().first().name();
+
+//}
+
+bool FormEvaluation::yearExist(int year)
+{
+    QDate today = QDate::currentDate();
+    QMapIterator<QString, ClassLehrling> it(azubiMap);
+    while (it.hasNext()) {
+        it.next();
+        int jahrgang = today.year() - it.value().ausbildungsDatum().year();
+        if( jahrgang <= 0)
+            jahrgang = 1;
+        if(jahrgang > 5)
+            jahrgang = 5;
+
+        if(year == jahrgang)
+            return true;
+    }
+
+    return false;
+}
+
+void FormEvaluation::setupSortBox()
+{
     QStringList labels;
     for(int i = 1; i < 6; i++)
     {
@@ -65,257 +246,106 @@ void FormEvaluation::setAzubiMap(QMap<QString, ClassLehrling> azubiMap)
     connect(ui->azubiSortBox, &QComboBox::currentTextChanged, this, &FormEvaluation::azubiSortBoxChanged);
 }
 
-void FormEvaluation::azubiSortBoxChanged(const QString &text)
-{
-    if(text.isEmpty())
-        return;
+//QList<ClassLehrling> FormEvaluation::getAzubiList(int year)
+//{
+//    QList<ClassLehrling> list;
+//    QDate today = QDate::currentDate();
+//    QMapIterator<QString, ClassLehrling> it(azubiMap());
+//    while (it.hasNext()) {
+//        it.next();
+//        ClassLehrling azu = it.value();
+//        int jahrgang = today.year() - azu.ausbildungsDatum().year();
+//        if( jahrgang <= 0)
+//            jahrgang = 1;
+//        if(jahrgang > 5)
+//            jahrgang = 5;
 
-    int jahrgang;
-    QList<ClassLehrling> jahrgangList;
-    QStringList azubiLabels;
+//        if(jahrgang == year)
+//            list << it.value();
+//    }
 
-    if(text != "Nachholer"){
-        jahrgang = QString("%1").arg(text[0],1).toInt();
-        jahrgangList = getAzubiList(jahrgang);
-    }
-    if(text == "Nachholer"){
-        jahrgang = 5;
-        jahrgangList = getAzubiList(jahrgang);
-    }
+//    return list;
+//}
 
-    foreach(ClassLehrling azu, jahrgangList){
-        azubiLabels << azu.getKey();
-    }
+//QList<ClassSkills> FormEvaluation::getSkillList(const ClassLehrling &azu)
+//{
+//    QList<ClassSkills> list;
+//    QMap<QString, ClassSkills> sMap;
+//    sMap = azu.getSkillMap();
+//    list = sMap.values();
+//    return list;
+//}
 
-    ui->azubiListBox->clear();
-    ui->azubiListBox->addItems(azubiLabels);
-    ui->countAzubiBox->setValue(azubiLabels.size());
-}
+//QList<ClassProjekt> FormEvaluation::getProjektList(const ClassSkills &skill)
+//{
+//    QList<ClassProjekt> list;
+//    QMap<QString, ClassProjekt> pMap;
+//    pMap = skill.getProjektMap();
+//    list = pMap.values();
+//    return list;
+//}
 
-void FormEvaluation::azubiListBoxChanged(const QString &text)
-{
+//void FormEvaluation::setupFragenTable(ClassProjekt pro)
+//{
 
-    if(dirty){
-        int result = QMessageBox::question(this, tr("Daten speichern"), tr("Daten haben sich geändert!\n"
-                      "Wenn sie nicht speichern, gehen die Daten verloren!"), QMessageBox::Save | QMessageBox::Cancel);
-        if(result == QMessageBox::Cancel)
-            return;
+//    disconnect(ui->fragenTableWidget, &QTableWidget::cellChanged, this, &FormEvaluation::fragenTableCellChanged);
 
+//    ui->fragenTableWidget->clear();
+//    ui->fragenTableWidget->setColumnCount(5);
+//    ui->fragenTableWidget->setRowCount(pro.fragenMap().size());
 
-    }
+//    QStringList labels;
+//    labels << "Nr." << "Frage" << "Punkte" << "Max. Punkte" << "Kennung" ;
+//    ui->fragenTableWidget->setHorizontalHeaderLabels(labels);
 
-    selectedAzubi = azubiMap().value(text);
-    currentSkillMap = selectedAzubi.getSkillMap();
+//    QMap<int, ClassFrage> fMap = pro.fragenMap();
 
-    ui->nrBox->setValue(selectedAzubi.nr());
-    ui->azuNameEdit->setText(selectedAzubi.vorname()+"."+selectedAzubi.nachname());
+//    int row = 0;
+//    QMapIterator<int, ClassFrage> it(fMap);
+//    while (it.hasNext()) {
+//        it.next();
 
+//        ClassFrage frage = it.value();
+//        QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(frage.frageNr(),10) );
+//        QTableWidgetItem *itemFrage = new QTableWidgetItem( frage.frage() );
+//        QTableWidgetItem *itemPunkte = new QTableWidgetItem( QString::number(frage.erreichtePunkte(),10) );
+//        QTableWidgetItem *itemMaxPunkte = new QTableWidgetItem( QString::number(frage.maxPunkte(),10) );
+//        QTableWidgetItem *itemKennung = new QTableWidgetItem( frage.kennung() );
+//        ui->fragenTableWidget->setItem(row,0, itemNr);
+//        ui->fragenTableWidget->setItem(row,1, itemFrage);
+//        ui->fragenTableWidget->setItem(row,2, itemPunkte);
+//        ui->fragenTableWidget->setItem(row,3, itemMaxPunkte);
+//        ui->fragenTableWidget->setItem(row,4, itemKennung);
 
-    QList<ClassSkills> skillList;
-    QStringList skillLabels;
-    skillList = getSkillList(selectedAzubi);
+//        itemNr->setFlags(Qt::ItemIsEnabled);
+//        itemFrage->setFlags(Qt::ItemIsEnabled);
+//        itemMaxPunkte->setFlags(Qt::ItemIsEnabled);
+//        itemKennung->setFlags(Qt::ItemIsEnabled);
+//        itemPunkte->setTextColor(Qt::blue);
 
-    foreach(ClassSkills skill, skillList){
-        skillLabels << skill.getKey();
-    }
+//        row++;
+//    }
 
-    ui->skillListBox->clear();
-    ui->skillListBox->addItems(skillLabels);
-    ui->countSkillBox->setValue(skillLabels.size());
+//    ui->fragenTableWidget->resizeColumnToContents(0);
+//    ui->fragenTableWidget->resizeColumnToContents(1);
+//    ui->fragenTableWidget->resizeColumnToContents(2);
+//    ui->fragenTableWidget->resizeColumnToContents(3);
+//    ui->fragenTableWidget->resizeColumnToContents(4);
 
-}
+//    connect(ui->fragenTableWidget, &QTableWidget::cellChanged, this, &FormEvaluation::fragenTableCellChanged);
 
-void FormEvaluation::skillListBoxChanged(const QString &text)
-{
-    selectedSkill = currentSkillMap.value(text);
-    currentProjektMap = selectedSkill.getProjektMap();
+//}
 
-    QList<ClassProjekt> projektList;
-    projektList = getProjektList(selectedSkill);
+//void FormEvaluation::updateAzubi(int points, double percent)
+//{
+//    selectedProjekt.setErreichtePunkte(points);
+//    selectedProjekt.setErgebnisProzent(percent);
 
-    QStringList labels;
-    foreach(ClassProjekt pro, projektList)
-        labels << pro.getKey();
-
-    ui->projektListBox->clear();
-    ui->projektListBox->addItems(labels);
-    ui->countProjektBox->setValue(labels.size());
-}
-
-void FormEvaluation::projektListBoxChanged(const QString &text)
-{
-    selectedProjekt = currentProjektMap.value(text);
-    ui->projektNameEdit->setText(selectedProjekt.name());
-    setupFragenTable(selectedProjekt);
-
-    double prozent = selectedProjekt.ergebnisProzent();
-
-
-    if(prozent < 50)
-        setTextColor(ui->projektProzentBox, Qt::darkRed);
-    else
-        setTextColor(ui->projektProzentBox, Qt::darkGreen);
-
-    ui->projektProzentBox->setValue(prozent);
-
-}
-
-void FormEvaluation::fragenTableCellChanged(int , int )
-{
-    int maxPunkte = selectedProjekt.maxPunkte();
-    double punkte = 0.0;
-    for(int i = 0; i < ui->fragenTableWidget->rowCount(); i++){
-        punkte = punkte + ui->fragenTableWidget->item(i,2)->text().toDouble();
-        selectedProjekt.setFragePunkte(i, ui->fragenTableWidget->item(i,2)->text().toInt());
-    }
-
-    double prozent = punkte * 100 / maxPunkte;
-
-    if(prozent >= 50.0)
-        setTextColor(ui->projektProzentBox, Qt::darkGreen);
-    else
-        setTextColor(ui->projektProzentBox, Qt::darkRed);
-
-    ui->projektProzentBox->setValue(prozent);
+//    QString pkey = selectedProjekt.getKey();
+//    currentProjektMap.insert(pkey, selectedProjekt);
 
 
-    updateAzubi( qFloor( punkte ), prozent);
-
-    selectedProjekt.setErreichtePunkte( qFloor( punkte) );
-    selectedProjekt.setErgebnisProzent(prozent);
-
-    currentProjektMap.insert(selectedProjekt.getKey(), selectedProjekt);
-    currentSkillMap.insert(selectedSkill.getKey(), selectedSkill);
-    selectedAzubi.setSkillMap(currentSkillMap);
-    m_azubiMap.insert(selectedAzubi.getKey(), selectedAzubi);
-
-    dirty = true;
-    ui->saveButton->setEnabled(true);
-
-    qDebug() << m_azubiMap.value("Farschad.Saberi.1").getSkillMap().values().first().getProjektMap().values().first().erreichtePunkte();
-    qDebug() << m_azubiMap.value("Farschad.Saberi.1").getSkillMap().values().first().getProjektMap().values().first().name();
-
-}
-
-bool FormEvaluation::yearExist(int year)
-{
-    QDate today = QDate::currentDate();
-    QMapIterator<QString, ClassLehrling> it(azubiMap());
-    while (it.hasNext()) {
-        it.next();
-        int jahrgang = today.year() - it.value().ausbildungsDatum().year();
-        if( jahrgang <= 0)
-            jahrgang = 1;
-        if(jahrgang > 5)
-            jahrgang = 5;
-
-        if(year == jahrgang)
-            return true;
-    }
-
-    return false;
-}
-
-QList<ClassLehrling> FormEvaluation::getAzubiList(int year)
-{
-    QList<ClassLehrling> list;
-    QDate today = QDate::currentDate();
-    QMapIterator<QString, ClassLehrling> it(azubiMap());
-    while (it.hasNext()) {
-        it.next();
-        ClassLehrling azu = it.value();
-        int jahrgang = today.year() - azu.ausbildungsDatum().year();
-        if( jahrgang <= 0)
-            jahrgang = 1;
-        if(jahrgang > 5)
-            jahrgang = 5;
-
-        if(jahrgang == year)
-            list << it.value();
-    }
-
-    return list;
-}
-
-QList<ClassSkills> FormEvaluation::getSkillList(const ClassLehrling &azu)
-{
-    QList<ClassSkills> list;
-    QMap<QString, ClassSkills> sMap;
-    sMap = azu.getSkillMap();
-    list = sMap.values();
-    return list;
-}
-
-QList<ClassProjekt> FormEvaluation::getProjektList(const ClassSkills &skill)
-{
-    QList<ClassProjekt> list;
-    QMap<QString, ClassProjekt> pMap;
-    pMap = skill.getProjektMap();
-    list = pMap.values();
-    return list;
-}
-
-void FormEvaluation::setupFragenTable(ClassProjekt pro)
-{
-
-    disconnect(ui->fragenTableWidget, &QTableWidget::cellChanged, this, &FormEvaluation::fragenTableCellChanged);
-
-    ui->fragenTableWidget->clear();
-    ui->fragenTableWidget->setColumnCount(5);
-    ui->fragenTableWidget->setRowCount(pro.fragenMap().size());
-
-    QStringList labels;
-    labels << "Nr." << "Frage" << "Punkte" << "Max. Punkte" << "Kennung" ;
-    ui->fragenTableWidget->setHorizontalHeaderLabels(labels);
-
-    QMap<int, ClassFrage> fMap = pro.fragenMap();
-
-    int row = 0;
-    QMapIterator<int, ClassFrage> it(fMap);
-    while (it.hasNext()) {
-        it.next();
-
-        ClassFrage frage = it.value();
-        QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(frage.frageNr(),10) );
-        QTableWidgetItem *itemFrage = new QTableWidgetItem( frage.frage() );
-        QTableWidgetItem *itemPunkte = new QTableWidgetItem( QString::number(frage.erreichtePunkte(),10) );
-        QTableWidgetItem *itemMaxPunkte = new QTableWidgetItem( QString::number(frage.maxPunkte(),10) );
-        QTableWidgetItem *itemKennung = new QTableWidgetItem( frage.kennung() );
-        ui->fragenTableWidget->setItem(row,0, itemNr);
-        ui->fragenTableWidget->setItem(row,1, itemFrage);
-        ui->fragenTableWidget->setItem(row,2, itemPunkte);
-        ui->fragenTableWidget->setItem(row,3, itemMaxPunkte);
-        ui->fragenTableWidget->setItem(row,4, itemKennung);
-
-        itemNr->setFlags(Qt::ItemIsEnabled);
-        itemFrage->setFlags(Qt::ItemIsEnabled);
-        itemMaxPunkte->setFlags(Qt::ItemIsEnabled);
-        itemKennung->setFlags(Qt::ItemIsEnabled);
-        itemPunkte->setTextColor(Qt::blue);
-
-        row++;
-    }
-
-    ui->fragenTableWidget->resizeColumnToContents(0);
-    ui->fragenTableWidget->resizeColumnToContents(1);
-    ui->fragenTableWidget->resizeColumnToContents(2);
-    ui->fragenTableWidget->resizeColumnToContents(3);
-    ui->fragenTableWidget->resizeColumnToContents(4);
-
-    connect(ui->fragenTableWidget, &QTableWidget::cellChanged, this, &FormEvaluation::fragenTableCellChanged);
-
-}
-
-void FormEvaluation::updateAzubi(int points, double percent)
-{
-    selectedProjekt.setErreichtePunkte(points);
-    selectedProjekt.setErgebnisProzent(percent);
-
-    QString pkey = selectedProjekt.getKey();
-    currentProjektMap.insert(pkey, selectedProjekt);
-
-
-}
+//}
 
 //void FormEvaluation::azubiSortBoxChanged(const QString &text)
 //{
@@ -654,14 +684,14 @@ void FormEvaluation::updateAzubi(int points, double percent)
 
 //}
 
-void FormEvaluation::setTextColor(QWidget *widget, QColor color)
-{
-    QPalette pal;
-    pal = widget->palette();
-    pal.setColor(QPalette::WindowText, color);
-    pal.setColor(QPalette::Text, color);
-    widget->setPalette(pal);
-}
+//void FormEvaluation::setTextColor(QWidget *widget, QColor color)
+//{
+//    QPalette pal;
+//    pal = widget->palette();
+//    pal.setColor(QPalette::WindowText, color);
+//    pal.setColor(QPalette::Text, color);
+//    widget->setPalette(pal);
+//}
 
 //int FormEvaluation::getSkillRow(ClassSkills skill)
 //{
