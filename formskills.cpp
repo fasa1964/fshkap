@@ -94,8 +94,8 @@ void FormSkills::createButtonClicked()
 void FormSkills::deleteButtonClicked()
 {
     int result = QMessageBox::information(this, tr("Prüfung löschen"), tr("Die Prüfung:\n")+selectedSkill.name()+"-"+selectedSkill.kennung()+
-                                       tr("\nwird unwiderruflich gelöscht!"), QMessageBox::Ok | QMessageBox::Abort);
-    if(result == QMessageBox::Abort)
+                                       tr("\nwird unwiderruflich gelöscht!"), QMessageBox::Ok | QMessageBox::Cancel);
+    if(result == QMessageBox::Cancel)
         return;
 
 
@@ -111,6 +111,12 @@ void FormSkills::deleteButtonClicked()
         ui->deleteButton->setEnabled(false);
         ui->createButton->setEnabled(true);
         ui->saveButton->setEnabled(false);
+    }
+    else
+    {
+        QMessageBox::information(this, tr("Prüfung löschen"), tr("Die Prüfung:\n")+selectedSkill.name()+"-"+selectedSkill.kennung()+
+                                              tr("\nkonnte nicht gelöscht werden!"), QMessageBox::Ok | QMessageBox::Cancel);
+
     }
 
 }

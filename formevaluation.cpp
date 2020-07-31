@@ -14,6 +14,7 @@ FormEvaluation::FormEvaluation(QWidget *parent) :
     ui(new Ui::FormEvaluation)
 {
     ui->setupUi(this);
+    ui->azubiListBox->setModel(new ItemList);
 
 //    dirty = false;
 //    selectedAzubi = ClassLehrling();
@@ -25,8 +26,8 @@ FormEvaluation::FormEvaluation(QWidget *parent) :
 
 
 
-//    connect(ui->closeButton, &QPushButton::clicked, this, &FormEvaluation::close);
-//    connect(ui->azubiListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::azubiListBoxChanged);
+    connect(ui->closeButton, &QPushButton::clicked, this, &FormEvaluation::close);
+    connect(ui->azubiListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::azubiListBoxChanged);
 //    connect(ui->skillListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::skillListBoxChanged);
 //    connect(ui->projektListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::projektListBoxChanged);
 
@@ -80,32 +81,48 @@ void FormEvaluation::azubiSortBoxChanged(const QString &text)
 {
     if(text.isEmpty())
         return;
+//comboBox->setItemData(0, QBrush(Qt::red), Qt::TextColorRole);
+    int jahrgang;
+    QList<ClassLehrling> jahrgangList;
+    QStringList azubiLabels;
 
-//    int jahrgang;
-//    QList<ClassLehrling> jahrgangList;
-//    QStringList azubiLabels;
+    if(text != "Nachholer"){
+        jahrgang = QString("%1").arg(text[0],1).toInt();
+        jahrgangList = getAzubiList(jahrgang);
+    }
+    if(text == "Nachholer"){
+        jahrgang = 5;
+        jahrgangList = getAzubiList(jahrgang);
+    }
 
-//    if(text != "Nachholer"){
-//        jahrgang = QString("%1").arg(text[0],1).toInt();
-//        jahrgangList = getAzubiList(jahrgang);
-//    }
-//    if(text == "Nachholer"){
-//        jahrgang = 5;
-//        jahrgangList = getAzubiList(jahrgang);
-//    }
+    ui->azubiListBox->clear();
+    int index = 0;
+    foreach(ClassLehrling azu, jahrgangList){
+        azubiLabels << azu.getKey();
+//        if(azu.getSkillMap().size() <= 0){
+//            qDebug() << "Index:" << index;
+            ui->azubiListBox->setItemData(index, QBrush(Qt::red), Qt::TextColorRole || Qt::ForegroundRole);
+         //}
+        index++;
+    }
 
-//    foreach(ClassLehrling azu, jahrgangList){
-//        azubiLabels << azu.getKey();
-//    }
-
-//    ui->azubiListBox->clear();
-//    ui->azubiListBox->addItems(azubiLabels);
-//    ui->countAzubiBox->setValue(azubiLabels.size());
+    ui->azubiListBox->addItems(azubiLabels);
+    ui->countAzubiBox->setValue(azubiLabels.size());
 }
 
-//void FormEvaluation::azubiListBoxChanged(const QString &text)
-//{
+void FormEvaluation::azubiListBoxChanged(const QString &text)
+{
+    qDebug() << ui->azubiListBox->itemData(0).toString();
+    if(text.isEmpty())
+        return;
 
+    int index = ui->azubiListBox->currentIndex();
+
+
+//    if(azubiMap.value(text).getSkillMap().size() <= 0)
+//        setTextColor(ui->azubiListBox, Qt::red);
+//    else
+//        setTextColor(ui->azubiListBox, Qt::blue);
 //    if(dirty){
 //        int result = QMessageBox::question(this, tr("Daten speichern"), tr("Daten haben sich geändert!\n"
 //                      "Wenn sie nicht speichern, gehen die Daten verloren!"), QMessageBox::Save | QMessageBox::Cancel);
@@ -134,7 +151,7 @@ void FormEvaluation::azubiSortBoxChanged(const QString &text)
 //    ui->skillListBox->addItems(skillLabels);
 //    ui->countSkillBox->setValue(skillLabels.size());
 
-//}
+}
 
 //void FormEvaluation::skillListBoxChanged(const QString &text)
 //{
@@ -208,6 +225,9 @@ void FormEvaluation::azubiSortBoxChanged(const QString &text)
 
 //}
 
+/// !brief
+/// Returns true if ClassLehrling in this
+/// year exist
 bool FormEvaluation::yearExist(int year)
 {
     QDate today = QDate::currentDate();
@@ -246,26 +266,26 @@ void FormEvaluation::setupSortBox()
     connect(ui->azubiSortBox, &QComboBox::currentTextChanged, this, &FormEvaluation::azubiSortBoxChanged);
 }
 
-//QList<ClassLehrling> FormEvaluation::getAzubiList(int year)
-//{
-//    QList<ClassLehrling> list;
-//    QDate today = QDate::currentDate();
-//    QMapIterator<QString, ClassLehrling> it(azubiMap());
-//    while (it.hasNext()) {
-//        it.next();
-//        ClassLehrling azu = it.value();
-//        int jahrgang = today.year() - azu.ausbildungsDatum().year();
-//        if( jahrgang <= 0)
-//            jahrgang = 1;
-//        if(jahrgang > 5)
-//            jahrgang = 5;
+QList<ClassLehrling> FormEvaluation::getAzubiList(int year)
+{
+    QList<ClassLehrling> list;
+    QDate today = QDate::currentDate();
+    QMapIterator<QString, ClassLehrling> it(azubiMap);
+    while (it.hasNext()) {
+        it.next();
+        ClassLehrling azu = it.value();
+        int jahrgang = today.year() - azu.ausbildungsDatum().year();
+        if( jahrgang <= 0)
+            jahrgang = 1;
+        if(jahrgang > 5)
+            jahrgang = 5;
 
-//        if(jahrgang == year)
-//            list << it.value();
-//    }
+        if(jahrgang == year)
+            list << it.value();
+    }
 
-//    return list;
-//}
+    return list;
+}
 
 //QList<ClassSkills> FormEvaluation::getSkillList(const ClassLehrling &azu)
 //{
@@ -684,14 +704,14 @@ void FormEvaluation::setupSortBox()
 
 //}
 
-//void FormEvaluation::setTextColor(QWidget *widget, QColor color)
-//{
-//    QPalette pal;
-//    pal = widget->palette();
-//    pal.setColor(QPalette::WindowText, color);
-//    pal.setColor(QPalette::Text, color);
-//    widget->setPalette(pal);
-//}
+void FormEvaluation::setTextColor(QWidget *widget, QColor color)
+{
+    QPalette pal;
+    pal = widget->palette();
+    pal.setColor(QPalette::WindowText, color);
+    pal.setColor(QPalette::Text, color);
+    widget->setPalette(pal);
+}
 
 //int FormEvaluation::getSkillRow(ClassSkills skill)
 //{

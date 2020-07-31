@@ -129,6 +129,7 @@ void FormLehrling::changeButtonClicked()
 {
     changeLehrling = true;
     setFormReadOnly(false);
+    setFormTextColor(QColor(0,87,127));
     ui->strasseEdit->setFocus();
 
     ui->changeButton->setEnabled(false);
@@ -206,6 +207,7 @@ void FormLehrling::saveButtonClicked()
     ui->changeButton->setEnabled(true);
 
     setFormReadOnly(true);
+    setFormTextColor(Qt::black);
 
 
 }

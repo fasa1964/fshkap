@@ -63,10 +63,6 @@ void FormProjekt::updateProjektTable(const QMap<QString, ClassProjekt> &proMap)
         ui->projekteTableWidget->setItem(row, 1, itemName);
         ui->projekteTableWidget->setItem(row, 2, itemKennung);
 
-//        itemNr->setFlags(Qt::ItemIsEnabled);
-//        itemName->setFlags(Qt::ItemIsEnabled);
-//        itemKennung->setFlags(Qt::ItemIsEnabled);
-
         row++;
     }
 
