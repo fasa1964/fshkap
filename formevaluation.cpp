@@ -225,8 +225,7 @@ void FormEvaluation::azubiListBoxChanged(const QString &text)
 
 //}
 
-/// !brief
-/// Returns true if ClassLehrling in this
+/// !brief Returns true if ClassLehrling in this
 /// year exist
 bool FormEvaluation::yearExist(int year)
 {
@@ -247,6 +246,7 @@ bool FormEvaluation::yearExist(int year)
     return false;
 }
 
+/// !brief Sort apprentices in grades (years)
 void FormEvaluation::setupSortBox()
 {
     QStringList labels;
@@ -266,6 +266,8 @@ void FormEvaluation::setupSortBox()
     connect(ui->azubiSortBox, &QComboBox::currentTextChanged, this, &FormEvaluation::azubiSortBoxChanged);
 }
 
+/// !brief Returns a list of ClassLehrling (apprentices)
+/// sorted by grades (year)
 QList<ClassLehrling> FormEvaluation::getAzubiList(int year)
 {
     QList<ClassLehrling> list;

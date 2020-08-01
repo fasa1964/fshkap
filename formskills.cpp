@@ -45,6 +45,7 @@ FormSkills::~FormSkills()
     delete ui;
 }
 
+/// !brief Delete a projekt form skill
 void FormSkills::deleteSkillProjektButtonClicked()
 {
     int size = ui->skillProjektTable->rowCount();
@@ -118,7 +119,6 @@ void FormSkills::deleteButtonClicked()
                                               tr("\nkonnte nicht gelöscht werden!"), QMessageBox::Ok | QMessageBox::Cancel);
 
     }
-
 }
 
 void FormSkills::changeButtonClicked()
