@@ -4,6 +4,8 @@
 #include <QString>
 #include <QDate>
 #include <QDataStream>
+#include <QColor>
+#include <QVariant>
 
 #include <classskills.h>
 
@@ -27,20 +29,20 @@ public:
     QString ort() const;
     void setOrt(const QString &ort);
 
-    QString telefon() const;
-    void setTelefon(const QString &telefon);
+    QString phone() const;
+    void setPhone(const QString &phone);
 
-    QDate gebDatum() const;
-    void setGebDatum(const QDate &gebDatum);
+    QDate birthDate() const;
+    void setBirthDate(const QDate &birthDate);
 
-    QDate ausbildungsDatum() const;
-    void setAusbildungsDatum(const QDate &ausbildungsDatum);
+    QDate apprenticeshipDate() const;
+    void setApprenticeshipDate(const QDate &apprenticeshipDate);
 
     QString klasse() const;
     void setKlasse(const QString &klasse);
 
-    QString betrieb() const;
-    void setBetrieb(const QString &betrieb);
+    QString company() const;
+    void setCompany(const QString &company);
 
     QString notiz() const;
     void setNotiz(const QString &notiz);
@@ -54,20 +56,29 @@ public:
     bool skillContain(ClassSkills skill);
 //    bool skillIsUpToDate(ClassSkills skill);
 
+
+
+    QMap<QString, QVariant> getColorMap() const;
+    void setColorMap(const QMap<QString, QVariant> &colorMap);
+
+    QColor getColor(const QString &key);
+
 private:
     int m_nr;
     QString m_vorname;
     QString m_nachname;
     QString m_strasse;
     QString m_ort;
-    QString m_telefon;
-    QDate m_gebDatum;
-    QDate m_ausbildungsDatum;
+    QString m_phone;
+    QDate m_birthDate;
+    QDate m_apprenticeshipDate;
     QString m_klasse;
-    QString m_betrieb;
+    QString m_company;
     QString m_notiz;
 
     QMap<QString, ClassSkills> m_skillMap;
+    QMap<QString, QVariant> m_colorMap;
+
 
 };
 

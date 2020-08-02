@@ -144,7 +144,7 @@ void FormLehrling::saveButtonClicked()
 
     if(ui->nrBox->value() == 0 || ui->vornameEdit->text().isEmpty() || ui->nachnameEdit->text().isEmpty())
     {
-        QMessageBox::information(this, tr("Speichern Lehrling"), tr("Prüfungs-Nummer, Vorname, Nachname und Ausbildungsdatum "
+        QMessageBox::information(this, tr("Speichern Lehrling"), tr("Prüfungs-Nummer, Vorname, Nachname und apprenticeshipDate "
                                         "müssen angegeben werden!"));
         return;
     }
@@ -160,8 +160,8 @@ void FormLehrling::saveButtonClicked()
 
     if(jahrgang >= 5)
     {
-        int result = QMessageBox::information(this, tr("Speichern Lehrling"), tr("Das Ausbildungsdatum liegt länger als 4 Jahre zurück.\n"
-                     "Wenn der Lehrling ein Nachholer ist, dann ist das ok. Ansonsten bitte das Ausbildungsdatum anpassen!"), QMessageBox::Yes | QMessageBox::Abort);
+        int result = QMessageBox::information(this, tr("Speichern Lehrling"), tr("Das apprenticeshipDate liegt länger als 4 Jahre zurück.\n"
+                     "Wenn der Lehrling ein Nachholer ist, dann ist das ok. Ansonsten bitte das apprenticeshipDate anpassen!"), QMessageBox::Yes | QMessageBox::Abort);
 
         if(result == QMessageBox::Abort)
             return;
@@ -196,7 +196,7 @@ void FormLehrling::saveButtonClicked()
     m_lehrlingMap.insert(azubi.getKey(), azubi);
     updateLehrlingTable(m_lehrlingMap);
     emit saveLehrlingMap(m_lehrlingMap);
-    emit updateBetriebe(azubi.betrieb(), azubi);
+    emit updateBetriebe(azubi.company(), azubi);
 
     selectedLehrling = azubi;
     changeLehrling = false;
@@ -299,7 +299,7 @@ void FormLehrling::updateLehrlingTable(const QMap<QString, ClassLehrling> &aMap)
        QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(it.value().nr(),10) );
        QTableWidgetItem *itemName = new QTableWidgetItem(it.value().vorname()+"."+it.value().nachname());
        QTableWidgetItem *itemKlasse = new QTableWidgetItem(it.value().klasse());
-       QTableWidgetItem *itemBetrieb = new QTableWidgetItem(it.value().betrieb());
+       QTableWidgetItem *itemBetrieb = new QTableWidgetItem(it.value().company());
 
        ui->azubiTableWidget->setItem(row,0, itemNr);
        ui->azubiTableWidget->setItem(row,1, itemName);
@@ -332,7 +332,7 @@ void FormLehrling::createSortMap(const QMap<QString, ClassLehrling> &aMap)
     QMapIterator<QString, ClassLehrling> it(aMap);
     while (it.hasNext()) {
         it.next();
-        int year = cDate.year() - it.value().ausbildungsDatum().year();
+        int year = cDate.year() - it.value().apprenticeshipDate().year();
         if(year <= 0)
             year = 1;
         if(year > 4)    // For repeater
@@ -371,7 +371,7 @@ bool FormLehrling::pruefnummerExist(int year, int nr)
     QMapIterator<QString, ClassLehrling> it(lehrlingMap());
     while (it.hasNext()) {
         it.next();
-        int ayear = today.year() - it.value().ausbildungsDatum().year();
+        int ayear = today.year() - it.value().apprenticeshipDate().year();
         if(ayear <= 0)
             ayear = 1;
 
@@ -406,7 +406,7 @@ void FormLehrling::updateTable(QTableWidget *widget, const QList<ClassLehrling> 
         QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(azu.nr(),10));
         QTableWidgetItem *itemName = new QTableWidgetItem( key );
         QTableWidgetItem *itemKlasse = new QTableWidgetItem( azu.klasse() );
-        QTableWidgetItem *itemBetrieb = new QTableWidgetItem( azu.betrieb() );
+        QTableWidgetItem *itemBetrieb = new QTableWidgetItem( azu.company() );
 
         widget->setItem(row,0,itemNr);
         widget->setItem(row,1,itemName);
@@ -436,15 +436,15 @@ ClassLehrling FormLehrling::readFromForm()
     ClassLehrling azubi;
 
     azubi.setNr( ui->nrBox->value() );
-    azubi.setAusbildungsDatum( ui->ausbildungsDateEdit->date() );
+    azubi.setApprenticeshipDate( ui->ausbildungsDateEdit->date() );
     azubi.setVorname( ui->vornameEdit->text() );
     azubi.setNachname( ui->nachnameEdit->text() );
     azubi.setStrasse( ui->strasseEdit->text() );
     azubi.setOrt( ui->ortEdit->text() );
-    azubi.setTelefon( ui->telefonEdit->text() );
+    azubi.setPhone( ui->phoneEdit->text() );
     azubi.setKlasse( ui->klasseEdit->text());
-    azubi.setGebDatum( ui->gebDateEdit->date() );
-    azubi.setBetrieb( ui->betriebEdit->text() );
+    azubi.setBirthDate( ui->gebDateEdit->date() );
+    azubi.setCompany( ui->betriebEdit->text() );
     azubi.setNotiz( ui->notizEdit->toPlainText());
 
 
@@ -456,13 +456,13 @@ void FormLehrling::setLehrlingToForm(const ClassLehrling &azubi)
     ui->nrBox->setValue(azubi.nr());
     ui->vornameEdit->setText(azubi.vorname());
     ui->nachnameEdit->setText(azubi.nachname());
-    ui->ausbildungsDateEdit->setDate(azubi.ausbildungsDatum());
+    ui->ausbildungsDateEdit->setDate(azubi.apprenticeshipDate());
     ui->strasseEdit->setText(azubi.strasse());
     ui->ortEdit->setText(azubi.ort());
     ui->klasseEdit->setText( azubi.klasse());
-    ui->telefonEdit->setText(azubi.telefon());
-    ui->betriebEdit->setText( azubi.betrieb());
-    ui->gebDateEdit->setDate(azubi.gebDatum());
+    ui->phoneEdit->setText(azubi.phone());
+    ui->betriebEdit->setText( azubi.company());
+    ui->gebDateEdit->setDate(azubi.birthDate());
     ui->notizEdit->setPlainText( azubi.notiz());
 
     ui->exameBox->clear();
@@ -504,7 +504,7 @@ void FormLehrling::setFormTextColor(QColor color)
     ui->ausbildungsDateEdit->setPalette(palette);
     ui->strasseEdit->setPalette(palette);
     ui->ortEdit->setPalette(palette);
-    ui->telefonEdit->setPalette(palette);
+    ui->phoneEdit->setPalette(palette);
     ui->gebDateEdit->setPalette(palette);
     ui->notizEdit->setPalette(palette);
     ui->klasseEdit->setPalette(palette);
@@ -521,7 +521,7 @@ void FormLehrling::setFormReadOnly(bool status)
     ui->ausbildungsDateEdit->setReadOnly(status);
     ui->strasseEdit->setReadOnly(status);
     ui->ortEdit->setReadOnly(status);
-    ui->telefonEdit->setReadOnly(status);
+    ui->phoneEdit->setReadOnly(status);
     ui->gebDateEdit->setReadOnly(status);
     ui->notizEdit->setReadOnly(status);
     ui->klasseEdit->setReadOnly(status);
@@ -548,7 +548,7 @@ void FormLehrling::clearForm()
     ui->ausbildungsDateEdit->setDate( QDate() );
     ui->strasseEdit->clear();
     ui->ortEdit->clear();
-    ui->telefonEdit->clear();
+    ui->phoneEdit->clear();
     ui->betriebEdit->clear();
     ui->gebDateEdit->setDate( QDate());
     ui->notizEdit->clear();

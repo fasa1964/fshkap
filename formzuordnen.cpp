@@ -164,7 +164,7 @@ void FormZuordnen::updateAzubiTable(const QMap<QString, ClassLehrling> &azuMap)
        QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(it.value().nr(),10) );
        QTableWidgetItem *itemName = new QTableWidgetItem(it.value().vorname()+"."+it.value().nachname());
        QTableWidgetItem *itemKlasse = new QTableWidgetItem(it.value().klasse());
-       QTableWidgetItem *itemBetrieb = new QTableWidgetItem(it.value().betrieb());
+       QTableWidgetItem *itemBetrieb = new QTableWidgetItem(it.value().company());
        QTableWidgetItem *itemAP = new QTableWidgetItem(ap);
        QTableWidgetItem *itemMarker = new QTableWidgetItem();
 
@@ -310,7 +310,7 @@ QMap<QString, ClassLehrling> FormZuordnen::getLehrjahrMap(int jahrgang)
     QMapIterator<QString, ClassLehrling> it(azubiMap());
     while (it.hasNext()) {
         it.next();
-        int year = today.year() - it.value().ausbildungsDatum().year();
+        int year = today.year() - it.value().apprenticeshipDate().year();
 
         if(year <= 0)
             year = 1;

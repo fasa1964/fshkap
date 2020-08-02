@@ -10,30 +10,66 @@
 #include <classfrage.h>
 
 
-class ItemList : public QAbstractListModel
+class LehrlingModel: public QAbstractItemModel
 {
-   Q_OBJECT
-public:
-   ItemList(QObject *parent = 0) : QAbstractListModel(parent) {}
+    Q_OBJECT
 
-   int rowCount(const QModelIndex &parent = QModelIndex()) const { return 5; }
-   QVariant data(const QModelIndex &index, int role) const {
-      if (!index.isValid())
-          return QVariant();
+ public:
+    int rowCount(const QModelIndex& = QModelIndex()) const { return m_sortedMap.values().size(); }
+    QVariant data(const QModelIndex &index, int role) const {
+        if (!index.isValid())
+            return QVariant();
 
-      if (role == Qt::TextColorRole)
-         return QColor(QColor::colorNames().at(index.row()));
+        if (role == Qt::DisplayRole)
+            return QString("%1").arg( m_sortedMap.keys().at( index.row() ));
+        else
+            return QVariant();
+    }
 
-      if (role == Qt::DisplayRole)
-          return QString("Item %1").arg(index.row() + 1);
-      else
-          return QVariant();
-   }
+    void setSortedMap(const QMap<QString, ClassLehrling> &sortedMap) { m_sortedMap = sortedMap; }
+
+private:
+    QMap<QString, ClassLehrling> m_sortedMap;
 };
+
+//class ItemList : public QAbstractListModel
+//{
+//   Q_OBJECT
+//public:
+//   ItemList(QObject *parent = 0) : QAbstractListModel(parent) {}
+
+//   int rowCount(const QModelIndex &parent = QModelIndex()) const { return m_labels.count(); }
+//   QVariant data(const QModelIndex &index, int role) const {
+//      if (!index.isValid())
+//          return QVariant();
+
+//      if (role == Qt::TextColorRole){
+//         if(redList().contains(index.row()))
+//             return QColor(255,0,0);
+//         else
+//             return QColor(27,0,255);
+//      }
+
+//      if (role == Qt::DisplayRole)
+//          return QString("%1").arg( labels().at( index.row() ));
+//      else
+//          return QVariant();
+//   }
+
+//   QStringList labels() const;
+//   void setLabels(const QStringList &labels);
+
+//   QList<int> redList() const;
+//   void setRedList(const QList<int> &redList);
+
+//private:
+//   QStringList m_labels;
+//   QList<int> m_redList;
+//};
 
 namespace Ui {
 class FormEvaluation;
-class ItemList;
+class LehrlingModel;
 }
 
 class FormEvaluation : public QWidget
@@ -47,12 +83,13 @@ public:
      QMap<QString, ClassLehrling> azubiMap;
      void update();
 
-//    QMap<QString, ClassLehrling> azubiMap() const;
-//    void setAzubiMap( QMap<QString, ClassLehrling> azubiMap);
-
 private slots:
     void azubiSortBoxChanged(const QString &text);
     void azubiListBoxChanged(const QString &text);
+
+
+
+
 //    void skillListBoxChanged(const QString &text);
 //    void projektListBoxChanged(const QString &text);
 
@@ -63,6 +100,39 @@ private slots:
 private:
     Ui::FormEvaluation *ui;
 
+    //LehrlingModel *model;
+
+
+    bool yearExist(int year);
+    void setupSortBox();
+    QMap<QString, ClassLehrling> apprenticeship(int year);
+
+
+    QList<ClassLehrling> getAzubiList(int year);    // sorted by year
+    void setTextColor(QWidget *widget, QColor color);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //    bool dirty;
@@ -70,11 +140,6 @@ private:
 //    ClassLehrling selectedAzubi;
 //    ClassSkills selectedSkill;
 //    ClassProjekt selectedProjekt;
-
-    bool yearExist(int year);
-    void setupSortBox();
-
-    QList<ClassLehrling> getAzubiList(int year);    // sorted by year
 //    QMap<QString, ClassLehrling> m_azubiMap;
     //QMap<QString, ClassLehrling> workingAzubiMap;
 
@@ -92,7 +157,7 @@ private:
 
 //    void setupFragenTable(const ClassProjekt &pro);
 //    void setupErgebnisTable(const ClassLehrling &azu);
-    void setTextColor(QWidget *widget, QColor color);
+
 
 //    int getSkillRow(ClassSkills skill);
 //    int getProjektRow(ClassProjekt pro);
@@ -102,5 +167,6 @@ private:
 //    QMap<int, ClassProjekt> cellProMap;
 
 };
+
 
 #endif // FORMEVALUATION_H

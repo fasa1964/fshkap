@@ -27,8 +27,8 @@ public:
 
 signals:
     void saveBetriebMap(const QMap<int, ClassBetrieb> &bMap);
-    void betriebRemoved(const ClassBetrieb &betrieb);
-    void azubiRemoved(const ClassLehrling &azu, const ClassBetrieb &betrieb);
+    void betriebRemoved(const ClassBetrieb &company);
+    void azubiRemoved(const ClassLehrling &azu, const ClassBetrieb &company);
 
 
 private slots:
@@ -53,7 +53,7 @@ private:
     void updateLehrlingTable(const QMap<QString, ClassLehrling> &azubiMap);
 
     ClassBetrieb readFromForm();
-    void setBetriebToForm(const ClassBetrieb betrieb);
+    void setBetriebToForm(const ClassBetrieb company);
     void setFormTextColor(QColor color);
     void setFormReadOnly(bool status);
     void clearForm();

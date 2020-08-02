@@ -24,8 +24,8 @@ public:
      QString ort() const;
      void setOrt(const QString &ort);
 
-     QString telefon() const;
-     void setTelefon(const QString &telefon);
+     QString phone() const;
+     void setPhone(const QString &phone);
 
      QMap<QString, ClassLehrling> azubiMap() const;
      void setAzubiMap(const QMap<QString, ClassLehrling> &azubiMap);
@@ -38,7 +38,7 @@ private:
      QString m_name;
      QString m_strasse;
      QString m_ort;
-     QString m_telefon;
+     QString m_phone;
 
      QMap<QString, ClassLehrling> m_azubiMap;
 

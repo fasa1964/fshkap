@@ -276,16 +276,16 @@ void FSHKWindow::saveBetriebMap(const QMap<int, ClassBetrieb> &bMap)
         ui->statusBar->showMessage(tr("Fehler beim Speichern der Datei Betrieb.dat!"), 5000);
 }
 
-void FSHKWindow::betriebRemoved(const ClassBetrieb &betrieb)
+void FSHKWindow::betriebRemoved(const ClassBetrieb &company)
 {
     bool dirty = false;
     QMapIterator<QString, ClassLehrling> it(azubiMap);
     while (it.hasNext()) {
         it.next();
         ClassLehrling azubi = it.value();
-        if(azubi.betrieb() == betrieb.name())
+        if(azubi.company() == company.name())
         {
-            azubi.setBetrieb("");
+            azubi.setCompany("");
             azubiMap.insert(azubi.getKey(), azubi);
             dirty = true;
         }
@@ -295,12 +295,12 @@ void FSHKWindow::betriebRemoved(const ClassBetrieb &betrieb)
         saveLehrlingMap(azubiMap);
 }
 
-void FSHKWindow::azubiRemovedFromBetrieb(const ClassLehrling azu, const ClassBetrieb &betrieb)
+void FSHKWindow::azubiRemovedFromBetrieb(const ClassLehrling azu, const ClassBetrieb &company)
 {
-    if(azu.betrieb() == betrieb.name())
+    if(azu.company() == company.name())
     {
         ClassLehrling lehrling = azubiMap.value(azu.getKey());
-        lehrling.setBetrieb("");
+        lehrling.setCompany("");
         azubiMap.insert(lehrling.getKey(), lehrling);
         saveLehrlingMap(azubiMap);
     }
@@ -325,29 +325,29 @@ void FSHKWindow::updateBetriebe(const QString &betriebName, const ClassLehrling 
     QMapIterator<int, ClassBetrieb> it(betriebMap);
     while (it.hasNext()) {
         it.next();
-        ClassBetrieb betrieb = it.value();
-        if(betriebName.isEmpty() && betrieb.azubiMap().keys().contains(azu.getKey()))
+        ClassBetrieb company = it.value();
+        if(betriebName.isEmpty() && company.azubiMap().keys().contains(azu.getKey()))
         {
-            QMap<QString, ClassLehrling> aMap = betrieb.azubiMap();
+            QMap<QString, ClassLehrling> aMap = company.azubiMap();
             aMap.remove(azu.getKey());
-            betrieb.setAzubiMap(aMap);
-            betriebMap.insert(betrieb.nr(), betrieb);
+            company.setAzubiMap(aMap);
+            betriebMap.insert(company.nr(), company);
         }
 
-        if(betriebName == betrieb.name())
+        if(betriebName == company.name())
         {
-            QMap<QString, ClassLehrling> aMap = betrieb.azubiMap();
+            QMap<QString, ClassLehrling> aMap = company.azubiMap();
             aMap.insert(azu.getKey(), azu);
-            betrieb.setAzubiMap(aMap);
-            betriebMap.insert(betrieb.nr(), betrieb);
+            company.setAzubiMap(aMap);
+            betriebMap.insert(company.nr(), company);
         }
 
-        if(betriebName != betrieb.name() && betrieb.azubiMap().keys().contains(azu.getKey()))
+        if(betriebName != company.name() && company.azubiMap().keys().contains(azu.getKey()))
         {
-            QMap<QString, ClassLehrling> aMap = betrieb.azubiMap();
+            QMap<QString, ClassLehrling> aMap = company.azubiMap();
             aMap.remove(azu.getKey());
-            betrieb.setAzubiMap(aMap);
-            betriebMap.insert(betrieb.nr(), betrieb);
+            company.setAzubiMap(aMap);
+            betriebMap.insert(company.nr(), company);
         }
     }
 
@@ -514,6 +514,14 @@ void FSHKWindow::skillChanged(ClassSkills skill)
         saveLehrlingMap(azubiMap);
 }
 
+void FSHKWindow::setupColorMap()
+{
+    lehrlingColorMap.insert("default", QColor(0,255,255));
+    lehrlingColorMap.insert("noSkill", QColor(255,0,255));
+    lehrlingColorMap.insert("inProgress", QColor(255,0,0));
+    lehrlingColorMap.insert("finished", QColor(155,70,0));
+}
+
 void FSHKWindow::readDataBetriebe()
 {
     QFile file("Betriebe.dat");
@@ -544,9 +552,9 @@ void FSHKWindow::readDataBetriebe()
 
     while (!in.atEnd())
     {
-        ClassBetrieb betrieb;
-        in >> betrieb;
-        betriebMap.insert(betrieb.nr(), betrieb);
+        ClassBetrieb company;
+        in >> company;
+        betriebMap.insert(company.nr(), company);
     }
 
     file.close();
@@ -584,6 +592,7 @@ void FSHKWindow::readDataLehrlinge()
     {
         ClassLehrling azubi;
         in >> azubi;
+        azubi.setColorMap( lehrlingColorMap );
         azubiMap.insert(azubi.getKey(), azubi);
     }
 

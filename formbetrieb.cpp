@@ -77,23 +77,23 @@ void FormBetrieb::changeButtonClicked()
 
 void FormBetrieb::saveButtonClicked()
 {
-    ClassBetrieb betrieb = readFromForm();
+    ClassBetrieb company = readFromForm();
 
-    if(betrieb.name().isEmpty() || betrieb.ort().isEmpty() || betrieb.strasse().isEmpty()){
+    if(company.name().isEmpty() || company.ort().isEmpty() || company.strasse().isEmpty()){
         QMessageBox::information(this, tr("Betrieb speichern"), tr("Der Name, Straße und Ort vom "
                                          "Betrieb müssen angegeben werden!"));
         return;
     }
 
     if(changeBetrieb && selectedBetrieb.azubiMap().size() > 0)
-        betrieb.setAzubiMap( selectedBetrieb.azubiMap());
+        company.setAzubiMap( selectedBetrieb.azubiMap());
 
 
-    m_betriebMap.insert(betrieb.nr(), betrieb);
+    m_betriebMap.insert(company.nr(), company);
     updateBetriebTable(m_betriebMap);
     emit saveBetriebMap(m_betriebMap);
 
-    selectedBetrieb = betrieb;
+    selectedBetrieb = company;
     changeBetrieb = false;
     setFormReadOnly(true);
 
@@ -192,26 +192,26 @@ void FormBetrieb::updateLehrlingTable(const QMap<QString, ClassLehrling> &azubiM
 
 ClassBetrieb FormBetrieb::readFromForm()
 {
-    ClassBetrieb betrieb;
-    betrieb.setNr(ui->nrBox->value());
-    betrieb.setName(ui->nameEdit->text());
-    betrieb.setOrt(ui->ortEdit->text());
-    betrieb.setStrasse(ui->strasseEdit->text());
-    betrieb.setTelefon(ui->telefonEdit->text());
+    ClassBetrieb company;
+    company.setNr(ui->nrBox->value());
+    company.setName(ui->nameEdit->text());
+    company.setOrt(ui->ortEdit->text());
+    company.setStrasse(ui->strasseEdit->text());
+    company.setPhone(ui->phoneEdit->text());
 
-    return betrieb;
+    return company;
 }
 
-void FormBetrieb::setBetriebToForm(const ClassBetrieb betrieb)
+void FormBetrieb::setBetriebToForm(const ClassBetrieb company)
 {
-    ui->nrBox->setValue(betrieb.nr());
-    ui->nameEdit->setText(betrieb.name());
-    ui->strasseEdit->setText(betrieb.strasse());
-    ui->ortEdit->setText(betrieb.ort());
-    ui->telefonEdit->setText(betrieb.telefon());
+    ui->nrBox->setValue(company.nr());
+    ui->nameEdit->setText(company.name());
+    ui->strasseEdit->setText(company.strasse());
+    ui->ortEdit->setText(company.ort());
+    ui->phoneEdit->setText(company.phone());
 
-    if(!betrieb.azubiMap().isEmpty())
-        updateLehrlingTable(betrieb.azubiMap());
+    if(!company.azubiMap().isEmpty())
+        updateLehrlingTable(company.azubiMap());
 
 }
 
@@ -225,7 +225,7 @@ void FormBetrieb::setFormTextColor(QColor color)
     ui->nameEdit->setPalette(palette);
     ui->strasseEdit->setPalette(palette);
     ui->ortEdit->setPalette(palette);
-    ui->telefonEdit->setPalette(palette);
+    ui->phoneEdit->setPalette(palette);
 
 }
 
@@ -278,7 +278,7 @@ void FormBetrieb::setFormReadOnly(bool status)
     ui->nameEdit->setReadOnly(status);
     ui->strasseEdit->setReadOnly(status);
     ui->ortEdit->setReadOnly(status);
-    ui->telefonEdit->setReadOnly(status);
+    ui->phoneEdit->setReadOnly(status);
 
     if(!status)
         setFormTextColor(QColor(0,85,127));
@@ -294,6 +294,6 @@ void FormBetrieb::clearForm()
     ui->nameEdit->clear();
     ui->strasseEdit->clear();
     ui->ortEdit->clear();
-    ui->telefonEdit->clear();
+    ui->phoneEdit->clear();
     ui->lehrlingTableWidget->clear();
 }

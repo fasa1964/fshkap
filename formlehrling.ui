@@ -357,7 +357,7 @@
        </widget>
       </item>
       <item row="4" column="5" colspan="6">
-       <widget class="QLineEdit" name="telefonEdit">
+       <widget class="QLineEdit" name="phoneEdit">
         <property name="toolTip">
          <string>Telefonnummer</string>
         </property>
@@ -729,7 +729,7 @@
   <tabstop>nachnameEdit</tabstop>
   <tabstop>strasseEdit</tabstop>
   <tabstop>ortEdit</tabstop>
-  <tabstop>telefonEdit</tabstop>
+  <tabstop>phoneEdit</tabstop>
   <tabstop>klasseEdit</tabstop>
   <tabstop>klasseBox</tabstop>
   <tabstop>betriebEdit</tabstop>

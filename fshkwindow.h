@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QSettings>
+#include <QVariant>
 
 #include <classbetrieb.h>
 #include <classlehrling.h>
@@ -47,8 +48,8 @@ private slots:
 
     // Signal from FormBetrieb
     void saveBetriebMap(const QMap<int, ClassBetrieb> &bMap);
-    void betriebRemoved(const ClassBetrieb &betrieb);
-    void azubiRemovedFromBetrieb(const ClassLehrling azu, const ClassBetrieb &betrieb);
+    void betriebRemoved(const ClassBetrieb &company);
+    void azubiRemovedFromBetrieb(const ClassLehrling azu, const ClassBetrieb &company);
 
     // Signal from FormLehrling
     void saveLehrlingMap(const QMap<QString, ClassLehrling> &azuMap);
@@ -81,6 +82,9 @@ private:
     FormZuordnen *formzuordnen;
 
     FormEvaluation *formevaluation;
+
+    QMap<QString, QVariant> lehrlingColorMap;
+    void setupColorMap();
 
     void readDataBetriebe();
     void readDataLehrlinge();

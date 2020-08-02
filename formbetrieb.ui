@@ -150,7 +150,7 @@
        <widget class="QTableWidget" name="lehrlingTableWidget"/>
       </item>
       <item row="4" column="0" colspan="3">
-       <widget class="QLineEdit" name="telefonEdit">
+       <widget class="QLineEdit" name="phoneEdit">
         <property name="placeholderText">
          <string>Telefon</string>
         </property>
@@ -468,7 +468,7 @@
   <tabstop>nameEdit</tabstop>
   <tabstop>strasseEdit</tabstop>
   <tabstop>ortEdit</tabstop>
-  <tabstop>telefonEdit</tabstop>
+  <tabstop>phoneEdit</tabstop>
   <tabstop>saveButton</tabstop>
   <tabstop>closeButton</tabstop>
   <tabstop>betriebeTableWidget</tabstop>

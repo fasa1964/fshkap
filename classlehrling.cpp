@@ -7,11 +7,11 @@ ClassLehrling::ClassLehrling()
     m_nachname = "";
     m_strasse = "";
     m_ort = "";
-    m_telefon = "";
-    m_gebDatum = QDate();
-    m_ausbildungsDatum = QDate();
+    m_phone = "";
+    m_birthDate = QDate();
+    m_apprenticeshipDate = QDate();
     m_klasse = "";
-    m_betrieb = "";
+    m_company = "";
     m_notiz = "";
 }
 
@@ -65,34 +65,34 @@ void ClassLehrling::setOrt(const QString &ort)
     m_ort = ort;
 }
 
-QString ClassLehrling::telefon() const
+QString ClassLehrling::phone() const
 {
-    return m_telefon;
+    return m_phone;
 }
 
-void ClassLehrling::setTelefon(const QString &telefon)
+void ClassLehrling::setPhone(const QString &phone)
 {
-    m_telefon = telefon;
+    m_phone = phone;
 }
 
-QDate ClassLehrling::gebDatum() const
+QDate ClassLehrling::birthDate() const
 {
-    return m_gebDatum;
+    return m_birthDate;
 }
 
-void ClassLehrling::setGebDatum(const QDate &gebDatum)
+void ClassLehrling::setBirthDate(const QDate &birthDate)
 {
-    m_gebDatum = gebDatum;
+    m_birthDate = birthDate;
 }
 
-QDate ClassLehrling::ausbildungsDatum() const
+QDate ClassLehrling::apprenticeshipDate() const
 {
-    return m_ausbildungsDatum;
+    return m_apprenticeshipDate;
 }
 
-void ClassLehrling::setAusbildungsDatum(const QDate &ausbildungsDatum)
+void ClassLehrling::setApprenticeshipDate(const QDate &apprenticeshipDate)
 {
-    m_ausbildungsDatum = ausbildungsDatum;
+    m_apprenticeshipDate = apprenticeshipDate;
 }
 
 QString ClassLehrling::klasse() const
@@ -105,14 +105,14 @@ void ClassLehrling::setKlasse(const QString &klasse)
     m_klasse = klasse;
 }
 
-QString ClassLehrling::betrieb() const
+QString ClassLehrling::company() const
 {
-    return m_betrieb;
+    return m_company;
 }
 
-void ClassLehrling::setBetrieb(const QString &betrieb)
+void ClassLehrling::setCompany(const QString &company)
 {
-    m_betrieb = betrieb;
+    m_company = company;
 }
 
 bool ClassLehrling::isValid()
@@ -153,20 +153,22 @@ bool ClassLehrling::skillContain(ClassSkills skill)
     return false;
 }
 
-//bool ClassLehrling::skillIsUpToDate(ClassSkills skill)
-//{
-//    QMapIterator<QString, ClassSkills> it(getSkillMap());
-//    while (it.hasNext()) {
-//        it.next();
-//        ClassSkills s = it.value();
-//        if(s.getKey() == skill.getKey()){
-//            if(skill.date())
-//            return true;
-//        }
-//    }
+QMap<QString, QVariant> ClassLehrling::getColorMap() const
+{
+    return m_colorMap;
+}
 
-//    return false;
-//}
+void ClassLehrling::setColorMap(const QMap<QString, QVariant> &colorMap)
+{
+    m_colorMap = colorMap;
+}
+
+QColor ClassLehrling::getColor(const QString &key)
+{
+    QVariant var = getColorMap().value(key);
+    return var.value<QColor>();
+}
+
 
 QString ClassLehrling::notiz() const
 {
@@ -181,8 +183,8 @@ void ClassLehrling::setNotiz(const QString &notiz)
 QDataStream &operator<<(QDataStream &out, const ClassLehrling &dat)
 {
     out << dat.nr() << dat.vorname() << dat.nachname() << dat.strasse() <<
-           dat.ort() << dat.telefon() << dat.gebDatum() << dat.ausbildungsDatum() <<
-           dat.klasse() << dat.betrieb() << dat.notiz() << dat.getSkillMap();
+           dat.ort() << dat.phone() << dat.birthDate() << dat.apprenticeshipDate() <<
+           dat.klasse() << dat.company() << dat.notiz() << dat.getSkillMap();
 
     return out;
 }
@@ -196,26 +198,26 @@ QDataStream &operator>>(QDataStream &in, ClassLehrling &dat)
     QString str;
     QString ort;
     QString tel;
-    QDate gebDatum;
-    QDate ausbildungsDatum;
+    QDate birthDate;
+    QDate apprenticeshipDate;
     QString klasse;
-    QString betrieb;
+    QString company;
     QString notiz;
     QMap<QString, ClassSkills> smap;
 
-    in >> nr >> vorn >> nachn >> str >> ort >> tel >> gebDatum >>
-        ausbildungsDatum >> klasse >> betrieb >> notiz >> smap;
+    in >> nr >> vorn >> nachn >> str >> ort >> tel >> birthDate >>
+        apprenticeshipDate >> klasse >> company >> notiz >> smap;
 
     dat.setNr(nr);
     dat.setVorname(vorn);
     dat.setNachname(nachn);
     dat.setStrasse(str);
     dat.setOrt(ort);
-    dat.setTelefon(tel);
-    dat.setGebDatum(gebDatum);
-    dat.setAusbildungsDatum(ausbildungsDatum);
+    dat.setPhone(tel);
+    dat.setBirthDate(birthDate);
+    dat.setApprenticeshipDate(apprenticeshipDate);
     dat.setKlasse(klasse);
-    dat.setBetrieb(betrieb);
+    dat.setCompany(company);
     dat.setNotiz(notiz);
     dat.setSkillMap(smap);
 
