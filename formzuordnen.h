@@ -54,7 +54,7 @@ private:
 
     QMap<QString, ClassLehrling> getSelectedAzubi();
     QMap<QString, ClassLehrling> getLehrjahrMap(int jahrgang);
-    QMap<QString, ClassSkills> getSkillMap(const QString &kennung);
+    QMap<QString, ClassSkills> getSkillMap(const QString &identifier);
 };
 
 #endif // FORMZUORDNEN_H

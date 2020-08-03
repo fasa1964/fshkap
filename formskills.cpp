@@ -94,7 +94,7 @@ void FormSkills::createButtonClicked()
 
 void FormSkills::deleteButtonClicked()
 {
-    int result = QMessageBox::information(this, tr("Prüfung löschen"), tr("Die Prüfung:\n")+selectedSkill.name()+"-"+selectedSkill.kennung()+
+    int result = QMessageBox::information(this, tr("Prüfung löschen"), tr("Die Prüfung:\n")+selectedSkill.name()+"-"+selectedSkill.identifier()+
                                        tr("\nwird unwiderruflich gelöscht!"), QMessageBox::Ok | QMessageBox::Cancel);
     if(result == QMessageBox::Cancel)
         return;
@@ -115,7 +115,7 @@ void FormSkills::deleteButtonClicked()
     }
     else
     {
-        QMessageBox::information(this, tr("Prüfung löschen"), tr("Die Prüfung:\n")+selectedSkill.name()+"-"+selectedSkill.kennung()+
+        QMessageBox::information(this, tr("Prüfung löschen"), tr("Die Prüfung:\n")+selectedSkill.name()+"-"+selectedSkill.identifier()+
                                               tr("\nkonnte nicht gelöscht werden!"), QMessageBox::Ok | QMessageBox::Cancel);
 
     }
@@ -227,7 +227,7 @@ void FormSkills::sortKennungBoxTextChanged(const QString &text)
     QMapIterator<QString, ClassProjekt> it(projektMap());
     while (it.hasNext()) {
         it.next();
-        if(it.value().kennung() == text)
+        if(it.value().identifier() == text)
             sortMap.insert(it.key(), it.value());
     }
 
@@ -332,7 +332,7 @@ void FormSkills::setupSkillTable(const QMap<QString, ClassSkills> &sMap)
 
         QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(skill.getNr(),10));
         QTableWidgetItem *itemName = new QTableWidgetItem( skill.name() );
-        QTableWidgetItem *itemKennung = new QTableWidgetItem( skill.kennung() );
+        QTableWidgetItem *itemKennung = new QTableWidgetItem( skill.identifier() );
 
         ui->skillTable->setItem(row,0, itemNr);
         ui->skillTable->setItem(row,1, itemName);
@@ -355,7 +355,7 @@ void FormSkills::setSkillToForm(const ClassSkills &skill)
     ui->nrBox->setValue( skill.getNr());
     ui->nameEdit->setText(skill.name());
     ui->dateEdit->setDate(skill.date());
-    ui->kennungEdit->setText(skill.kennung());
+    ui->kennungEdit->setText(skill.identifier());
     ui->wertBox->setValue(skill.getWert() );
     ui->dateTimeEdit->setDateTime(skill.getCreatedDate());
     setSkillProjektToForm(skill.getProjektMap());
@@ -378,7 +378,7 @@ void FormSkills::setSkillProjektToForm(const QMap<QString, ClassProjekt> &proMap
         ClassProjekt pro = it.value();
         QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(pro.nr(),10));
         QTableWidgetItem *itemName = new QTableWidgetItem( pro.name() );
-        QTableWidgetItem *itemKennung = new QTableWidgetItem( pro.kennung() );
+        QTableWidgetItem *itemKennung = new QTableWidgetItem( pro.identifier() );
         QTableWidgetItem *itemCheck = new QTableWidgetItem();
 
         ui->skillProjektTable->setItem(row, 0, itemNr);
@@ -408,7 +408,7 @@ ClassSkills FormSkills::readFromForm()
 
     skill.setNr(ui->nrBox->value());
     skill.setName( ui->nameEdit->text());
-    skill.setKennung(ui->kennungEdit->text());
+    skill.setIdentifier(ui->kennungEdit->text());
     skill.setDate( ui->dateEdit->date() );
     skill.setWert( ui->wertBox->value() );
     skill.setCreatedDate( ui->dateTimeEdit->dateTime() );
@@ -452,8 +452,8 @@ void FormSkills::setupKennungBox(const QMap<QString, ClassProjekt> &proMap)
     QMapIterator<QString, ClassProjekt> it(proMap);
     while (it.hasNext()) {
         it.next();
-        if(!kennungList.contains(it.value().kennung()))
-            kennungList << it.value().kennung();
+        if(!kennungList.contains(it.value().identifier()))
+            kennungList << it.value().identifier();
     }
 
     ui->kennungBox->addItems(kennungList);
@@ -479,7 +479,7 @@ void FormSkills::setupProjektTable(const QMap<QString, ClassProjekt> &proMap, Qt
         ClassProjekt pro = it.value();
         QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(pro.nr(),10));
         QTableWidgetItem *itemName = new QTableWidgetItem( pro.name() );
-        QTableWidgetItem *itemKennung = new QTableWidgetItem( pro.kennung() );
+        QTableWidgetItem *itemKennung = new QTableWidgetItem( pro.identifier() );
         QTableWidgetItem *itemCheck = new QTableWidgetItem();
 
         ui->projektTable->setItem(row, 0, itemNr);
@@ -593,7 +593,7 @@ void FormSkills::setupProjektTable(const QMap<QString, ClassProjekt> &proMap, Qt
 //        it.next();
 //        ClassProjekt pro = it.value();
 
-//        if(pro.kennung() == ui->kennungEdit->text())
+//        if(pro.identifier() == ui->kennungEdit->text())
 //            importMap.insert(pro.getKey(), pro);
 //    }
 
@@ -613,7 +613,7 @@ void FormSkills::setupProjektTable(const QMap<QString, ClassProjekt> &proMap, Qt
 //    QMapIterator<QString, ClassProjekt> it(projektMap());
 //    while (it.hasNext()) {
 //        it.next();
-//        if(it.value().kennung() == text){
+//        if(it.value().identifier() == text){
 
 //            ClassProjekt pro = it.value();
 //            sortMap.insert(pro.getKey(), pro );
@@ -688,7 +688,7 @@ void FormSkills::setupProjektTable(const QMap<QString, ClassProjekt> &proMap, Qt
 //        ClassProjekt pro = it.value();
 //        QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(pro.nr(),10));
 //        QTableWidgetItem *itemName = new QTableWidgetItem( pro.name() );
-//        QTableWidgetItem *itemKennung = new QTableWidgetItem( pro.kennung() );
+//        QTableWidgetItem *itemKennung = new QTableWidgetItem( pro.identifier() );
 //        QTableWidgetItem *itemCheck = new QTableWidgetItem("");
 
 //        ui->projektTable->setItem(row, 0, itemNr);
@@ -728,7 +728,7 @@ void FormSkills::setupProjektTable(const QMap<QString, ClassProjekt> &proMap, Qt
 //        ClassProjekt pro = it.value();
 //        QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(pro.nr(),10));
 //        QTableWidgetItem *itemName = new QTableWidgetItem( pro.name() );
-//        QTableWidgetItem *itemKennung = new QTableWidgetItem( pro.kennung() );
+//        QTableWidgetItem *itemKennung = new QTableWidgetItem( pro.identifier() );
 //        QTableWidgetItem *itemCheck = new QTableWidgetItem("Ok");
 
 //        ui->projektTable->setItem(row, 0, itemNr);
@@ -770,7 +770,7 @@ void FormSkills::setupProjektTable(const QMap<QString, ClassProjekt> &proMap, Qt
 //        ClassProjekt pro = it.value();
 //        QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(pro.nr(),10));
 //        QTableWidgetItem *itemName = new QTableWidgetItem( pro.name() );
-//        QTableWidgetItem *itemKennung = new QTableWidgetItem( pro.kennung() );
+//        QTableWidgetItem *itemKennung = new QTableWidgetItem( pro.identifier() );
 //        QTableWidgetItem *itemCheck = new QTableWidgetItem();
 
 //        ui->projektSkillTable->setItem(row, 0, itemNr);
@@ -812,7 +812,7 @@ void FormSkills::setupProjektTable(const QMap<QString, ClassProjekt> &proMap, Qt
 //        ClassProjekt pro = it.value();
 //        QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(pro.nr(),10));
 //        QTableWidgetItem *itemName = new QTableWidgetItem( pro.name() );
-//        QTableWidgetItem *itemKennung = new QTableWidgetItem( pro.kennung() );
+//        QTableWidgetItem *itemKennung = new QTableWidgetItem( pro.identifier() );
 //        QTableWidgetItem *itemMarker = new QTableWidgetItem(  );
 
 //        ui->projektTable->setItem(row, 0, itemNr);
@@ -843,8 +843,8 @@ void FormSkills::setupProjektTable(const QMap<QString, ClassProjekt> &proMap, Qt
 //    QMapIterator<QString, ClassProjekt> it(projektMap());
 //    while (it.hasNext()) {
 //        it.next();
-//        if(!kennungList.contains(it.value().kennung()))
-//            kennungList << it.value().kennung();
+//        if(!kennungList.contains(it.value().identifier()))
+//            kennungList << it.value().identifier();
 //    }
 
 //    ui->kennungBox->addItems(kennungList);
@@ -940,7 +940,7 @@ void FormSkills::clearForm()
 
 //        QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(skill.getNr(),10));
 //        QTableWidgetItem *itemName = new QTableWidgetItem( skill.name() );
-//        QTableWidgetItem *itemKennung = new QTableWidgetItem( skill.kennung() );
+//        QTableWidgetItem *itemKennung = new QTableWidgetItem( skill.identifier() );
 
 //        ui->skillTable->setItem(row,0, itemNr);
 //        ui->skillTable->setItem(row,1, itemName);
@@ -969,7 +969,7 @@ void FormSkills::clearForm()
 //    ui->nrBox->setValue( skill.getNr());
 //    ui->nameEdit->setText(skill.name());
 //    ui->dateEdit->setDate(skill.date());
-//    ui->kennungEdit->setText(skill.kennung());
+//    ui->kennungEdit->setText(skill.identifier());
 //    ui->wertBox->setValue(skill.getWert() );
 //    ui->dateTimeEdit->setDateTime(skill.getCreatedDate());
 
@@ -983,7 +983,7 @@ void FormSkills::clearForm()
 
 //    skill.setNr(ui->nrBox->value());
 //    skill.setName( ui->nameEdit->text());
-//    skill.setKennung(ui->kennungEdit->text());
+//    skill.setIdentifier(ui->kennungEdit->text());
 //    skill.setDate( ui->dateEdit->date() );
 //    skill.setWert( ui->wertBox->value() );
 //    skill.setCreatedDate( ui->dateTimeEdit->dateTime() );

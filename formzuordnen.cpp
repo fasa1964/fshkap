@@ -116,7 +116,7 @@ void FormZuordnen::updateSkillTable(const QMap<QString, ClassSkills> &sMap)
 
         QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(skill.getNr(),10));
         QTableWidgetItem *itemName = new QTableWidgetItem( skill.name() );
-        QTableWidgetItem *itemKennung = new QTableWidgetItem( skill.kennung() );
+        QTableWidgetItem *itemKennung = new QTableWidgetItem( skill.identifier() );
 
         ui->skillTable->setItem(row,0, itemNr);
         ui->skillTable->setItem(row,1, itemName);
@@ -162,8 +162,8 @@ void FormZuordnen::updateAzubiTable(const QMap<QString, ClassLehrling> &azuMap)
        }
 
        QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(it.value().nr(),10) );
-       QTableWidgetItem *itemName = new QTableWidgetItem(it.value().vorname()+"."+it.value().nachname());
-       QTableWidgetItem *itemKlasse = new QTableWidgetItem(it.value().klasse());
+       QTableWidgetItem *itemName = new QTableWidgetItem(it.value().firstname()+"."+it.value().surname());
+       QTableWidgetItem *itemKlasse = new QTableWidgetItem(it.value().educationClass());
        QTableWidgetItem *itemBetrieb = new QTableWidgetItem(it.value().company());
        QTableWidgetItem *itemAP = new QTableWidgetItem(ap);
        QTableWidgetItem *itemMarker = new QTableWidgetItem();
@@ -232,8 +232,8 @@ void FormZuordnen::setupSkillSortBox()
     QMapIterator<QString, ClassSkills> it(skillMap());
     while (it.hasNext()) {
         it.next();
-        if(!sortList.contains(it.value().kennung()))
-            sortList << it.value().kennung();
+        if(!sortList.contains(it.value().identifier()))
+            sortList << it.value().identifier();
     }
 
     sortList << "Alle";
@@ -325,13 +325,13 @@ QMap<QString, ClassLehrling> FormZuordnen::getLehrjahrMap(int jahrgang)
     return map;
 }
 
-QMap<QString, ClassSkills> FormZuordnen::getSkillMap(const QString &kennung)
+QMap<QString, ClassSkills> FormZuordnen::getSkillMap(const QString &identifier)
 {
     QMap<QString, ClassSkills> map;
     QMapIterator<QString, ClassSkills> it(skillMap());
     while (it.hasNext()) {
         it.next();
-        if(it.value().kennung() == kennung){
+        if(it.value().identifier() == identifier){
             ClassSkills skill = it.value();
             map.insert(skill.getKey(), skill);
         }

@@ -3,16 +3,16 @@
 ClassLehrling::ClassLehrling()
 {
     m_nr = 0;
-    m_vorname = "";
-    m_nachname = "";
-    m_strasse = "";
-    m_ort = "";
+    m_firstname = "";
+    m_surname = "";
+    m_street = "";
+    m_city = "";
     m_phone = "";
     m_birthDate = QDate();
     m_apprenticeshipDate = QDate();
-    m_klasse = "";
+    m_educationClass = "";
     m_company = "";
-    m_notiz = "";
+    m_note = "";
 }
 
 int ClassLehrling::nr() const
@@ -25,44 +25,44 @@ void ClassLehrling::setNr(int nr)
     m_nr = nr;
 }
 
-QString ClassLehrling::vorname() const
+QString ClassLehrling::firstname() const
 {
-    return m_vorname;
+    return m_firstname;
 }
 
-void ClassLehrling::setVorname(const QString &vorname)
+void ClassLehrling::setFirstname(const QString &firstname)
 {
-    m_vorname = vorname;
+    m_firstname = firstname;
 }
 
-QString ClassLehrling::nachname() const
+QString ClassLehrling::surname() const
 {
-    return m_nachname;
+    return m_surname;
 }
 
-void ClassLehrling::setNachname(const QString &nachname)
+void ClassLehrling::setSurname(const QString &surname)
 {
-    m_nachname = nachname;
+    m_surname = surname;
 }
 
-QString ClassLehrling::strasse() const
+QString ClassLehrling::street() const
 {
-    return m_strasse;
+    return m_street;
 }
 
-void ClassLehrling::setStrasse(const QString &strasse)
+void ClassLehrling::setStreet(const QString &street)
 {
-    m_strasse = strasse;
+    m_street = street;
 }
 
-QString ClassLehrling::ort() const
+QString ClassLehrling::city() const
 {
-    return m_ort;
+    return m_city;
 }
 
-void ClassLehrling::setOrt(const QString &ort)
+void ClassLehrling::setCity(const QString &city)
 {
-    m_ort = ort;
+    m_city = city;
 }
 
 QString ClassLehrling::phone() const
@@ -95,14 +95,14 @@ void ClassLehrling::setApprenticeshipDate(const QDate &apprenticeshipDate)
     m_apprenticeshipDate = apprenticeshipDate;
 }
 
-QString ClassLehrling::klasse() const
+QString ClassLehrling::educationClass() const
 {
-    return m_klasse;
+    return m_educationClass;
 }
 
-void ClassLehrling::setKlasse(const QString &klasse)
+void ClassLehrling::setEducationClass(const QString &educationClass)
 {
-    m_klasse = klasse;
+    m_educationClass = educationClass;
 }
 
 QString ClassLehrling::company() const
@@ -118,7 +118,7 @@ void ClassLehrling::setCompany(const QString &company)
 bool ClassLehrling::isValid()
 {
     bool status = false;
-    if(nr() != 0 && !vorname().isEmpty() && nachname().isEmpty())
+    if(nr() != 0 && !firstname().isEmpty() && surname().isEmpty())
         status = true;
 
     return status;
@@ -126,7 +126,7 @@ bool ClassLehrling::isValid()
 
 QString ClassLehrling::getKey() const
 {
-    QString key = vorname()+"."+nachname()+"."+QString::number(nr(),10);
+    QString key = firstname()+"."+surname()+"."+QString::number(nr(),10);
     return key;
 }
 
@@ -170,21 +170,21 @@ QColor ClassLehrling::getColor(const QString &key)
 }
 
 
-QString ClassLehrling::notiz() const
+QString ClassLehrling::note() const
 {
-    return m_notiz;
+    return m_note;
 }
 
-void ClassLehrling::setNotiz(const QString &notiz)
+void ClassLehrling::setNote(const QString &note)
 {
-    m_notiz = notiz;
+    m_note = note;
 }
 
 QDataStream &operator<<(QDataStream &out, const ClassLehrling &dat)
 {
-    out << dat.nr() << dat.vorname() << dat.nachname() << dat.strasse() <<
-           dat.ort() << dat.phone() << dat.birthDate() << dat.apprenticeshipDate() <<
-           dat.klasse() << dat.company() << dat.notiz() << dat.getSkillMap();
+    out << dat.nr() << dat.firstname() << dat.surname() << dat.street() <<
+           dat.city() << dat.phone() << dat.birthDate() << dat.apprenticeshipDate() <<
+           dat.educationClass() << dat.company() << dat.note() << dat.getSkillMap();
 
     return out;
 }
@@ -193,32 +193,32 @@ QDataStream &operator>>(QDataStream &in, ClassLehrling &dat)
 {
 
     int nr;
-    QString vorn;
-    QString nachn;
+    QString fn;
+    QString sn;
     QString str;
-    QString ort;
-    QString tel;
+    QString city;
+    QString ph;
     QDate birthDate;
     QDate apprenticeshipDate;
-    QString klasse;
+    QString educationClass;
     QString company;
-    QString notiz;
+    QString note;
     QMap<QString, ClassSkills> smap;
 
-    in >> nr >> vorn >> nachn >> str >> ort >> tel >> birthDate >>
-        apprenticeshipDate >> klasse >> company >> notiz >> smap;
+    in >> nr >> fn >> sn >> str >> city >> ph >> birthDate >>
+        apprenticeshipDate >> educationClass >> company >> note >> smap;
 
     dat.setNr(nr);
-    dat.setVorname(vorn);
-    dat.setNachname(nachn);
-    dat.setStrasse(str);
-    dat.setOrt(ort);
-    dat.setPhone(tel);
+    dat.setFirstname(fn);
+    dat.setSurname(sn);
+    dat.setStreet(str);
+    dat.setCity(city);
+    dat.setPhone(ph);
     dat.setBirthDate(birthDate);
     dat.setApprenticeshipDate(apprenticeshipDate);
-    dat.setKlasse(klasse);
+    dat.setEducationClass(educationClass);
     dat.setCompany(company);
-    dat.setNotiz(notiz);
+    dat.setNote(note);
     dat.setSkillMap(smap);
 
     return in;

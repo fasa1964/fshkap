@@ -4,7 +4,7 @@ ClassSkills::ClassSkills()
 {
     m_nr = 0;
     m_name = "";
-    m_kennung = "";
+    m_identifier = "";
     m_wert = 0;
     m_date = QDate();
 }
@@ -29,14 +29,14 @@ void ClassSkills::setDate(const QDate &date)
     m_date = date;
 }
 
-QString ClassSkills::kennung() const
+QString ClassSkills::identifier() const
 {
-    return m_kennung;
+    return m_identifier;
 }
 
-void ClassSkills::setKennung(const QString &kennung)
+void ClassSkills::setIdentifier(const QString &identifier)
 {
-    m_kennung = kennung;
+    m_identifier = identifier;
 }
 
 QMap<QString, ClassProjekt> ClassSkills::getProjektMap() const
@@ -51,7 +51,7 @@ void ClassSkills::setProjektMap(const QMap<QString, ClassProjekt> &value)
 
 bool ClassSkills::addProjekt(const ClassProjekt &pro)
 {
-    QString key = pro.name()+"."+pro.kennung();
+    QString key = pro.name()+"."+pro.identifier();
     if(projektMap.keys().contains(key))
         return false;
     else
@@ -62,7 +62,7 @@ bool ClassSkills::addProjekt(const ClassProjekt &pro)
 
 bool ClassSkills::removeProjekt(const ClassProjekt &pro)
 {
-    QString key = pro.name()+"."+pro.kennung();
+    QString key = pro.name()+"."+pro.identifier();
     int result = projektMap.remove(key);
 
     if(result == 0)
@@ -93,29 +93,29 @@ void ClassSkills::setWert(int wert)
 
 QString ClassSkills::getKey()
 {
-    QString key = name()+"."+kennung();
+    QString key = name()+"."+identifier();
     return key;
 }
 
-int ClassSkills::maxPunkte()
+int ClassSkills::maxPoints()
 {
     int maxpunkte = 0;
     QMapIterator<QString, ClassProjekt> it(projektMap);
     while (it.hasNext()){
          it.next();
-         maxpunkte = maxpunkte + it.value().maxPunkte();
+         maxpunkte = maxpunkte + it.value().maxPoints();
     }
 
     return maxpunkte;
 }
 
-int ClassSkills::erreichtePunkte()
+int ClassSkills::points()
 {
     int punkte = 0;
     QMapIterator<QString, ClassProjekt> it(projektMap);
     while (it.hasNext()){
          it.next();
-         punkte = punkte + it.value().erreichtePunkte();
+         punkte = punkte + it.value().points();
     }
 
     return punkte;
@@ -133,7 +133,7 @@ void ClassSkills::setNr(int nr)
 
 QDataStream &operator<<(QDataStream &out, const ClassSkills &dat)
 {
-    out << dat.getNr() << dat.name() << dat.kennung() << dat.date() << dat.getWert() <<
+    out << dat.getNr() << dat.name() << dat.identifier() << dat.date() << dat.getWert() <<
            dat.getCreatedDate() << dat.getProjektMap();
     return out;
 }
@@ -142,17 +142,17 @@ QDataStream &operator>>(QDataStream &in, ClassSkills &dat)
 {
     int nr;
     QString name;
-    QString kennung;
+    QString identifier;
     QDate date;
     QDateTime createdDate;
     int wert;
     QMap<QString, ClassProjekt> pMap;
 
-    in >> nr >> name >> kennung >> date >> wert >> createdDate >> pMap;
+    in >> nr >> name >> identifier >> date >> wert >> createdDate >> pMap;
 
     dat.setNr( nr );
     dat.setName( name );
-    dat.setKennung( kennung );
+    dat.setIdentifier( identifier );
     dat.setWert( wert );
     dat.setDate( date );
     dat.setCreatedDate( createdDate );

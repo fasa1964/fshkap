@@ -254,8 +254,7 @@ void FSHKWindow::actionAuswertungClicked()
     this->takeCentralWidget();
     formevaluation->show();
     formevaluation->azubiMap = azubiMap;
-    formevaluation->update();
-//    formevaluation->setAzubiMap(azubiMap);
+    formevaluation->updateSortBox();
     setCentralWidget(formevaluation);
 }
 
@@ -393,7 +392,7 @@ void FSHKWindow::projektChanged(const ClassProjekt &pro)
                     skill.setCreatedDate(QDateTime::currentDateTime());
                     skillsMap.insert(skill.getKey(), skill);
                     saveSkillMap(skillsMap);
-                    ui->statusBar->showMessage("Die Prüfung: "+skill.name()+"."+skill.kennung()+" wurde aktualisiert!",8000);
+                    ui->statusBar->showMessage("Die Prüfung: "+skill.name()+"."+skill.identifier()+" wurde aktualisiert!",8000);
                     skillKeyList << skill.getKey();
             }
         }
@@ -451,9 +450,9 @@ void FSHKWindow::projektAdded(const ClassProjekt &pro)
     QMapIterator<QString, ClassSkills> it(skillsMap);
     while (it.hasNext()) {
         it.next();
-        if(pro.kennung() == it.value().kennung())
+        if(pro.identifier() == it.value().identifier())
         {
-            QString s = it.value().name()+"."+it.value().kennung();
+            QString s = it.value().name()+"."+it.value().identifier();
             int result = QMessageBox::question(this, tr("Projekt"),tr("Die Prüfung: ")+s+"\n"+
                          "mit der Kennung existiert bereits, soll das Projekt der Prüfung hinzugefügt werden?",
                          QMessageBox::Yes | QMessageBox::No);

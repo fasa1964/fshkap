@@ -57,7 +57,7 @@ void FormProjekt::updateProjektTable(const QMap<QString, ClassProjekt> &proMap)
         ClassProjekt pro = it.value();
         QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(pro.nr(),10));
         QTableWidgetItem *itemName = new QTableWidgetItem( pro.name() );
-        QTableWidgetItem *itemKennung = new QTableWidgetItem( pro.kennung() );
+        QTableWidgetItem *itemKennung = new QTableWidgetItem( pro.identifier() );
 
         ui->projekteTableWidget->setItem(row, 0, itemNr);
         ui->projekteTableWidget->setItem(row, 1, itemName);
@@ -269,7 +269,7 @@ void FormProjekt::sortBoxTextChanged(const QString &text)
     QMapIterator<QString, ClassProjekt> it(projektMap());
     while (it.hasNext()) {
         it.next();
-        if(it.value().kennung() == text)
+        if(it.value().identifier() == text)
             sortMap.insert(it.key(), it.value());
     }
 
@@ -301,16 +301,16 @@ ClassProjekt FormProjekt::readFromForm()
     ClassProjekt pro;
     pro.setNr( ui->nrBox->value() );
     pro.setName( ui->nameEdit->text() );
-    pro.setKennung( ui->kennungEdit->text() );
-    pro.setAnzahlFragen( ui->anzahlFragenBox->value() );
-    pro.setMaxPunkte(ui->maxPunkteBox->value());
+    pro.setIdentifier( ui->kennungEdit->text() );
+    pro.setCountQuestion( ui->anzahlFragenBox->value() );
+    pro.setMaxPoints(ui->maxPunkteBox->value());
     pro.setDocument(ui->documentEdit->text());
     pro.setDateTime( ui->dateTimeEdit->dateTime());
 
     if(ui->sperrfachBox->checkState() == Qt::Checked)
-        pro.setSperrfach(true);
+        pro.setLockSubject(true);
     else
-        pro.setSperrfach(false);
+        pro.setLockSubject(false);
 
     pro.setCreateTime( ui->dateTimeEdit->dateTime().toString("dd.MM.yy hh:mm"));
 
@@ -321,32 +321,32 @@ ClassProjekt FormProjekt::readFromForm()
     QMap<int, ClassFrage> frgMap;
     for(int i = 0; i < rowCount; i++)
     {
-        ClassFrage frage;
+        ClassFrage question;
         int nr = ui->fragenTableWidget->item(i,0)->text().toInt();
         QString frg = ui->fragenTableWidget->item(i,1)->text();
         int punkte = ui->fragenTableWidget->item(i,2)->text().toInt();
-        QString kennung = ui->fragenTableWidget->item(i,3)->text();
+        QString identifier = ui->fragenTableWidget->item(i,3)->text();
 
-        frage.setFrageNr(nr);
-        frage.setFrage(frg);
-        frage.setMaxPunkte(punkte);
-        frage.setKennung(kennung);
+        question.setQuestionNr(nr);
+        question.setQuestion(frg);
+        question.setMaxPoints(punkte);
+        question.setIdentifier(identifier);
 
         maxpunkte = maxpunkte + punkte;
 
-        frgMap.insert(i, frage);
+        frgMap.insert(i, question);
     }
 
-    if(maxpunkte != pro.maxPunkte())
+    if(maxpunkte != pro.maxPoints())
     {
         QMessageBox::information(this, tr("Projekt speichern"), tr("Die Punktzahl stimmt nicht mit den Punkten der Fragen überein!\n"
                      "Die maximale Punktzahl wird angeglichen!"));
 
-        pro.setMaxPunkte(maxpunkte);
+        pro.setMaxPoints(maxpunkte);
         ui->maxPunkteBox->setValue(maxpunkte);
     }
 
-    pro.setFragenMap(frgMap);
+    pro.setQuestionMap(frgMap);
     return pro;
 }
 
@@ -381,12 +381,12 @@ void FormProjekt::setProjektToForm(const ClassProjekt &pro)
 {
     ui->nrBox->setValue(pro.nr());
     ui->nameEdit->setText(pro.name());
-    ui->kennungEdit->setText(pro.kennung());
-    ui->anzahlFragenBox->setValue(pro.anzahlFragen());
-    ui->maxPunkteBox->setValue(pro.maxPunkte());
+    ui->kennungEdit->setText(pro.identifier());
+    ui->anzahlFragenBox->setValue(pro.countQuestion());
+    ui->maxPunkteBox->setValue(pro.maxPoints());
     ui->documentEdit->setText( pro.document() );
 
-    if(pro.sperrfach())
+    if(pro.lockSubject())
         ui->sperrfachBox->setCheckState(Qt::Checked);
     else
         ui->sperrfachBox->setCheckState(Qt::Unchecked);
@@ -399,7 +399,7 @@ void FormProjekt::setProjektToForm(const ClassProjekt &pro)
         QString dts = pro.createTime();
     }
 
-    updateFragenTable(pro.fragenMap());
+    updateFragenTable(pro.questionMap());
 }
 
 void FormProjekt::clearForm()
@@ -431,11 +431,11 @@ void FormProjekt::updateFragenTable(const QMap<int, ClassFrage> &fMap)
     while (it.hasNext()) {
         it.next();
 
-        ClassFrage frage = it.value();
-        QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(frage.frageNr(),10) );
-        QTableWidgetItem *itemFrage = new QTableWidgetItem( frage.frage() );
-        QTableWidgetItem *itemPunkte = new QTableWidgetItem( QString::number(frage.maxPunkte(),10) );
-        QTableWidgetItem *itemKennung = new QTableWidgetItem( frage.kennung() );
+        ClassFrage question = it.value();
+        QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(question.questionNr(),10) );
+        QTableWidgetItem *itemFrage = new QTableWidgetItem( question.question() );
+        QTableWidgetItem *itemPunkte = new QTableWidgetItem( QString::number(question.maxPoints(),10) );
+        QTableWidgetItem *itemKennung = new QTableWidgetItem( question.identifier() );
         ui->fragenTableWidget->setItem(row,0, itemNr);
         ui->fragenTableWidget->setItem(row,1, itemFrage);
         ui->fragenTableWidget->setItem(row,2, itemPunkte);
@@ -463,8 +463,8 @@ void FormProjekt::updateSortBox()
     QMapIterator<QString, ClassProjekt> it(projektMap());
     while (it.hasNext()) {
         it.next();
-        if(!sortList.contains(it.value().kennung()))
-            sortList << it.value().kennung();
+        if(!sortList.contains(it.value().identifier()))
+            sortList << it.value().identifier();
     }
 
     sortList.sort();

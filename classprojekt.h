@@ -17,29 +17,29 @@ public:
     QString name() const;
     void setName(const QString &name);
 
-    QString kennung() const;
-    void setKennung(const QString &kennung);
+    QString identifier() const;
+    void setIdentifier(const QString &identifier);
 
     int nr() const;
     void setNr(int nr);
 
-    int anzahlFragen() const;
-    void setAnzahlFragen(int anzahlFragen);
+    int countQuestion() const;
+    void setCountQuestion(int countQuestion);
 
-    int maxPunkte() const;
-    void setMaxPunkte(int maxPunkte);
+    int maxPoints() const;
+    void setMaxPoints(int maxPoints);
 
-    int erreichtePunkte() const;
-    void setErreichtePunkte(int erreichtePunkte);
+    int points() const;
+    void setPoints(int points);
 
-    double ergebnisProzent() const;
-    void setErgebnisProzent(double ergebnisProzent);
+    double percent() const;
+    void setPercent(double percent);
 
     int note() const;
     void setNote(int note);
 
-    QMap<int, ClassFrage> fragenMap() const;
-    void setFragenMap(const QMap<int, ClassFrage> &fragenMap);
+    QMap<int, ClassFrage> questionMap() const;
+    void setQuestionMap(const QMap<int, ClassFrage> &questionMap);
 
     QString document() const;
     void setDocument(const QString &document);
@@ -50,32 +50,32 @@ public:
     QString createTime() const;
     void setCreateTime(const QString &createTime);
 
-    bool sperrfach() const;
-    void setSperrfach(bool sperrfach);
+    bool lockSubject() const;
+    void setLockSubject(bool lockSubject);
 
     QString getKey();
 
-    bool getAusgewertet() const;
-    void setAusgewertet(bool ausgewertet);
+    bool getEvaluated() const;
+    void setEvaluated(bool evaluated);
 
-    void setFragePunkte(int nr, int points);
+    void setQuestionPoints(int nr, int points);
 
 private:
 
     QString m_name;
-    QString m_kennung;
+    QString m_identifier;
     int m_nr;
-    int m_anzahlFragen;
-    int m_maxPunkte;
-    int m_erreichtePunkte;
-    double m_ergebnisProzent;
+    int m_countQuestion;
+    int m_maxPoints;
+    int m_points;
+    double m_percent;
     int m_note;
-    QMap<int, ClassFrage> m_fragenMap;
+    QMap<int, ClassFrage> m_questionMap;
     QString m_document;
     QDateTime m_dateTime;
     QString m_createTime;
-    bool m_sperrfach;
-    bool m_ausgewertet;
+    bool m_lockSubject;
+    bool m_evaluated;
 
 };
 

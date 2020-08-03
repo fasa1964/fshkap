@@ -17,17 +17,17 @@ public:
     int nr() const;
     void setNr(int nr);
 
-    QString vorname() const;
-    void setVorname(const QString &vorname);
+    QString firstname() const;
+    void setFirstname(const QString &firstname);
 
-    QString nachname() const;
-    void setNachname(const QString &nachname);
+    QString surname() const;
+    void setSurname(const QString &surname);
 
-    QString strasse() const;
-    void setStrasse(const QString &strasse);
+    QString street() const;
+    void setStreet(const QString &street);
 
-    QString ort() const;
-    void setOrt(const QString &ort);
+    QString city() const;
+    void setCity(const QString &city);
 
     QString phone() const;
     void setPhone(const QString &phone);
@@ -38,14 +38,14 @@ public:
     QDate apprenticeshipDate() const;
     void setApprenticeshipDate(const QDate &apprenticeshipDate);
 
-    QString klasse() const;
-    void setKlasse(const QString &klasse);
+    QString educationClass() const;
+    void setEducationClass(const QString &educationClass);
 
     QString company() const;
     void setCompany(const QString &company);
 
-    QString notiz() const;
-    void setNotiz(const QString &notiz);
+    QString note() const;
+    void setNote(const QString &note);
 
     bool isValid();
     QString getKey() const;
@@ -65,16 +65,16 @@ public:
 
 private:
     int m_nr;
-    QString m_vorname;
-    QString m_nachname;
-    QString m_strasse;
-    QString m_ort;
+    QString m_firstname;
+    QString m_surname;
+    QString m_street;
+    QString m_city;
     QString m_phone;
     QDate m_birthDate;
     QDate m_apprenticeshipDate;
-    QString m_klasse;
+    QString m_educationClass;
     QString m_company;
-    QString m_notiz;
+    QString m_note;
 
     QMap<QString, ClassSkills> m_skillMap;
     QMap<QString, QVariant> m_colorMap;

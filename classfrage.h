@@ -9,27 +9,27 @@ class ClassFrage
 public:
     ClassFrage();
 
-    int frageNr() const;
-    void setFrageNr(int frageNr);
+    int questionNr() const;
+    void setQuestionNr(int questionNr);
 
-    QString kennung() const;
-    void setKennung(const QString &kennung);
+    QString identifier() const;
+    void setIdentifier(const QString &identifier);
 
-    QString frage() const;
-    void setFrage(const QString &frage);
+    QString question() const;
+    void setQuestion(const QString &question);
 
-    int maxPunkte() const;
-    void setMaxPunkte(int maxPunkte);
+    int maxPoints() const;
+    void setMaxPoints(int maxPoints);
 
-    int erreichtePunkte() const;
-    void setErreichtePunkte(int erreichtePunkte);
+    int points() const;
+    void setPoints(int points);
 
 private:
-    int m_frageNr;
-    QString m_kennung;
-    QString m_frage;
-    int m_maxPunkte;
-    int m_erreichtePunkte;
+    int m_questionNr;
+    QString m_identifier;
+    QString m_question;
+    int m_maxPoints;
+    int m_points;
 
 };
 

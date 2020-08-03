@@ -2,83 +2,83 @@
 
 ClassFrage::ClassFrage()
 {
-    m_frageNr = 0;
-    m_kennung = "";
-    m_frage = "";
-    m_maxPunkte = 0;
-    m_erreichtePunkte = 0;
+    m_questionNr = 0;
+    m_identifier = "";
+    m_question = "";
+    m_maxPoints = 0;
+    m_points = 0;
 }
 
-int ClassFrage::frageNr() const
+int ClassFrage::questionNr() const
 {
-    return m_frageNr;
+    return m_questionNr;
 }
 
-void ClassFrage::setFrageNr(int frageNr)
+void ClassFrage::setQuestionNr(int questionNr)
 {
-    m_frageNr = frageNr;
+    m_questionNr = questionNr;
 }
 
-QString ClassFrage::kennung() const
+QString ClassFrage::identifier() const
 {
-    return m_kennung;
+    return m_identifier;
 }
 
-void ClassFrage::setKennung(const QString &kennung)
+void ClassFrage::setIdentifier(const QString &identifier)
 {
-    m_kennung = kennung;
+    m_identifier = identifier;
 }
 
-QString ClassFrage::frage() const
+QString ClassFrage::question() const
 {
-    return m_frage;
+    return m_question;
 }
 
-void ClassFrage::setFrage(const QString &frage)
+void ClassFrage::setQuestion(const QString &question)
 {
-    m_frage = frage;
+    m_question = question;
 }
 
-int ClassFrage::maxPunkte() const
+int ClassFrage::maxPoints() const
 {
-    return m_maxPunkte;
+    return m_maxPoints;
 }
 
-void ClassFrage::setMaxPunkte(int maxPunkte)
+void ClassFrage::setMaxPoints(int maxPoints)
 {
-    m_maxPunkte = maxPunkte;
+    m_maxPoints = maxPoints;
 }
 
-int ClassFrage::erreichtePunkte() const
+int ClassFrage::points() const
 {
-    return m_erreichtePunkte;
+    return m_points;
 }
 
-void ClassFrage::setErreichtePunkte(int erreichtePunkte)
+void ClassFrage::setPoints(int points)
 {
-    m_erreichtePunkte = erreichtePunkte;
+    m_points = points;
 }
 
 QDataStream &operator<<(QDataStream &out, const ClassFrage &dat)
 {
-    out << dat.frageNr() << dat.kennung() << dat.frage() << dat.maxPunkte() << dat.erreichtePunkte();
+    out << dat.questionNr() << dat.identifier() << dat.question() << dat.maxPoints() << dat.points();
     return out;
 }
 
 QDataStream &operator>>(QDataStream &in, ClassFrage &dat)
 {
-    int frageNr;
-    QString kennung;
-    QString frage;
-    int maxPunkte;
-    int erreichtePunkte;
+    int questionNr;
+    QString identifier;
+    QString question;
+    int maxPoints;
+    int points;
 
-    in >> frageNr >> kennung >> frage >> maxPunkte >> erreichtePunkte;
+    in >> questionNr >> identifier >> question >> maxPoints >> points;
 
-    dat.setFrageNr(frageNr);
-    dat.setKennung(kennung);
-    dat.setMaxPunkte(maxPunkte);
-    dat.setFrage(frage);
-    dat.setErreichtePunkte(erreichtePunkte);
+    dat.setQuestionNr(questionNr);
+    dat.setIdentifier(identifier);
+    dat.setMaxPoints(maxPoints);
+    dat.setQuestion(question);
+    dat.setPoints(points);
     return  in;
 }

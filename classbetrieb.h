@@ -18,11 +18,11 @@ public:
     QString name() const;
     void setName(const QString &name);
 
-    QString strasse() const;
-    void setStrasse(const QString &strasse);
+    QString street() const;
+    void setStreet(const QString &street);
 
-     QString ort() const;
-     void setOrt(const QString &ort);
+     QString city() const;
+     void setCity(const QString &city);
 
      QString phone() const;
      void setPhone(const QString &phone);
@@ -36,8 +36,8 @@ public:
 private:
      int m_nr;
      QString m_name;
-     QString m_strasse;
-     QString m_ort;
+     QString m_street;
+     QString m_city;
      QString m_phone;
 
      QMap<QString, ClassLehrling> m_azubiMap;

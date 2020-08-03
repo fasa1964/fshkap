@@ -10,12 +10,14 @@
 #include <classfrage.h>
 
 
-class LehrlingModel: public QAbstractItemModel
+class LehrlingModel: public QAbstractListModel
 {
     Q_OBJECT
 
  public:
-    int rowCount(const QModelIndex& = QModelIndex()) const { return m_sortedMap.values().size(); }
+    LehrlingModel(QObject *parent = nullptr) : QAbstractListModel(parent) {}
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const { return m_sortedMap.values().size(); }
     QVariant data(const QModelIndex &index, int role) const {
         if (!index.isValid())
             return QVariant();
@@ -69,7 +71,7 @@ private:
 
 namespace Ui {
 class FormEvaluation;
-class LehrlingModel;
+//class LehrlingModel;
 }
 
 class FormEvaluation : public QWidget
@@ -81,91 +83,19 @@ public:
     ~FormEvaluation();
 
      QMap<QString, ClassLehrling> azubiMap;
-     void update();
+     void updateSortBox();
 
 private slots:
-    void azubiSortBoxChanged(const QString &text);
-    void azubiListBoxChanged(const QString &text);
-
-
-
-
-//    void skillListBoxChanged(const QString &text);
-//    void projektListBoxChanged(const QString &text);
-
-//    void fragenTableCellChanged(int, int);
-//    void cellItemClicked(int row, int column);
-//    void cellItemChanged(int row, int column);
+    void sortBoxTextChanged(const QString &text);
+    void azubiBoxTextChanged(const QString &text);
 
 private:
     Ui::FormEvaluation *ui;
 
-    //LehrlingModel *model;
+    ClassLehrling selectedLehrling;
 
-
-    bool yearExist(int year);
-    void setupSortBox();
     QMap<QString, ClassLehrling> apprenticeship(int year);
-
-
-    QList<ClassLehrling> getAzubiList(int year);    // sorted by year
     void setTextColor(QWidget *widget, QColor color);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    bool dirty;
-
-//    ClassLehrling selectedAzubi;
-//    ClassSkills selectedSkill;
-//    ClassProjekt selectedProjekt;
-//    QMap<QString, ClassLehrling> m_azubiMap;
-    //QMap<QString, ClassLehrling> workingAzubiMap;
-
-//    QMap<QString, ClassSkills> currentSkillMap;
-//    QMap<QString, ClassProjekt> currentProjektMap;
-
-//    QList<ClassSkills> getSkillList(const ClassLehrling &azu);
-//    QList<ClassProjekt> getProjektList(const ClassSkills &skill);
-
-//    void setupFragenTable(ClassProjekt pro);
-//    void updateAzubi(int points, double percent);
-
-//    void sortAzubi(const QMap<QString, ClassLehrling> &aMap);
-//    QStringList getAzubiKeys(int jahrgang);
-
-//    void setupFragenTable(const ClassProjekt &pro);
-//    void setupErgebnisTable(const ClassLehrling &azu);
-
-
-//    int getSkillRow(ClassSkills skill);
-//    int getProjektRow(ClassProjekt pro);
-//    int getCurrentPoints();
-
-//    QMap<int, ClassSkills> cellSkillMap;
-//    QMap<int, ClassProjekt> cellProMap;
-
 };
 
 

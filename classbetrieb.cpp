@@ -4,8 +4,8 @@ ClassBetrieb::ClassBetrieb()
 {
     m_nr = 0;
     m_name = "";
-    m_strasse = "";
-    m_ort = "";
+    m_street = "";
+    m_city = "";
     m_phone = "";
 }
 
@@ -29,24 +29,24 @@ void ClassBetrieb::setName(const QString &name)
     m_name = name;
 }
 
-QString ClassBetrieb::strasse() const
+QString ClassBetrieb::street() const
 {
-    return m_strasse;
+    return m_street;
 }
 
-void ClassBetrieb::setStrasse(const QString &strasse)
+void ClassBetrieb::setStreet(const QString &street)
 {
-    m_strasse = strasse;
+    m_street = street;
 }
 
-QString ClassBetrieb::ort() const
+QString ClassBetrieb::city() const
 {
-    return m_ort;
+    return m_city;
 }
 
-void ClassBetrieb::setOrt(const QString &ort)
+void ClassBetrieb::setCity(const QString &city)
 {
-    m_ort = ort;
+    m_city = city;
 }
 
 QString ClassBetrieb::phone() const
@@ -88,7 +88,7 @@ int ClassBetrieb::countLehrling()
 
 QDataStream &operator<<(QDataStream &out, const ClassBetrieb &dat)
 {
-    out << dat.nr() << dat.name() << dat.strasse() << dat.ort() << dat.phone() << dat.azubiMap();
+    out << dat.nr() << dat.name() << dat.street() << dat.city() << dat.phone() << dat.azubiMap();
     return out;
 }
 
@@ -96,17 +96,17 @@ QDataStream &operator>>(QDataStream &in, ClassBetrieb &dat)
 {
     int nr;
     QString name;
-    QString strasse;
-    QString ort;
+    QString street;
+    QString city;
     QString phone;
     QMap<QString, ClassLehrling> aMap;
 
-    in >> nr >> name >> strasse >> ort >> phone >> aMap;
+    in >> nr >> name >> street >> city >> phone >> aMap;
 
     dat.setNr( nr );
     dat.setName( name );
-    dat.setStrasse( strasse );
-    dat.setOrt( ort );
+    dat.setStreet( street );
+    dat.setCity( city );
     dat.setPhone( phone );
     dat.setAzubiMap( aMap );
 

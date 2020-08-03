@@ -3,17 +3,17 @@
 ClassProjekt::ClassProjekt()
 {
     m_name = "";
-    m_kennung = "";
+    m_identifier = "";
     m_nr = 0;
-    m_anzahlFragen = 0;
-    m_maxPunkte = 0;
-    m_erreichtePunkte = 0;
-    m_ergebnisProzent = 0.0;
+    m_countQuestion = 0;
+    m_maxPoints = 0;
+    m_points = 0;
+    m_percent = 0.0;
     m_note = 0;
     m_document = "";
     m_createTime = "";
-    m_sperrfach = false;
-    m_ausgewertet = false;
+    m_lockSubject = false;
+    m_evaluated = false;
 }
 
 QString ClassProjekt::name() const
@@ -26,14 +26,14 @@ void ClassProjekt::setName(const QString &name)
     m_name = name;
 }
 
-QString ClassProjekt::kennung() const
+QString ClassProjekt::identifier() const
 {
-    return m_kennung;
+    return m_identifier;
 }
 
-void ClassProjekt::setKennung(const QString &kennung)
+void ClassProjekt::setIdentifier(const QString &identifier)
 {
-    m_kennung = kennung;
+    m_identifier = identifier;
 }
 
 int ClassProjekt::nr() const
@@ -46,44 +46,44 @@ void ClassProjekt::setNr(int nr)
     m_nr = nr;
 }
 
-int ClassProjekt::anzahlFragen() const
+int ClassProjekt::countQuestion() const
 {
-    return m_anzahlFragen;
+    return m_countQuestion;
 }
 
-void ClassProjekt::setAnzahlFragen(int anzahlFragen)
+void ClassProjekt::setCountQuestion(int countQuestion)
 {
-    m_anzahlFragen = anzahlFragen;
+    m_countQuestion = countQuestion;
 }
 
-int ClassProjekt::maxPunkte() const
+int ClassProjekt::maxPoints() const
 {
-    return m_maxPunkte;
+    return m_maxPoints;
 }
 
-void ClassProjekt::setMaxPunkte(int maxPunkte)
+void ClassProjekt::setMaxPoints(int maxPoints)
 {
-    m_maxPunkte = maxPunkte;
+    m_maxPoints = maxPoints;
 }
 
-int ClassProjekt::erreichtePunkte() const
+int ClassProjekt::points() const
 {
-    return m_erreichtePunkte;
+    return m_points;
 }
 
-void ClassProjekt::setErreichtePunkte(int erreichtePunkte)
+void ClassProjekt::setPoints(int points)
 {
-    m_erreichtePunkte = erreichtePunkte;
+    m_points = points;
 }
 
-double ClassProjekt::ergebnisProzent() const
+double ClassProjekt::percent() const
 {
-    return m_ergebnisProzent;
+    return m_percent;
 }
 
-void ClassProjekt::setErgebnisProzent(double ergebnisProzent)
+void ClassProjekt::setPercent(double percent)
 {
-    m_ergebnisProzent = ergebnisProzent;
+    m_percent = percent;
 }
 
 int ClassProjekt::note() const
@@ -96,14 +96,14 @@ void ClassProjekt::setNote(int note)
     m_note = note;
 }
 
-QMap<int, ClassFrage> ClassProjekt::fragenMap() const
+QMap<int, ClassFrage> ClassProjekt::questionMap() const
 {
-    return m_fragenMap;
+    return m_questionMap;
 }
 
-void ClassProjekt::setFragenMap(const QMap<int, ClassFrage> &fragenMap)
+void ClassProjekt::setQuestionMap(const QMap<int, ClassFrage> &questionMap)
 {
-    m_fragenMap = fragenMap;
+    m_questionMap = questionMap;
 }
 
 QString ClassProjekt::document() const
@@ -136,84 +136,84 @@ void ClassProjekt::setCreateTime(const QString &createTime)
     m_createTime = createTime;
 }
 
-bool ClassProjekt::sperrfach() const
+bool ClassProjekt::lockSubject() const
 {
-    return m_sperrfach;
+    return m_lockSubject;
 }
 
-void ClassProjekt::setSperrfach(bool sperrfach)
+void ClassProjekt::setLockSubject(bool lockSubject)
 {
-    m_sperrfach = sperrfach;
+    m_lockSubject = lockSubject;
 }
 
 QString ClassProjekt::getKey()
 {
     QString key;
-    key = name()+"."+kennung();
+    key = name()+"."+identifier();
     return key;
 }
 
-bool ClassProjekt::getAusgewertet() const
+bool ClassProjekt::getEvaluated() const
 {
-    return m_ausgewertet;
+    return m_evaluated;
 }
 
-void ClassProjekt::setAusgewertet(bool ausgewertet)
+void ClassProjekt::setEvaluated(bool evaluated)
 {
-    m_ausgewertet = ausgewertet;
+    m_evaluated = evaluated;
 }
 
-void ClassProjekt::setFragePunkte(int nr, int points)
+void ClassProjekt::setQuestionPoints(int nr, int points)
 {
-    ClassFrage frg = m_fragenMap.value(nr);
-    frg.setErreichtePunkte(points);
-    m_fragenMap.insert(nr, frg);
+    ClassFrage frg = m_questionMap.value(nr);
+    frg.setPoints(points);
+    m_questionMap.insert(nr, frg);
 }
 
 
 QDataStream &operator<<(QDataStream &out, const ClassProjekt &dat)
 {
-    out << dat.nr() << dat.name() << dat.kennung() << dat.anzahlFragen() << dat.maxPunkte() <<
-           dat.erreichtePunkte() << dat.ergebnisProzent() << dat.note() << dat.fragenMap() <<
-           dat.document() << dat.dateTime() << dat.createTime() << dat.sperrfach() << dat.getAusgewertet();
+    out << dat.nr() << dat.name() << dat.identifier() << dat.countQuestion() << dat.maxPoints() <<
+           dat.points() << dat.percent() << dat.note() << dat.questionMap() <<
+           dat.document() << dat.dateTime() << dat.createTime() << dat.lockSubject() << dat.getEvaluated();
     return out;
 }
 
 QDataStream &operator>>(QDataStream &in, ClassProjekt &dat)
 {
     QString name;
-    QString kennung;
+    QString identifier;
     int nr;
-    int anzahlFragen;
-    int maxPunkte;
-    int erreichtePunkte;
-    double ergebnisProzent;
+    int countQuestion;
+    int maxPoints;
+    int points;
+    double percent;
     int note;
     QMap<int, ClassFrage> frgMap;
     QString doc;
     QString dts;
     QDateTime dt;
     bool sperr;
-    bool ausgewertet;
+    bool evaluated;
 
-    in >> nr >> name >> kennung >> anzahlFragen >> maxPunkte >> erreichtePunkte
-       >> ergebnisProzent >> note >> frgMap >> doc >> dt >> dts >> sperr >> ausgewertet;
+    in >> nr >> name >> identifier >> countQuestion >> maxPoints >> points
+       >> percent >> note >> frgMap >> doc >> dt >> dts >> sperr >> evaluated;
 
 
     dat.setNr(nr);
     dat.setName(name);
-    dat.setKennung(kennung);
-    dat.setAnzahlFragen(anzahlFragen);
-    dat.setMaxPunkte(maxPunkte);
-    dat.setErreichtePunkte(erreichtePunkte);
-    dat.setErgebnisProzent(ergebnisProzent);
+    dat.setIdentifier(identifier);
+    dat.setCountQuestion(countQuestion);
+    dat.setMaxPoints(maxPoints);
+    dat.setPoints(points);
+    dat.setPercent(percent);
     dat.setNote(note);
-    dat.setFragenMap(frgMap);
+    dat.setQuestionMap(frgMap);
     dat.setDocument(doc);
     dat.setDateTime(dt);
     dat.setCreateTime(dts);
-    dat.setSperrfach(sperr);
-    dat.setAusgewertet(ausgewertet);
+    dat.setLockSubject(sperr);
+    dat.setEvaluated(evaluated);
 
     return in;
 }

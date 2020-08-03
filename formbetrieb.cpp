@@ -79,7 +79,7 @@ void FormBetrieb::saveButtonClicked()
 {
     ClassBetrieb company = readFromForm();
 
-    if(company.name().isEmpty() || company.ort().isEmpty() || company.strasse().isEmpty()){
+    if(company.name().isEmpty() || company.city().isEmpty() || company.street().isEmpty()){
         QMessageBox::information(this, tr("Betrieb speichern"), tr("Der Name, Straße und Ort vom "
                                          "Betrieb müssen angegeben werden!"));
         return;
@@ -107,7 +107,7 @@ void FormBetrieb::saveButtonClicked()
 void FormBetrieb::deleteLehrlingButtonClicked()
 {
 
-    QString vn = selectedLehrling.vorname()+ ","+ selectedLehrling.nachname();
+    QString vn = selectedLehrling.firstname()+ ","+ selectedLehrling.surname();
 
     int result = QMessageBox::information(this, tr("Löschen Lehrling"), tr("Der Auszubildende : ")+vn+"\n"+
                                           tr("wird nur vom Betrieb entfernt!"),
@@ -178,7 +178,7 @@ void FormBetrieb::updateLehrlingTable(const QMap<QString, ClassLehrling> &azubiM
        it.next();
 
        QTableWidgetItem *itemKennung = new QTableWidgetItem(it.value().getKey());
-       QTableWidgetItem *itemKlasse = new QTableWidgetItem(it.value().klasse());
+       QTableWidgetItem *itemKlasse = new QTableWidgetItem(it.value().educationClass());
 
        ui->lehrlingTableWidget->setItem(row,0, itemKennung);
        ui->lehrlingTableWidget->setItem(row,1, itemKlasse);
@@ -195,8 +195,8 @@ ClassBetrieb FormBetrieb::readFromForm()
     ClassBetrieb company;
     company.setNr(ui->nrBox->value());
     company.setName(ui->nameEdit->text());
-    company.setOrt(ui->ortEdit->text());
-    company.setStrasse(ui->strasseEdit->text());
+    company.setCity(ui->ortEdit->text());
+    company.setStreet(ui->strasseEdit->text());
     company.setPhone(ui->phoneEdit->text());
 
     return company;
@@ -206,8 +206,8 @@ void FormBetrieb::setBetriebToForm(const ClassBetrieb company)
 {
     ui->nrBox->setValue(company.nr());
     ui->nameEdit->setText(company.name());
-    ui->strasseEdit->setText(company.strasse());
-    ui->ortEdit->setText(company.ort());
+    ui->strasseEdit->setText(company.street());
+    ui->ortEdit->setText(company.city());
     ui->phoneEdit->setText(company.phone());
 
     if(!company.azubiMap().isEmpty())

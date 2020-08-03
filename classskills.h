@@ -23,8 +23,8 @@ public:
     QDate date() const;
     void setDate(const QDate &date);
 
-    QString kennung() const;
-    void setKennung(const QString &kennung);
+    QString identifier() const;
+    void setIdentifier(const QString &identifier);
 
     QMap<QString, ClassProjekt> getProjektMap() const;
     void setProjektMap(const QMap<QString, ClassProjekt> &value);
@@ -40,14 +40,14 @@ public:
 
     QString getKey();
 
-    int maxPunkte();
-    int erreichtePunkte();
+    int maxPoints();
+    int points();
 
 private:
 
     int m_nr;
     QString m_name;
-    QString m_kennung;
+    QString m_identifier;
     QDate m_date;
     QDateTime m_createdDate;
     int m_wert;

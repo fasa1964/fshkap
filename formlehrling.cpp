@@ -96,7 +96,7 @@ void FormLehrling::deleteSkillButtonClicked()
            skillList << selectedLehrling.getSkillMap().value(model->item(i,0)->text());
     }
 
-    QString message = "Vom Auszubildenden: " + selectedLehrling.vorname()+"."+selectedLehrling.nachname()+"\n"+
+    QString message = "Vom Auszubildenden: " + selectedLehrling.firstname()+"."+selectedLehrling.surname()+"\n"+
             "Werden die Prüfungen:\n";
 
     foreach(ClassSkills s, skillList){
@@ -297,8 +297,8 @@ void FormLehrling::updateLehrlingTable(const QMap<QString, ClassLehrling> &aMap)
        it.next();
 
        QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(it.value().nr(),10) );
-       QTableWidgetItem *itemName = new QTableWidgetItem(it.value().vorname()+"."+it.value().nachname());
-       QTableWidgetItem *itemKlasse = new QTableWidgetItem(it.value().klasse());
+       QTableWidgetItem *itemName = new QTableWidgetItem(it.value().firstname()+"."+it.value().surname());
+       QTableWidgetItem *itemKlasse = new QTableWidgetItem(it.value().educationClass());
        QTableWidgetItem *itemBetrieb = new QTableWidgetItem(it.value().company());
 
        ui->azubiTableWidget->setItem(row,0, itemNr);
@@ -402,10 +402,10 @@ void FormLehrling::updateTable(QTableWidget *widget, const QList<ClassLehrling> 
     int row = 0;
     foreach(ClassLehrling azu, azuList){
 
-        QString key = azu.vorname()+"."+azu.nachname();
+        QString key = azu.firstname()+"."+azu.surname();
         QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(azu.nr(),10));
         QTableWidgetItem *itemName = new QTableWidgetItem( key );
-        QTableWidgetItem *itemKlasse = new QTableWidgetItem( azu.klasse() );
+        QTableWidgetItem *itemKlasse = new QTableWidgetItem( azu.educationClass() );
         QTableWidgetItem *itemBetrieb = new QTableWidgetItem( azu.company() );
 
         widget->setItem(row,0,itemNr);
@@ -437,15 +437,15 @@ ClassLehrling FormLehrling::readFromForm()
 
     azubi.setNr( ui->nrBox->value() );
     azubi.setApprenticeshipDate( ui->ausbildungsDateEdit->date() );
-    azubi.setVorname( ui->vornameEdit->text() );
-    azubi.setNachname( ui->nachnameEdit->text() );
-    azubi.setStrasse( ui->strasseEdit->text() );
-    azubi.setOrt( ui->ortEdit->text() );
+    azubi.setFirstname( ui->vornameEdit->text() );
+    azubi.setSurname( ui->nachnameEdit->text() );
+    azubi.setStreet( ui->strasseEdit->text() );
+    azubi.setCity( ui->ortEdit->text() );
     azubi.setPhone( ui->phoneEdit->text() );
-    azubi.setKlasse( ui->klasseEdit->text());
+    azubi.setEducationClass( ui->klasseEdit->text());
     azubi.setBirthDate( ui->gebDateEdit->date() );
     azubi.setCompany( ui->betriebEdit->text() );
-    azubi.setNotiz( ui->notizEdit->toPlainText());
+    azubi.setNote( ui->notizEdit->toPlainText());
 
 
     return azubi;
@@ -454,16 +454,16 @@ ClassLehrling FormLehrling::readFromForm()
 void FormLehrling::setLehrlingToForm(const ClassLehrling &azubi)
 {
     ui->nrBox->setValue(azubi.nr());
-    ui->vornameEdit->setText(azubi.vorname());
-    ui->nachnameEdit->setText(azubi.nachname());
+    ui->vornameEdit->setText(azubi.firstname());
+    ui->nachnameEdit->setText(azubi.surname());
     ui->ausbildungsDateEdit->setDate(azubi.apprenticeshipDate());
-    ui->strasseEdit->setText(azubi.strasse());
-    ui->ortEdit->setText(azubi.ort());
-    ui->klasseEdit->setText( azubi.klasse());
+    ui->strasseEdit->setText(azubi.street());
+    ui->ortEdit->setText(azubi.city());
+    ui->klasseEdit->setText( azubi.educationClass());
     ui->phoneEdit->setText(azubi.phone());
     ui->betriebEdit->setText( azubi.company());
     ui->gebDateEdit->setDate(azubi.birthDate());
-    ui->notizEdit->setPlainText( azubi.notiz());
+    ui->notizEdit->setPlainText( azubi.note());
 
     ui->exameBox->clear();
     model->clear();
@@ -487,7 +487,7 @@ void FormLehrling::setLehrlingToForm(const ClassLehrling &azubi)
 
     }
 
-    ui->klasseBox->setCurrentText(azubi.klasse());
+    ui->klasseBox->setCurrentText(azubi.educationClass());
 
 }
 
