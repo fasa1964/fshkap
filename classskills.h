@@ -30,6 +30,7 @@ public:
     void setProjektMap(const QMap<QString, ClassProjekt> &value);
 
     bool addProjekt(const ClassProjekt &pro);
+    void insertProjekt(ClassProjekt pro);
     bool removeProjekt(const ClassProjekt &pro);
 
     QDateTime getCreatedDate() const;

@@ -56,7 +56,7 @@ public:
     bool skillContain(ClassSkills skill);
 //    bool skillIsUpToDate(ClassSkills skill);
 
-
+    void insertSkill(ClassSkills skill);
 
     QMap<QString, QVariant> getColorMap() const;
     void setColorMap(const QMap<QString, QVariant> &colorMap);

@@ -60,6 +60,13 @@ bool ClassSkills::addProjekt(const ClassProjekt &pro)
     return true;
 }
 
+void ClassSkills::insertProjekt( ClassProjekt pro)
+{
+    projektMap.insert(pro.getKey(), pro);
+}
+
+
+
 bool ClassSkills::removeProjekt(const ClassProjekt &pro)
 {
     QString key = pro.name()+"."+pro.identifier();

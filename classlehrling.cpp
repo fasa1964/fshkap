@@ -153,6 +153,11 @@ bool ClassLehrling::skillContain(ClassSkills skill)
     return false;
 }
 
+void ClassLehrling::insertSkill(ClassSkills skill)
+{
+    m_skillMap.insert(skill.getKey(), skill);
+}
+
 QMap<QString, QVariant> ClassLehrling::getColorMap() const
 {
     return m_colorMap;
