@@ -38,6 +38,7 @@ private slots:
      void skillBoxTextChanged(const QString &text);
      void projectBoxTextChanged(const QString &text);
 
+     void evaluatedCheckBoxChanged(int status);
      void questionTableCellChanged(int row, int column);
 
 private:

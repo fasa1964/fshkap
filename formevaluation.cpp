@@ -21,6 +21,7 @@ FormEvaluation::FormEvaluation(QWidget *parent) :
 
     connect(ui->closeButton, &QPushButton::clicked, this, &FormEvaluation::closeButtonClicked);
     connect(ui->saveButton, &QPushButton::clicked, this, &FormEvaluation::saveButtonClicked);
+    connect(ui->evaluatedCheckBox, &QCheckBox::stateChanged, this, &FormEvaluation::evaluatedCheckBoxChanged);
 //    connect(ui->azubiSortBox, &QComboBox::currentTextChanged, this, &FormEvaluation::sortBoxTextChanged);
     connect(ui->azubiListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::azubiBoxTextChanged);
     connect(ui->skillListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::skillBoxTextChanged);
@@ -97,13 +98,31 @@ void FormEvaluation::projectBoxTextChanged(const QString &text)
 
     ui->projektNameEdit->setText(selectedProjekt.name());
     ui->percentBox->setValue(selectedProjekt.percent());
+    ui->evaluatedCheckBox->setChecked(selectedProjekt.getEvaluated());
 
     setupQuestionTable(selectedProjekt);
+}
+
+void FormEvaluation::evaluatedCheckBoxChanged(int status)
+{
+    if(status == Qt::Checked)
+        selectedProjekt.setEvaluated(true);
+    if(status == Qt::Unchecked)
+        selectedProjekt.setEvaluated(false);
+
 }
 
 /// !brief Calculate the points of current project
 void FormEvaluation::questionTableCellChanged(int row, int column)
 {
+    if(ui->evaluatedCheckBox->isChecked()){
+        QMessageBox::information(this, tr("Eingabe"), tr("Das Projekt wurde bereits ausgewertet!\n"
+                                           "Sollte dennoch Änderungen gemacht werden,\n"
+                                           "deaktivieren sie bitte Ausgewertet!"));
+        setupQuestionTable(selectedProjekt);
+
+        return;
+    }
 
     // Check entered value
     QString s = ui->fragenTableWidget->item(row, column)->text();
