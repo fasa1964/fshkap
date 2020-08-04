@@ -68,6 +68,7 @@ FSHKWindow::FSHKWindow(QWidget *parent) :
 
     formevaluation = new FormEvaluation(this);
     formevaluation->hide();
+    connect(formevaluation, &FormEvaluation::saveAzubiMap, this, &FSHKWindow::saveLehrlingMap);
 
     connect(ui->actionBeenden, &QAction::triggered , this, &FSHKWindow::actionBeendenClicked);
     connect(ui->actionInfo, &QAction::triggered , this, &FSHKWindow::actionInfoClicked);

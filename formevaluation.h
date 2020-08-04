@@ -27,13 +27,18 @@ public:
      QMap<QString, ClassLehrling> azubiMap() const;
      void setAzubiMap(const QMap<QString, ClassLehrling> &azubiMap);
 
+signals:
+     void saveAzubiMap(QMap<QString, ClassLehrling> azuMap);
+
 private slots:
+     void closeButtonClicked();
+     void saveButtonClicked();
      void sortBoxTextChanged(const QString &text);
      void azubiBoxTextChanged(const QString &text);
      void skillBoxTextChanged(const QString &text);
      void projectBoxTextChanged(const QString &text);
 
-     void questionTableCellChanged(int, int);
+     void questionTableCellChanged(int row, int column);
 
 private:
     Ui::FormEvaluation *ui;
