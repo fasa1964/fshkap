@@ -90,6 +90,7 @@ void FormEvaluation::skillBoxTextChanged(const QString &text)
     ui->projektListBox->addItems(selectedSkill.getProjektMap().keys());
 }
 
+
 void FormEvaluation::projectBoxTextChanged(const QString &text)
 {
     QMap<QString, ClassProjekt> pMap;
@@ -105,10 +106,16 @@ void FormEvaluation::projectBoxTextChanged(const QString &text)
 
 void FormEvaluation::evaluatedCheckBoxChanged(int status)
 {
-    if(status == Qt::Checked)
+
+    if(status == Qt::Checked && selectedProjekt.getEvaluated() != true){
         selectedProjekt.setEvaluated(true);
-    if(status == Qt::Unchecked)
+        setupProjectValue();
+    }
+
+    if(status == Qt::Unchecked  && selectedProjekt.getEvaluated() == true){
         selectedProjekt.setEvaluated(false);
+        setupProjectValue();
+    }
 
 }
 
@@ -163,10 +170,13 @@ void FormEvaluation::questionTableCellChanged(int row, int column)
 
     selectedProjekt.setPercent(percent);
     selectedProjekt.setQuestionMap(fMap);
+}
+
+void FormEvaluation::setupProjectValue()
+{
     selectedSkill.insertProjekt(selectedProjekt);
     selectedLehrling.insertSkill(selectedSkill);
     m_azubiMap.insert(selectedLehrling.getKey(), selectedLehrling);
-
 
     dirty = true;
     ui->saveButton->setEnabled(true);

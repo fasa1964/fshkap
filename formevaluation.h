@@ -51,6 +51,7 @@ private:
 
     QMap<QString, ClassLehrling> m_azubiMap;
 
+    void setupProjectValue();
     void setupQuestionTable(ClassProjekt pro);
     void updateSkillBox(const ClassLehrling &azu);
     QMap<QString, ClassLehrling> apprenticeship(int year);

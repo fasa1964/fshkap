@@ -355,10 +355,9 @@ void FSHKWindow::updateBetriebe(const QString &betriebName, const ClassLehrling 
 
 }
 
-// Signal from FormProjekt
+/// !brief Signal from FormProjekt
 void FSHKWindow::saveProjektMap(const QMap<QString, ClassProjekt> &pMap)
 {
-
     bool ok = saveDataProjekte(pMap);
     projektMap = pMap;
     if(ok)
@@ -368,7 +367,8 @@ void FSHKWindow::saveProjektMap(const QMap<QString, ClassProjekt> &pMap)
 
 }
 
-/// Update skill and azubi
+/// !brief Update skill and azubi
+/// has to be rewrite
 void FSHKWindow::projektChanged(const ClassProjekt &pro)
 {
 
