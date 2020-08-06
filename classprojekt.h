@@ -60,6 +60,9 @@ public:
 
     void setQuestionPoints(int nr, int points);
 
+    double getFactor() const;
+    void setFactor(double factor);
+
 private:
 
     QString m_name;
@@ -76,6 +79,7 @@ private:
     QString m_createTime;
     bool m_lockSubject;
     bool m_evaluated;
+    double m_factor;
 
 };
 
