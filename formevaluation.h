@@ -56,6 +56,10 @@ private:
     void updateSkillBox(const ClassLehrling &azu);
     QMap<QString, ClassLehrling> apprenticeship(int year);
     void setTextColor(QWidget *widget, QColor color);
+
+    // Test
+    void setupResultWidget(const ClassLehrling &azu);
+
 };
 
 
