@@ -342,7 +342,7 @@ void FormEvaluation::setupResultWidget(const ClassLehrling &azu)
     ui->resultTreeWidget->setColumnCount(3);
 
     QStringList headers;
-    headers << "Beschreibung" << "Ergebnis in %" << "Status";
+    headers << "Beschreibung" << "Ergebnis in %" << "Wert/Faktor";
     ui->resultTreeWidget->setHeaderLabels(headers);
 
     double totalPercent = 0.0;
@@ -360,6 +360,10 @@ void FormEvaluation::setupResultWidget(const ClassLehrling &azu)
 
         double percent = skill.points() * 100.0 / skill.maxPoints();
         topItem->setText(1, QString::number(percent, 'g',3));
+
+        QString wert = QString::number( skill.getWert(), 10 )+"%";
+        topItem->setText(2, wert);
+
         QFont font = topItem->font(0);
         font.setBold(true);
         topItem->setFont(0,font);
@@ -367,8 +371,6 @@ void FormEvaluation::setupResultWidget(const ClassLehrling &azu)
 
         double tp = percent * (skill.getWert()/100.0);
         totalPercent = totalPercent + tp;
-        qDebug() << tp;
-        qDebug() << "Prozent" << percent;
 
         // Set all projects as child items
         QMap<QString, ClassProjekt> pMap;
@@ -383,7 +385,9 @@ void FormEvaluation::setupResultWidget(const ClassLehrling &azu)
             topItem->addChild(childItem);
 
             QString pers = QString::number(pro.percent(),'g' , 3);
+            QString fact = QString::number(pro.getFactor(),'g' , 3);
             childItem->setText(1, pers);
+            childItem->setText(2, fact);
             if(pro.percent() < 50.0){
                 childItem->setTextColor(0, Qt::red);
                 childItem->setTextColor(1, Qt::red);
@@ -406,6 +410,13 @@ void FormEvaluation::setupResultWidget(const ClassLehrling &azu)
     font.setBold(true);
     topItem->setFont(0,font);
     topItem->setFont(1,font);
+
+    if(totalPercent < 50.0)
+        topItem->setTextColor(1, Qt::red);
+    else
+        topItem->setTextColor(1, Qt::darkGreen);
+
+
 
     topItem->setText(1, QString::number(totalPercent, 'g',3));
 
