@@ -44,6 +44,7 @@ private slots:
     void actionZuordnenClicked();
     void actionAuswertungClicked();
     void actionAktualisierenClicked();
+    void actionAddUserClicked();
 
 
     // Signal from FormBetrieb

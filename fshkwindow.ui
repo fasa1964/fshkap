@@ -25,7 +25,7 @@
      <x>0</x>
      <y>0</y>
      <width>941</width>
-     <height>29</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuProgramm">
@@ -52,9 +52,16 @@
     <addaction name="actionZuordnen"/>
     <addaction name="actionAuswerten"/>
    </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>&amp;Einstellungen</string>
+    </property>
+    <addaction name="actionAddUser"/>
+   </widget>
    <addaction name="menuProgramm"/>
    <addaction name="menuDaten"/>
    <addaction name="menuPr_fungen"/>
+   <addaction name="menuSettings"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -146,6 +153,11 @@
   <action name="actionAktualisieren">
    <property name="text">
     <string>A&amp;ktualisieren</string>
+   </property>
+  </action>
+  <action name="actionAddUser">
+   <property name="text">
+    <string>&amp;Nutzer hinzufügen</string>
    </property>
   </action>
  </widget>

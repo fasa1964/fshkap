@@ -78,6 +78,7 @@ FSHKWindow::FSHKWindow(QWidget *parent) :
     connect(ui->actionPruefungen, &QAction::triggered , this, &FSHKWindow::actionSkillsClicked);
     connect(ui->actionZuordnen, &QAction::triggered , this, &FSHKWindow::actionZuordnenClicked);
     connect(ui->actionAuswerten , &QAction::triggered , this, &FSHKWindow::actionAuswertungClicked);
+    connect(ui->actionAddUser , &QAction::triggered , this, &FSHKWindow::actionAddUserClicked);
 }
 
 FSHKWindow::~FSHKWindow()
@@ -261,7 +262,12 @@ void FSHKWindow::actionAuswertungClicked()
 
 void FSHKWindow::actionAktualisierenClicked()
 {
+    QMessageBox::information(this, tr("Info"), tr("Noch nicht implementiert"));
+}
 
+void FSHKWindow::actionAddUserClicked()
+{
+    QMessageBox::information(this, tr("Info"), tr("Noch nicht implementiert"));
 }
 
 // Signal from FormBetrieb
