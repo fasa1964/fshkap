@@ -423,6 +423,79 @@ void FormEvaluation::setupResultWidget(const ClassLehrling &azu)
 
     ui->resultTreeWidget->resizeColumnToContents(0);
     ui->resultTreeWidget->resizeColumnToContents(1);
+
+    setupIdentifier(azu);
+}
+
+void FormEvaluation::setupIdentifier(const ClassLehrling &azu)
+{
+
+    QMultiMap<QString, ClassFrage> identifierMap;
+
+    QMap<QString, ClassSkills> sMap;
+    sMap = azu.getSkillMap();
+
+    QMapIterator<QString, ClassSkills> it(sMap);
+    while (it.hasNext()) {
+        it.next();
+
+        ClassSkills skill = it.value();
+
+        // Set all projects as child items
+        QMap<QString, ClassProjekt> pMap;
+        pMap = skill.getProjektMap();
+
+        QMapIterator<QString, ClassProjekt> ip(pMap);
+        while (ip.hasNext()) {
+            ip.next();
+            ClassProjekt pro = ip.value();
+
+            QMap<int, ClassFrage> iMap;
+            iMap = pro.questionMap();
+            QMapIterator<int, ClassFrage> iq(iMap);
+            while (iq.hasNext()) {
+                iq.next();
+                ClassFrage frg = iq.value();
+                if(!frg.identifier().isEmpty())
+                    identifierMap.insert(frg.identifier(),frg);
+
+            }
+
+        }
+    }
+
+    if(identifierMap.isEmpty())
+        return;
+
+    QStringList keys = identifierMap.keys();
+    QStringList headers;
+    foreach (QString k , keys) {
+
+        // Create top item
+        if(!headers.contains(k)){
+            headers << k;
+            QTreeWidgetItem *topItem = new QTreeWidgetItem(QStringList() << k);
+            ui->resultTreeWidget->addTopLevelItem(topItem);
+
+            double percent = getResultIdentifier(identifierMap.values(k));
+            topItem->setText(1, QString::number(percent, 'g', 3));
+        }
+    }
+}
+
+double FormEvaluation::getResultIdentifier(const QList<ClassFrage> questList)
+{
+    double percent = 0.0;
+    int points = 0;
+    int maxpoints = 0;
+    foreach (ClassFrage frg, questList) {
+        maxpoints = maxpoints + frg.maxPoints();
+        points = points + frg.points();
+    }
+
+    percent = points * 100.0 / maxpoints;
+
+    return percent;
 }
 
 

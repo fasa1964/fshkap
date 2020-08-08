@@ -59,6 +59,8 @@ private:
 
     // Test
     void setupResultWidget(const ClassLehrling &azu);
+    void setupIdentifier(const ClassLehrling &azu);
+    double getResultIdentifier(const QList<ClassFrage> questList);
 
 };
 
