@@ -8,6 +8,7 @@
 #include <QtMath>
 #include <QTreeWidgetItem>
 
+#include <fshkwindow.h>
 #include <QDebug>
 
 FormEvaluation::FormEvaluation(QWidget *parent) :
@@ -494,6 +495,9 @@ double FormEvaluation::getResultIdentifier(const QList<ClassFrage> questList)
     }
 
     percent = points * 100.0 / maxpoints;
+
+    QString key = "test";
+    qDebug() << FSHKWindow::getValue(key).toString();
 
     return percent;
 }

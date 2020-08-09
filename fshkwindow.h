@@ -33,6 +33,13 @@ public:
     bool saveDataProjekte(const QMap<QString, ClassProjekt> &pMap);
     bool saveDataSkills(const QMap<QString, ClassSkills> &pMap);
 
+    static QVariant getValue(const QString &key){
+        QMap<QString, QString> map;
+        map.insert("test", "From static function");
+
+        return map.value(key);
+    }
+
 private slots:
     void actionBeendenClicked();
     void actionInfoClicked();
