@@ -63,6 +63,9 @@ public:
     double getFactor() const;
     void setFactor(double factor);
 
+    int getDuration() const;
+    void setDuration(int duration);
+
 private:
 
     QString m_name;
@@ -80,6 +83,7 @@ private:
     bool m_lockSubject;
     bool m_evaluated;
     double m_factor;
+    int m_duration;     // in minutes
 
 };
 

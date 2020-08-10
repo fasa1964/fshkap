@@ -290,6 +290,7 @@ void FormProjekt::setFormReadOnly(bool status)
     ui->openFilelButton->setEnabled(!status);
     ui->sperrfachBox->setEnabled(!status);
     ui->factorBox->setReadOnly(status);
+    ui->durationBox->setReadOnly(status);
 
     if(!changeProjekt){
         ui->anzahlFragenBox->setEnabled(true);
@@ -308,6 +309,7 @@ ClassProjekt FormProjekt::readFromForm()
     pro.setDocument(ui->documentEdit->text());
     pro.setDateTime( ui->dateTimeEdit->dateTime());
     pro.setFactor(ui->factorBox->value());
+    pro.setDuration( ui->durationBox->value());
 
     if(ui->sperrfachBox->checkState() == Qt::Checked)
         pro.setLockSubject(true);
@@ -388,6 +390,7 @@ void FormProjekt::setProjektToForm(const ClassProjekt &pro)
     ui->maxPunkteBox->setValue(pro.maxPoints());
     ui->documentEdit->setText( pro.document() );
     ui->factorBox->setValue(pro.getFactor());
+    ui->durationBox->setValue(pro.getDuration());
 
     if(pro.lockSubject())
         ui->sperrfachBox->setCheckState(Qt::Checked);
@@ -415,6 +418,7 @@ void FormProjekt::clearForm()
     ui->dateTimeEdit->clear();
     ui->documentEdit->clear();
     ui->sperrfachBox->setCheckState(Qt::Unchecked);
+    ui->durationBox->setValue(0);
 
     clearTableFragen();
 }

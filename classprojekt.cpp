@@ -15,6 +15,7 @@ ClassProjekt::ClassProjekt()
     m_lockSubject = false;
     m_evaluated = false;
     m_factor = 1.0;
+    m_duration = 0;
 }
 
 QString ClassProjekt::name() const
@@ -182,13 +183,23 @@ void ClassProjekt::setFactor(double factor)
     m_factor = factor;
 }
 
+int ClassProjekt::getDuration() const
+{
+    return m_duration;
+}
+
+void ClassProjekt::setDuration(int duration)
+{
+    m_duration = duration;
+}
+
 
 QDataStream &operator<<(QDataStream &out, const ClassProjekt &dat)
 {
     out << dat.nr() << dat.name() << dat.identifier() << dat.countQuestion() << dat.maxPoints() <<
            dat.points() << dat.percent() << dat.note() << dat.questionMap() <<
            dat.document() << dat.dateTime() << dat.createTime() << dat.lockSubject() <<
-           dat.getEvaluated() << dat.getFactor();
+           dat.getEvaluated() << dat.getFactor() << dat.getDuration();
     return out;
 }
 
@@ -209,9 +220,11 @@ QDataStream &operator>>(QDataStream &in, ClassProjekt &dat)
     bool sperr;
     bool evaluated;
     double fac;
+    int min;
 
     in >> nr >> name >> identifier >> countQuestion >> maxPoints >> points
-       >> percent >> note >> frgMap >> doc >> dt >> dts >> sperr >> evaluated >> fac;
+       >> percent >> note >> frgMap >> doc >> dt >> dts >> sperr >> evaluated
+       >> fac >> min;
 
 
     dat.setNr(nr);
@@ -229,6 +242,7 @@ QDataStream &operator>>(QDataStream &in, ClassProjekt &dat)
     dat.setLockSubject(sperr);
     dat.setEvaluated(evaluated);
     dat.setFactor(fac);
+    dat.setDuration(min);
 
     return in;
 }
