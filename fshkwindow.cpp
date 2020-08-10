@@ -371,6 +371,17 @@ void FSHKWindow::saveProjektMap(const QMap<QString, ClassProjekt> &pMap)
     else
         ui->statusBar->showMessage(tr("Fehler beim Speichern der Datei Projekte.dat!"), 5000);
 
+    // When projektMap is empty disable skill actions
+    if(projektMap.isEmpty()){
+        ui->actionPruefungen->setEnabled(false);
+        ui->actionAuswerten->setEnabled(false);
+        ui->actionZuordnen->setEnabled(false);
+    }else{
+        ui->actionPruefungen->setEnabled(true);
+        ui->actionAuswerten->setEnabled(true);
+        ui->actionZuordnen->setEnabled(true);
+    }
+
 }
 
 /// !brief Update skill and azubi
