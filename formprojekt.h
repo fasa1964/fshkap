@@ -60,6 +60,7 @@ private:
 
     void clearTableFragen();
     void setColorTableFragen(QColor color);
+    void setFormTextColor(QColor color);
 
     void setProjektToForm(const ClassProjekt &pro);
     void clearForm();

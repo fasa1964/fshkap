@@ -296,6 +296,11 @@ void FormProjekt::setFormReadOnly(bool status)
         ui->anzahlFragenBox->setEnabled(true);
         ui->anzahlFragenBox->setReadOnly(status);
     }
+
+    if(!status)
+        setFormTextColor(QColor(0,85,127));
+    else
+        setFormTextColor(Qt::black);
 }
 
 ClassProjekt FormProjekt::readFromForm()
@@ -379,6 +384,26 @@ void FormProjekt::setColorTableFragen(QColor color)
             item->setTextColor(color);
         }
     }
+}
+
+void FormProjekt::setFormTextColor(QColor color)
+{
+    QPalette palette;
+    palette.setColor(QPalette::Base,Qt::white);
+    palette.setColor(QPalette::Text,color);
+    palette.setColor(QPalette::ButtonText,color);
+
+    ui->nrBox->setPalette(palette);
+    ui->nameEdit->setPalette(palette);
+    ui->kennungEdit->setPalette(palette);
+    ui->anzahlFragenBox->setPalette(palette);
+    ui->maxPunkteBox->setPalette(palette);
+    ui->dateTimeEdit->setPalette(palette);
+    ui->documentEdit->setPalette(palette);
+    //ui->sperrfachBox->setPalette(palette);
+    ui->durationBox->setPalette(palette);
+    ui->factorBox->setPalette(palette);
+
 }
 
 void FormProjekt::setProjektToForm(const ClassProjekt &pro)
