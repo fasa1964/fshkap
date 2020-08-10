@@ -241,6 +241,8 @@ void FormProjekt::anzahlFragenChanged(int value)
         ui->fragenTableWidget->setItem(i,3, itemKennung);
         nr++;
     }
+
+     setColorTableFragen(Qt::blue);
 }
 
 void FormProjekt::projekteTableClicked(QTableWidgetItem *item)

@@ -85,7 +85,11 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="sortBox"/>
+       <widget class="QComboBox" name="sortBox">
+        <property name="toolTip">
+         <string>Sortierung nach Kennung.</string>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0" colspan="2">
        <widget class="QTableWidget" name="projekteTableWidget"/>
@@ -261,10 +265,17 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
       <item row="1" column="1" colspan="2">
-       <widget class="QSpinBox" name="nrBox"/>
+       <widget class="QSpinBox" name="nrBox">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Die Projektnummer sollte, bei anderen Projekten mit gleicher Kennung, unterschiedlich sein!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
       </item>
       <item row="2" column="1" colspan="10">
        <widget class="QLineEdit" name="nameEdit">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Der Name des Projektes wie z. B. Arbeitsplanung kann in anderen Projekten mit unterschiedlicher Kennung wieder verwendet werden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="placeholderText">
          <string>Name des Projekts</string>
         </property>
@@ -420,6 +431,9 @@
       </item>
       <item row="1" column="9" colspan="2">
        <widget class="QDateTimeEdit" name="dateTimeEdit">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Datum und Zeit wird automatisch bei der Erstellung oder Änderung gesetzt und dient zur Versionskontrolle.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -481,6 +495,9 @@
           </disabled>
          </palette>
         </property>
+        <property name="toolTip">
+         <string>Fügt eine Frage hinzu.</string>
+        </property>
         <property name="text">
          <string>+</string>
         </property>
@@ -500,7 +517,11 @@
        </spacer>
       </item>
       <item row="4" column="1" colspan="2">
-       <widget class="QSpinBox" name="anzahlFragenBox"/>
+       <widget class="QSpinBox" name="anzahlFragenBox">
+        <property name="toolTip">
+         <string>Anzahl der Fragen im Projekt.</string>
+        </property>
+       </widget>
       </item>
       <item row="5" column="0">
        <widget class="QLabel" name="label_5">
@@ -551,6 +572,9 @@
       </item>
       <item row="5" column="1" colspan="2">
        <widget class="QSpinBox" name="maxPunkteBox">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Die maximale zu erreichende Punktzahl in diesem Projekt.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="maximum">
          <number>999</number>
         </property>
@@ -652,6 +676,9 @@
       </item>
       <item row="8" column="1" colspan="9">
        <widget class="QLineEdit" name="documentEdit">
+        <property name="toolTip">
+         <string>Verzeichnis einschl. Datei des hinterlegtem Dokument.</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -662,6 +689,9 @@
       </item>
       <item row="3" column="1" colspan="10">
        <widget class="QLineEdit" name="kennungEdit">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Die Kennung spezifiziert den Zeitraum für die Püfung. Z. B. Sommer 2022 somit können alle Projekte mit der gleichen Kennung in einer Prüfung kopiert werden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="placeholderText">
          <string>Kennung des Projekts</string>
         </property>
@@ -716,6 +746,9 @@
         <property name="enabled">
          <bool>false</bool>
         </property>
+        <property name="toolTip">
+         <string>Öffnet ein Dialog zum Speichern des Verzeichisses vom hinterlegtem Dokument.</string>
+        </property>
         <property name="text">
          <string>...</string>
         </property>
@@ -759,6 +792,9 @@
            </colorrole>
           </disabled>
          </palette>
+        </property>
+        <property name="toolTip">
+         <string>Löscht die letzte Frage.</string>
         </property>
         <property name="text">
          <string>-</string>
@@ -855,6 +891,9 @@
       </item>
       <item row="6" column="1" colspan="2">
        <widget class="QDoubleSpinBox" name="factorBox">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Faktor zur anteilmäßigen Gewichtung in der Prüfung. Z.B. 0,15 entspicht 15% Wenn alle Projekte in einer Prüfung den Faktor 1,0 haben, werden alle Projekte gleichermaßen gewichtet.\nVoreingestellt ist 1,0.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="minimum">
          <double>0.100000000000000</double>
         </property>
@@ -925,6 +964,9 @@
       </item>
       <item row="4" column="9" colspan="2">
        <widget class="QSpinBox" name="durationBox">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Die zur Verfügung stehende Zeit in Minuten, die für das Projekt angesetzt werden. Dient zur Kalkulation der zur Verfügung stehende Zeit in der Prüfung.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="suffix">
          <string> min</string>
         </property>
@@ -971,6 +1013,9 @@
            </colorrole>
           </disabled>
          </palette>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wenn der Prüfling in einem Projekt als Sperrfach eine Bewertung unter 50% bekommt, wird die Prüfung als nicht bestanden bewertet. Wenn in einer Prüfung, mehrere Projekte als Sperrfach gekennzeichnet wurden, kann durch Einstellung in der Prüfung folgendes gewählt werden.\n a) Nicht bestanden wenn einer der gekennzeichneten Projekten &amp;lt;50%\n b) Nicht bestanden wenn alle der gekennzeichneten Projekten &amp;lt;50% &lt;/p&gt;&lt;p&gt;Der Faktor ist damit außer Kraft gesetzt.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="layoutDirection">
          <enum>Qt::RightToLeft</enum>
