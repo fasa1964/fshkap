@@ -892,7 +892,7 @@
       <item row="6" column="1" colspan="2">
        <widget class="QDoubleSpinBox" name="factorBox">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Faktor zur anteilmäßigen Gewichtung in der Prüfung. Z.B. 0,15 entspicht 15% Wenn alle Projekte in einer Prüfung den Faktor 1,0 haben, werden alle Projekte gleichermaßen gewichtet.\nVoreingestellt ist 1,0.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fakto&lt;/span&gt;r zur anteilmäßigen Gewichtung in der Prüfung.&lt;/p&gt;&lt;p&gt;Z.B. 0,15 entspicht 15%.&lt;/p&gt;&lt;p&gt;Wenn alle Projekte in einer Prüfung den Faktor 1,0 haben, werden alle Projekte gleichermaßen gewichtet.&lt;/p&gt;&lt;p&gt;Voreingestellt ist 1,0.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="minimum">
          <double>0.100000000000000</double>
@@ -1015,7 +1015,7 @@
          </palette>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wenn der Prüfling in einem Projekt als Sperrfach eine Bewertung unter 50% bekommt, wird die Prüfung als nicht bestanden bewertet. Wenn in einer Prüfung, mehrere Projekte als Sperrfach gekennzeichnet wurden, kann durch Einstellung in der Prüfung folgendes gewählt werden.\n a) Nicht bestanden wenn einer der gekennzeichneten Projekten &amp;lt;50%\n b) Nicht bestanden wenn alle der gekennzeichneten Projekten &amp;lt;50% &lt;/p&gt;&lt;p&gt;Der Faktor ist damit außer Kraft gesetzt.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wenn der Prüfling in einem Projekt als &lt;span style=&quot; font-weight:600;&quot;&gt;Sperrfach&lt;/span&gt; eine Bewertung unter 50% bekommt, wird die Prüfung als nicht bestanden bewertet. Wenn in einer Prüfung, mehrere Projekte als Sperrfach gekennzeichnet wurden, kann durch Einstellung in der Prüfung folgendes gewählt werden.&lt;/p&gt;&lt;p&gt;a) Nicht bestanden wenn einer der gekennzeichneten Projekten &amp;lt;50%&lt;/p&gt;&lt;p&gt;b) Nicht bestanden wenn alle der gekennzeichneten Projekten &amp;lt;50% &lt;/p&gt;&lt;p&gt;Der Faktor ist damit außer Kraft gesetzt.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="layoutDirection">
          <enum>Qt::RightToLeft</enum>

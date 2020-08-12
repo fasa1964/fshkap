@@ -2,6 +2,7 @@
 #include "ui_formbetrieb.h"
 
 #include <QMessageBox>
+#include <QDebug>
 
 FormBetrieb::FormBetrieb(QWidget *parent) :
     QWidget(parent),
@@ -14,6 +15,9 @@ FormBetrieb::FormBetrieb(QWidget *parent) :
     selectedBetrieb = ClassBetrieb();
     selectedLehrling = ClassLehrling();
 
+    QStringList labels;
+    labels << "Alle" << "Betriebe mit Auszubildenden";
+    ui->sortBox->addItems(labels);
 
     connect(ui->closeButton, &QPushButton::clicked, this, &FormBetrieb::close);
     connect(ui->deleteButton, &QPushButton::clicked, this, &FormBetrieb::deleteButtonClicked);
@@ -24,6 +28,8 @@ FormBetrieb::FormBetrieb(QWidget *parent) :
 
     connect(ui->betriebeTableWidget, &QTableWidget::itemClicked , this, &FormBetrieb::betriebTableClicked);
     connect(ui->lehrlingTableWidget, &QTableWidget::itemClicked , this, &FormBetrieb::lehrlingTableClicked);
+
+    connect(ui->sortBox, &QComboBox::currentTextChanged , this, &FormBetrieb::sortBoxTextChanged);
 
 }
 
@@ -160,6 +166,27 @@ void FormBetrieb::lehrlingTableClicked(QTableWidgetItem *item)
     selectedLehrling = selectedBetrieb.azubiMap().value(key);
 
     ui->deleteLehrlingButton->setEnabled(true);
+}
+
+void FormBetrieb::sortBoxTextChanged(const QString &text)
+{
+    if(text == "Alle")
+        updateBetriebTable(betriebMap());
+
+    if(text == "Betriebe mit Auszubildenden"){
+        QMap<int, ClassBetrieb> sortMap;
+        QMapIterator<int, ClassBetrieb> it(betriebMap());
+        while (it.hasNext()) {
+            it.next();
+            ClassBetrieb betrieb = it.value();
+            if(!betrieb.azubiMap().isEmpty())
+                sortMap.insert(betrieb.nr(), betrieb);
+
+        }
+
+        if(!sortMap.isEmpty())
+            updateBetriebTable(sortMap);
+    }
 }
 
 void FormBetrieb::updateLehrlingTable(const QMap<QString, ClassLehrling> &azubiMap)

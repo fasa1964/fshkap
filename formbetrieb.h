@@ -41,6 +41,7 @@ private slots:
     void betriebTableClicked(QTableWidgetItem *item);
     void lehrlingTableClicked(QTableWidgetItem *item);
 
+    void sortBoxTextChanged(const QString &text);
 
 private:
     Ui::FormBetrieb *ui;
