@@ -14,6 +14,9 @@ class ClassSkills
 public:
     ClassSkills();
 
+    // Evaluation criteria
+    enum Criteria{ projectNode, identifierNote };
+
     int getNr() const;
     void setNr(int nr);
 
@@ -44,6 +47,18 @@ public:
     int maxPoints();
     int points();
 
+    // Evaluation criteria
+    void setCriteria (Criteria criteria);
+    Criteria criteria() const;
+
+    static QStringList supportedCriteria(){
+        QStringList list;
+        list << "Nach Projekten" << "Nach Kennung (Fragen)";
+        return list;
+    }
+
+    Criteria convert(int index);
+
 private:
 
     int m_nr;
@@ -52,6 +67,8 @@ private:
     QDate m_date;
     QDateTime m_createdDate;
     int m_wert;
+    Criteria m_criteria;
+
 
     QMap<QString, ClassProjekt> projektMap;
 

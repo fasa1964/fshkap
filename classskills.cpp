@@ -7,6 +7,7 @@ ClassSkills::ClassSkills()
     m_identifier = "";
     m_wert = 0;
     m_date = QDate();
+    m_criteria = Criteria::projectNode;
 }
 
 QString ClassSkills::name() const
@@ -128,6 +129,29 @@ int ClassSkills::points()
     return punkte;
 }
 
+void ClassSkills::setCriteria(ClassSkills::Criteria criteria)
+{
+    m_criteria = criteria;
+}
+
+ClassSkills::Criteria ClassSkills::criteria() const
+{
+    return m_criteria;
+}
+
+ClassSkills::Criteria ClassSkills::convert(int index)
+{
+    Criteria cr;
+    if(index == 0)
+        cr = Criteria::projectNode;
+
+    if(index == 1)
+        cr = Criteria::identifierNote;
+
+    return cr;
+}
+
+
 int ClassSkills::getNr() const
 {
     return m_nr;
@@ -141,7 +165,7 @@ void ClassSkills::setNr(int nr)
 QDataStream &operator<<(QDataStream &out, const ClassSkills &dat)
 {
     out << dat.getNr() << dat.name() << dat.identifier() << dat.date() << dat.getWert() <<
-           dat.getCreatedDate() << dat.getProjektMap();
+           dat.getCreatedDate() << dat.getProjektMap() << dat.criteria();
     return out;
 }
 
@@ -154,8 +178,9 @@ QDataStream &operator>>(QDataStream &in, ClassSkills &dat)
     QDateTime createdDate;
     int wert;
     QMap<QString, ClassProjekt> pMap;
+    int criteriaIndex;
 
-    in >> nr >> name >> identifier >> date >> wert >> createdDate >> pMap;
+    in >> nr >> name >> identifier >> date >> wert >> createdDate >> pMap >> criteriaIndex;
 
     dat.setNr( nr );
     dat.setName( name );
@@ -164,6 +189,7 @@ QDataStream &operator>>(QDataStream &in, ClassSkills &dat)
     dat.setDate( date );
     dat.setCreatedDate( createdDate );
     dat.setProjektMap( pMap );
+    dat.setCriteria(dat.convert(criteriaIndex));
 
     return in;
 }

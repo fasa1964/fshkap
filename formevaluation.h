@@ -62,6 +62,11 @@ private:
     void setupIdentifier(const ClassLehrling &azu);
     double getResultIdentifier(const QList<ClassFrage> questList);
 
+    QStringList questionsIdentifierList(const ClassLehrling &azu);
+    double getProjectPercent(const ClassProjekt &pro);
+    int getProjectMaxPoint(const ClassProjekt &pro);
+    int getProjectPoints(const ClassProjekt &pro);
+
 };
 
 

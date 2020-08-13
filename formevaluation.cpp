@@ -333,6 +333,7 @@ void FormEvaluation::setTextColor(QWidget *widget, QColor color)
 }
 
 
+
 void FormEvaluation::setupResultWidget(const ClassLehrling &azu)
 {
     ui->resultTreeWidget->clear();
@@ -363,14 +364,25 @@ void FormEvaluation::setupResultWidget(const ClassLehrling &azu)
         topItem->setText(1, QString::number(percent, 'g',3));
 
         QString wert = QString::number( skill.getWert(), 10 )+"%";
+        if(sMap.size() == 1)
+            wert.append("(100%)");
+
         topItem->setText(2, wert);
+
 
         QFont font = topItem->font(0);
         font.setBold(true);
         topItem->setFont(0,font);
         topItem->setFont(1,font);
 
-        double tp = percent * (skill.getWert()/100.0);
+
+        double tp = 0.0;
+        if(sMap.size() == 1)
+            tp = percent * (100/100.0);
+        else
+            tp = percent * (skill.getWert()/100.0);
+
+
         totalPercent = totalPercent + tp;
 
         // Set all projects as child items
@@ -389,6 +401,7 @@ void FormEvaluation::setupResultWidget(const ClassLehrling &azu)
             QString fact = QString::number(pro.getFactor(),'g' , 3);
             childItem->setText(1, pers);
             childItem->setText(2, fact);
+
             if(pro.percent() < 50.0){
                 childItem->setTextColor(0, Qt::red);
                 childItem->setTextColor(1, Qt::red);
@@ -500,6 +513,59 @@ double FormEvaluation::getResultIdentifier(const QList<ClassFrage> questList)
     qDebug() << FSHKWindow::getValue(key).toString();
 
     return percent;
+}
+
+QStringList FormEvaluation::questionsIdentifierList(const ClassLehrling &azu)
+{
+    QStringList identList;
+    QMap<QString, ClassSkills> sMap;
+    sMap = azu.getSkillMap();
+    QMapIterator<QString, ClassSkills> it(sMap);
+    while (it.hasNext()) {
+        it.next();
+        ClassSkills skill = it.value();
+        QMap<QString, ClassProjekt> pMap;
+        pMap = skill.getProjektMap();
+        QMapIterator<QString, ClassProjekt> ip(pMap);
+        while (ip.hasNext()) {
+            ip.next();
+            ClassProjekt pro = ip.value();
+            foreach (ClassFrage frg, pro.questionMap().values()) {
+                if(!identList.contains(frg.identifier()))
+                    identList << frg.identifier();
+            }
+        }
+    }
+    return identList;
+}
+
+double FormEvaluation::getProjectPercent(const ClassProjekt &pro)
+{
+    double percent = 0.0;
+    int maxPoint = getProjectMaxPoint(pro);
+    int points = getProjectPoints(pro);
+
+    percent = points * 100.0 / maxPoint;
+
+    return percent;
+}
+
+int FormEvaluation::getProjectMaxPoint(const ClassProjekt &pro)
+{
+    int mp = 0;
+    foreach (ClassFrage frg, pro.questionMap().values()) {
+        mp = mp + frg.maxPoints();
+    }
+    return mp;
+}
+
+int FormEvaluation::getProjectPoints(const ClassProjekt &pro)
+{
+    int p = 0;
+    foreach (ClassFrage frg, pro.questionMap().values()) {
+        p = p + frg.points();
+    }
+    return p;
 }
 
 

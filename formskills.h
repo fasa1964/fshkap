@@ -46,13 +46,11 @@ private slots:
 
     void sortKennungBoxTextChanged(const QString &text);
     void projektTableItemClicked(QTableWidgetItem *);
-//    void projektSkillTableItemClicked(QTableWidgetItem *item);
     void skillTableItemClicked(QTableWidgetItem *item);
     void skillProjektTableItemClicked(QTableWidgetItem *);
     bool isItemChecked(QTableWidget *widget);
 
     void kennungBoxTextChanged(const QString &text);
-//    void kennungEditTextChanged(const QString &text);
 
 private:
     Ui::FormSkills *ui;
@@ -71,20 +69,6 @@ private:
     QMap<QString, ClassProjekt> m_projektMap;
     void setupKennungBox(const QMap<QString, ClassProjekt> &proMap);
     void setupProjektTable(const QMap<QString, ClassProjekt> &proMap, Qt::CheckState state);
-
-
-//    ClassProjekt selectedProjekt;
-//    ClassProjekt selectedSkillProjekt;
-
-
-//    // Test
-//    void updateProjektTable(const QMap<QString, ClassProjekt> &proMap);
-
-//    void updateProjektTable();
-//    void updateSkillProjektTable(const QMap<QString, ClassProjekt> &proMap);
-
-//    void sortProjektTable(const  QMap<QString, ClassProjekt> &proMap);
-//    void setupKennungBox();
 
 
     void setFormTextColor(QColor color);

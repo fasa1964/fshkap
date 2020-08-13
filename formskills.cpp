@@ -19,6 +19,7 @@ FormSkills::FormSkills(QWidget *parent) :
 //    selectedProjekt = ClassProjekt();
 //    selectedSkillProjekt = ClassProjekt();
 
+    ui->criteriaBox->addItems(ClassSkills::supportedCriteria());
     setFormReadOnly(true);
 
     connect(ui->closeButton, &QPushButton::clicked, this, &FormSkills::close);
@@ -359,6 +360,15 @@ void FormSkills::setSkillToForm(const ClassSkills &skill)
     ui->wertBox->setValue(skill.getWert() );
     ui->dateTimeEdit->setDateTime(skill.getCreatedDate());
     setSkillProjektToForm(skill.getProjektMap());
+
+    int min = 0;
+    foreach (ClassProjekt p, skill.getProjektMap().values()) {
+        min = min + p.getDuration();
+    }
+
+    ui->durationBox->setValue(min);
+
+    ui->criteriaBox->setCurrentIndex(skill.criteria());
 }
 
 void FormSkills::setSkillProjektToForm(const QMap<QString, ClassProjekt> &proMap)
@@ -414,6 +424,9 @@ ClassSkills FormSkills::readFromForm()
     skill.setCreatedDate( ui->dateTimeEdit->dateTime() );
 
     skill.setProjektMap( getSkillProjektMap() );
+
+    int ci = ClassSkills::supportedCriteria().indexOf(ui->criteriaBox->currentText());
+    skill.setCriteria( skill.convert(ci) );
 
     return skill;
 }
@@ -884,19 +897,7 @@ void FormSkills::setFormReadOnly(bool status)
     ui->dateEdit->setReadOnly(status);
     ui->kennungEdit->setReadOnly(status);
     ui->kennungBox->setEnabled(!status);
-
-//    int size = ui->skillProjektTable->rowCount();
-//    for(int i = 0; i < size; i++)
-//    {
-//        if(!status){
-//            ui->skillProjektTable->item(i,3)->setFlags(Qt::ItemIsUserCheckable);
-//            ui->skillProjektTable->item(i,3)->setCheckState(Qt::Unchecked);
-//        }else{
-//            ;
-//            ui->skillProjektTable->item(i,3)->setFlags(Qt::ItemIsEnabled);
-
-//        }
-//    }
+    ui->criteriaBox->setEnabled(!status);
 }
 
 void FormSkills::clearForm()
@@ -910,99 +911,3 @@ void FormSkills::clearForm()
     ui->skillProjektTable->setRowCount(0);
     ui->skillProjektTable->clear();
 }
-
-//QMap<QString, ClassProjekt> FormSkills::projektMap() const
-//{
-//    return m_projektMap;
-//}
-
-//void FormSkills::setProjekMap(const QMap<QString, ClassProjekt> &projektMap)
-//{
-//    m_projektMap = projektMap;
-//    updateProjektTable(projektMap);
-//}
-
-//void FormSkills::updateSkillTable()
-//{
-//    ui->skillTable->clear();
-//    ui->skillTable->setColumnCount(3);
-//    ui->skillTable->setRowCount(skillMap().size());
-
-//    QStringList labels;
-//    labels << "Nr." << "Name" << "Kennung";
-//    ui->skillTable->setHorizontalHeaderLabels(labels);
-
-//    int row = 0;
-//    QMapIterator<QString, ClassSkills> it(skillMap());
-//    while (it.hasNext()) {
-//        it.next();
-//        ClassSkills skill = it.value();
-
-//        QTableWidgetItem *itemNr = new QTableWidgetItem( QString::number(skill.getNr(),10));
-//        QTableWidgetItem *itemName = new QTableWidgetItem( skill.name() );
-//        QTableWidgetItem *itemKennung = new QTableWidgetItem( skill.identifier() );
-
-//        ui->skillTable->setItem(row,0, itemNr);
-//        ui->skillTable->setItem(row,1, itemName);
-//        ui->skillTable->setItem(row,2, itemKennung);
-
-//        row++;
-//    }
-
-//    ui->skillTable->resizeColumnToContents(0);
-//    ui->skillTable->resizeColumnToContents(1);
-//    ui->skillTable->resizeColumnToContents(2);
-//}
-
-//QMap<QString, ClassSkills> FormSkills::skillMap() const
-//{
-//    return m_skillMap;
-//}
-
-//void FormSkills::setSkillMap(const QMap<QString, ClassSkills> &skillMap)
-//{
-//    m_skillMap = skillMap;
-//}
-
-//void FormSkills::setSkillToForm(const ClassSkills &skill)
-//{
-//    ui->nrBox->setValue( skill.getNr());
-//    ui->nameEdit->setText(skill.name());
-//    ui->dateEdit->setDate(skill.date());
-//    ui->kennungEdit->setText(skill.identifier());
-//    ui->wertBox->setValue(skill.getWert() );
-//    ui->dateTimeEdit->setDateTime(skill.getCreatedDate());
-
-//    if(!skill.getProjektMap().isEmpty())
-//        updateSkillProjektTable(skill.getProjektMap());
-//}
-
-//ClassSkills FormSkills::readFromForm()
-//{
-//    ClassSkills skill;
-
-//    skill.setNr(ui->nrBox->value());
-//    skill.setName( ui->nameEdit->text());
-//    skill.setIdentifier(ui->kennungEdit->text());
-//    skill.setDate( ui->dateEdit->date() );
-//    skill.setWert( ui->wertBox->value() );
-//    skill.setCreatedDate( ui->dateTimeEdit->dateTime() );
-
-//    skill.setProjektMap( getSkillProjektMap() );
-
-//    return skill;
-//}
-
-//QMap<QString, ClassProjekt> FormSkills::getSkillProjektMap()
-//{
-//    QMap<QString, ClassProjekt> map;
-//    int size = ui->projektSkillTable->rowCount();
-//    for(int i = 0; i < size; i++)
-//    {
-//        QString key = ui->projektSkillTable->item(i,1)->text()+"."+ui->projektSkillTable->item(i,2)->text();
-//        map.insert(key, projektMap().value(key));
-
-//    }
-
-//    return map;
-//}

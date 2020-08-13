@@ -30,7 +30,6 @@ FormBetrieb::FormBetrieb(QWidget *parent) :
     connect(ui->lehrlingTableWidget, &QTableWidget::itemClicked , this, &FormBetrieb::lehrlingTableClicked);
 
     connect(ui->sortBox, &QComboBox::currentTextChanged , this, &FormBetrieb::sortBoxTextChanged);
-
 }
 
 FormBetrieb::~FormBetrieb()
@@ -170,8 +169,10 @@ void FormBetrieb::lehrlingTableClicked(QTableWidgetItem *item)
 
 void FormBetrieb::sortBoxTextChanged(const QString &text)
 {
-    if(text == "Alle")
+    if(text == "Alle"){
         updateBetriebTable(betriebMap());
+        setBetriebToForm(betriebMap().values().first());
+    }
 
     if(text == "Betriebe mit Auszubildenden"){
         QMap<int, ClassBetrieb> sortMap;
@@ -184,8 +185,10 @@ void FormBetrieb::sortBoxTextChanged(const QString &text)
 
         }
 
-        if(!sortMap.isEmpty())
+        if(!sortMap.isEmpty()){
             updateBetriebTable(sortMap);
+            setBetriebToForm(sortMap.values().first());
+        }
     }
 }
 
@@ -264,6 +267,10 @@ QMap<int, ClassBetrieb> FormBetrieb::betriebMap() const
 void FormBetrieb::setBetriebMap(const QMap<int, ClassBetrieb> &betriebMap)
 {
     m_betriebMap = betriebMap;
+
+    if(!betriebMap.isEmpty())
+        setBetriebToForm(betriebMap.values().first());
+
 }
 
 void FormBetrieb::updateBetriebTable(const QMap<int, ClassBetrieb> &bMap)
