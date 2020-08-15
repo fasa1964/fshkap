@@ -71,6 +71,7 @@ private slots:
     // Signal from FormSkills
     void saveSkillMap(const QMap<QString, ClassSkills> &sMap);
     void skillChanged(ClassSkills skill);
+    void skillProjectChanged(ClassProjekt pro);
 
 private:
     Ui::FSHKWindow *ui;

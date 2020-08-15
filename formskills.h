@@ -20,11 +20,6 @@ public:
     explicit FormSkills(QWidget *parent = nullptr);
     ~FormSkills();
 
-//    QMap<QString, ClassProjekt> projektMap() const;
-//    void setProjekMap(const QMap<QString, ClassProjekt> &projektMap);
-
-//    void updateSkillTable();
-
     QMap<QString, ClassSkills> skillMap() const;
     void setSkillMap(const QMap<QString, ClassSkills> &skillMap);
 
@@ -34,6 +29,7 @@ public:
 signals:
     void saveSkillsMap(const QMap<QString, ClassSkills> &skillMap);
     void skillChanged(ClassSkills skill);
+    void skillProjektChanged(ClassProjekt pro);
 
 private slots:
     void deleteSkillProjektButtonClicked();
@@ -46,17 +42,23 @@ private slots:
 
     void sortKennungBoxTextChanged(const QString &text);
     void projektTableItemClicked(QTableWidgetItem *);
+
     void skillTableItemClicked(QTableWidgetItem *item);
     void skillProjektTableItemClicked(QTableWidgetItem *);
+    void skillProjektTableCellClicked(int row, int column);
+
+
     bool isItemChecked(QTableWidget *widget);
 
     void kennungBoxTextChanged(const QString &text);
+
 
 private:
     Ui::FormSkills *ui;
 
     bool changeSkill;
     bool createSkill;
+    bool projectFactorChanged;
 
     QMap<QString, ClassSkills> m_skillMap;
     void setupSkillTable(const QMap<QString, ClassSkills> &sMap);
@@ -69,7 +71,7 @@ private:
     QMap<QString, ClassProjekt> m_projektMap;
     void setupKennungBox(const QMap<QString, ClassProjekt> &proMap);
     void setupProjektTable(const QMap<QString, ClassProjekt> &proMap, Qt::CheckState state);
-
+    double getSkillProjectFactor();
 
     void setFormTextColor(QColor color);
     void setFormReadOnly(bool status);

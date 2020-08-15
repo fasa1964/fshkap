@@ -60,6 +60,7 @@ FSHKWindow::FSHKWindow(QWidget *parent) :
     formskills->hide();
     connect(formskills, &FormSkills::saveSkillsMap, this, &FSHKWindow::saveSkillMap);
     connect(formskills, &FormSkills::skillChanged, this, &FSHKWindow::skillChanged);
+    connect(formskills, &FormSkills::skillProjektChanged, this, &FSHKWindow::skillProjectChanged);
 
 
     formzuordnen = new FormZuordnen(this);
@@ -529,6 +530,12 @@ void FSHKWindow::skillChanged(ClassSkills skill)
 
     if(dirty)
         saveLehrlingMap(azubiMap);
+}
+
+void FSHKWindow::skillProjectChanged(ClassProjekt pro)
+{
+    projektMap.insert(pro.getKey(), pro);
+    saveDataProjekte(projektMap);
 }
 
 void FSHKWindow::setupColorMap()
