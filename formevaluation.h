@@ -67,6 +67,7 @@ private:
     int getProjectMaxPoint(const ClassProjekt &pro);
     int getProjectPoints(const ClassProjekt &pro);
 
+
 };
 
 

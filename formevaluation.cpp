@@ -20,11 +20,11 @@ FormEvaluation::FormEvaluation(QWidget *parent) :
     dirty = false;
     selectedLehrling = ClassLehrling();
     selectedSkill = ClassSkills();
+    selectedProjekt = ClassProjekt();
 
     connect(ui->closeButton, &QPushButton::clicked, this, &FormEvaluation::closeButtonClicked);
     connect(ui->saveButton, &QPushButton::clicked, this, &FormEvaluation::saveButtonClicked);
     connect(ui->evaluatedCheckBox, &QCheckBox::stateChanged, this, &FormEvaluation::evaluatedCheckBoxChanged);
-//    connect(ui->azubiSortBox, &QComboBox::currentTextChanged, this, &FormEvaluation::sortBoxTextChanged);
     connect(ui->azubiListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::azubiBoxTextChanged);
     connect(ui->skillListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::skillBoxTextChanged);
     connect(ui->projektListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::projectBoxTextChanged);
@@ -66,6 +66,7 @@ void FormEvaluation::updateSortBox()
 }
 
 /// !brief When the apprentices ship changed
+/// Get all apprentices from year
 void FormEvaluation::sortBoxTextChanged(const QString &text)
 {
     ui->azubiListBox->clear();
@@ -75,10 +76,10 @@ void FormEvaluation::sortBoxTextChanged(const QString &text)
 
     ui->azubiListBox->addItems(sortedMap.keys());
     ui->countAzubiBox->setValue(sortedMap.values().size());
-    //connect(ui->azubiListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::azubiBoxTextChanged);
 }
 
 /// !brief When the name of apprentices changed
+/// Update the skill and result table
 void FormEvaluation::azubiBoxTextChanged(const QString &text)
 {
     selectedLehrling = m_azubiMap.value(text);
@@ -91,8 +92,8 @@ void FormEvaluation::skillBoxTextChanged(const QString &text)
     selectedSkill = selectedLehrling.getSkillMap().value(text);
     ui->projektListBox->clear();
     ui->projektListBox->addItems(selectedSkill.getProjektMap().keys());
+    ui->countProjektBox->setValue(selectedSkill.getProjektMap().values().size());
 }
-
 
 void FormEvaluation::projectBoxTextChanged(const QString &text)
 {
@@ -125,6 +126,7 @@ void FormEvaluation::evaluatedCheckBoxChanged(int status)
 /// !brief Calculate the points of current project
 void FormEvaluation::questionTableCellChanged(int row, int column)
 {
+    // Check if already evaluated
     if(ui->evaluatedCheckBox->isChecked()){
         QMessageBox::information(this, tr("Eingabe"), tr("Das Projekt wurde bereits ausgewertet!\n"
                                            "Sollte dennoch Änderungen gemacht werden,\n"
@@ -331,8 +333,6 @@ void FormEvaluation::setTextColor(QWidget *widget, QColor color)
     pal.setColor(QPalette::Text, color);
     widget->setPalette(pal);
 }
-
-
 
 void FormEvaluation::setupResultWidget(const ClassLehrling &azu)
 {
