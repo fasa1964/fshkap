@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTableWidgetItem>
+#include <QTreeWidgetItem>
 
 #include <classlehrling.h>
 #include <classprojekt.h>
@@ -40,6 +41,7 @@ private slots:
 
      void evaluatedCheckBoxChanged(int status);
      void questionTableCellChanged(int row, int column);
+     void resultTableItemClicked(QTreeWidgetItem *item, int column);
 
 private:
     Ui::FormEvaluation *ui;
@@ -63,6 +65,7 @@ private:
     double getResultIdentifier(const QList<ClassFrage> questList);
 
     QStringList questionsIdentifierList(const ClassLehrling &azu);
+
     double getProjectPercent(const ClassProjekt &pro);
     int getProjectMaxPoint(const ClassProjekt &pro);
     int getProjectPoints(const ClassProjekt &pro);

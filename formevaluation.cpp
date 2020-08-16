@@ -28,6 +28,7 @@ FormEvaluation::FormEvaluation(QWidget *parent) :
     connect(ui->azubiListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::azubiBoxTextChanged);
     connect(ui->skillListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::skillBoxTextChanged);
     connect(ui->projektListBox, &QComboBox::currentTextChanged, this, &FormEvaluation::projectBoxTextChanged);
+    connect(ui->resultTreeWidget, &QTreeWidget::itemClicked, this, &FormEvaluation::resultTableItemClicked);
 
 }
 
@@ -102,8 +103,14 @@ void FormEvaluation::projectBoxTextChanged(const QString &text)
     selectedProjekt = pMap.value(text);
 
     ui->projektNameEdit->setText(selectedProjekt.name());
-    ui->percentBox->setValue(selectedProjekt.percent());
     ui->evaluatedCheckBox->setChecked(selectedProjekt.getEvaluated());
+
+    double percent = selectedProjekt.percent();
+    if(percent < 50)
+        setTextColor(ui->percentBox, Qt::red);
+    else
+        setTextColor(ui->percentBox, Qt::darkGreen);
+    ui->percentBox->setValue(percent);
 
     setupQuestionTable(selectedProjekt);
 }
@@ -144,6 +151,7 @@ void FormEvaluation::questionTableCellChanged(int row, int column)
             ui->fragenTableWidget->item(row, column)->setText("0");
         }
     }
+
     int value =  s.toInt();
     int mval = ui->fragenTableWidget->item(row, column+1)->text().toInt();
     if(value > mval){
@@ -151,8 +159,7 @@ void FormEvaluation::questionTableCellChanged(int row, int column)
         ui->fragenTableWidget->item(row, column)->setText("0");
     }
 
-    // Calculate project
-    int points = 0;
+    // Udate selected project
     QMap<int, ClassFrage> fMap;
     fMap = selectedProjekt.questionMap();
     for(int i = 0; i < ui->fragenTableWidget->rowCount(); i++){
@@ -160,36 +167,86 @@ void FormEvaluation::questionTableCellChanged(int row, int column)
         ClassFrage frg = fMap.value(i);
         frg.setPoints(p);
         fMap.insert(i, frg);
-        points = points + p;
     }
+    selectedProjekt.setQuestionMap(fMap);
 
-    int maxPoints = selectedProjekt.maxPoints();
-    double percent = points * 100.0 / maxPoints;
-    if(percent < 50.0)
+    double pp = getProjectPercent(selectedProjekt);
+    selectedProjekt.setPoints(getProjectPoints(selectedProjekt));
+    selectedProjekt.setPercent(pp);
+
+    ui->percentBox->setValue(pp);
+    if(pp < 50.0)
         setTextColor(ui->percentBox, Qt::red);
     else
         setTextColor(ui->percentBox, Qt::darkGreen);
 
-    ui->percentBox->setValue(percent);
+    selectedProjekt.setPoints(getProjectPoints(selectedProjekt));
+    selectedProjekt.setPercent(pp);
+
+//    // Update selected skill and selected Lehrling
+//    selectedSkill.insertProjekt(selectedProjekt);
+//    selectedLehrling.insertSkill(selectedSkill);
+//    m_azubiMap.insert(selectedLehrling.getKey(), selectedLehrling);
+    setupResultWidget(selectedLehrling);
+
+//    dirty = true;
+//    ui->saveButton->setEnabled(true);
 
 
-    selectedProjekt.setPercent(percent);
-    selectedProjekt.setPoints(points);
-    selectedProjekt.setQuestionMap(fMap);
-    setupProjectValue();
+
+//    qDebug() << "Max:" << getProjectMaxPoint(selectedProjekt);
+//    qDebug() << "Points:" << getProjectPoints(selectedProjekt);
+//    qDebug() << "Percent" << getProjectPercent(selectedProjekt);
+
+
+
+//    // Calculate project
+//    int points = 0;
+
+//    QMap<int, ClassFrage> fMap;
+//    fMap = selectedProjekt.questionMap();
+//    for(int i = 0; i < ui->fragenTableWidget->rowCount(); i++){
+//        int p = ui->fragenTableWidget->item(i, 2)->text().toInt();
+//        ClassFrage frg = fMap.value(i);
+//        frg.setPoints(p);
+//        fMap.insert(i, frg);
+//        points = points + p;
+//    }
+
+//    int maxPoints = selectedProjekt.maxPoints();
+//    double percent = points * 100.0 / maxPoints;
+//    if(percent < 50.0)
+//        setTextColor(ui->percentBox, Qt::red);
+//    else
+//        setTextColor(ui->percentBox, Qt::darkGreen);
+
+//    ui->percentBox->setValue(percent);
+
+
+//    selectedProjekt.setPercent(percent);
+//    selectedProjekt.setPoints(points);
+//    selectedProjekt.setQuestionMap(fMap);
+    //    setupProjectValue();
+}
+
+void FormEvaluation::resultTableItemClicked(QTreeWidgetItem *item, int column)
+{
+    QString key = item->text(column);
+    ui->projektListBox->setCurrentText(key);
+    //projectBoxTextChanged(key);
 }
 
 void FormEvaluation::setupProjectValue()
 {
-
+    // Update selected skill and selected Lehrling
     selectedSkill.insertProjekt(selectedProjekt);
     selectedLehrling.insertSkill(selectedSkill);
     m_azubiMap.insert(selectedLehrling.getKey(), selectedLehrling);
 
+    setupResultWidget(selectedLehrling);
+
     dirty = true;
     ui->saveButton->setEnabled(true);
-
-    setupResultWidget(selectedLehrling);
 }
 
 void FormEvaluation::setupQuestionTable(ClassProjekt pro)
@@ -347,98 +404,170 @@ void FormEvaluation::setupResultWidget(const ClassLehrling &azu)
     headers << "Beschreibung" << "Ergebnis in %" << "Wert/Faktor";
     ui->resultTreeWidget->setHeaderLabels(headers);
 
-    double totalPercent = 0.0;
-    int index = 0;
     QMapIterator<QString, ClassSkills> it(sMap);
     while (it.hasNext()) {
         it.next();
 
+        double skillPercent = 0.0;
+
         ClassSkills skill = it.value();
+        bool projectNode = false;
+        if( skill.index(skill.criteria()) == 0 )
+            projectNode = true;
 
         QTreeWidgetItem *topItem = new QTreeWidgetItem(QStringList() << it.key());
-
         ui->resultTreeWidget->addTopLevelItem(topItem);
         ui->resultTreeWidget->expandItem(topItem);
-
-        double percent = skill.points() * 100.0 / skill.maxPoints();
-        topItem->setText(1, QString::number(percent, 'g',3));
-
-        QString wert = QString::number( skill.getWert(), 10 )+"%";
-        if(sMap.size() == 1)
-            wert.append("(100%)");
-
-        topItem->setText(2, wert);
-
 
         QFont font = topItem->font(0);
         font.setBold(true);
         topItem->setFont(0,font);
         topItem->setFont(1,font);
 
-
-        double tp = 0.0;
-        if(sMap.size() == 1)
-            tp = percent * (100/100.0);
-        else
-            tp = percent * (skill.getWert()/100.0);
-
-
-        totalPercent = totalPercent + tp;
-
-        // Set all projects as child items
+        // Set child item
         QMap<QString, ClassProjekt> pMap;
         pMap = skill.getProjektMap();
 
         QMapIterator<QString, ClassProjekt> ip(pMap);
         while (ip.hasNext()) {
-            ip.next();
-            ClassProjekt pro = ip.value();
+             ip.next();
+             ClassProjekt pro = ip.value();
 
-            QTreeWidgetItem *childItem = new QTreeWidgetItem(QStringList() << ip.key());
-            topItem->addChild(childItem);
+             QTreeWidgetItem *childItem = new QTreeWidgetItem(QStringList() << ip.key());
+             topItem->addChild(childItem);
 
-            QString pers = QString::number(pro.percent(),'g' , 3);
-            QString fact = QString::number(pro.getFactor(),'g' , 3);
-            childItem->setText(1, pers);
-            childItem->setText(2, fact);
+             // Set percent each project
+             if(pro.percent() < 50.0){
+                 childItem->setTextColor(0, Qt::red);
+                 childItem->setTextColor(1, Qt::red);
+             }else{
+                 childItem->setTextColor(0, Qt::darkGreen);
+                 childItem->setTextColor(1, Qt::darkGreen);
+             }
 
-            if(pro.percent() < 50.0){
-                childItem->setTextColor(0, Qt::red);
-                childItem->setTextColor(1, Qt::red);
-            }else{
+             childItem->setText(1, QString::number(pro.percent(), 'g', 2)+" %");
+             childItem->setText(2, QString::number(pro.getFactor(), 'g', 2));
 
-                childItem->setTextColor(0, Qt::black);
-                childItem->setTextColor(1, Qt::darkGreen);
-            }
+             // calculate the skill percent
+             if(projectNode){
+                 double proPercent = pro.percent() * pro.getFactor();
+                 skillPercent = skillPercent + proPercent;
+             }
+
         }
 
-        index++;
+        // Set skill percent text
+        topItem->setText(1, QString::number( skillPercent,'g',2)+"%");
+
+        if(sMap.size() == 1){
+            QString text = "100%("+QString::number( skill.getWert(),10)+"%)";
+            topItem->setText(2, text);
+        }else
+            topItem->setText(2, QString::number( skill.getWert(),10)+"%");
+
+        if(skillPercent < 50.0)
+            topItem->setTextColor(1,Qt::red);
+        else
+            topItem->setTextColor(1,Qt::darkGreen);
+
 
     }
 
-    // Total result from exame
-    QTreeWidgetItem *topItem = new QTreeWidgetItem(QStringList() << "Prüfungsergebnis:");
-    ui->resultTreeWidget->addTopLevelItem(topItem);
-    ui->resultTreeWidget->expandItem(topItem);
-    QFont font = topItem->font(0);
-    font.setBold(true);
-    topItem->setFont(0,font);
-    topItem->setFont(1,font);
-
-    if(totalPercent < 50.0)
-        topItem->setTextColor(1, Qt::red);
-    else
-        topItem->setTextColor(1, Qt::darkGreen);
-
-
-
-    topItem->setText(1, QString::number(totalPercent, 'g',3));
-
-
     ui->resultTreeWidget->resizeColumnToContents(0);
-    ui->resultTreeWidget->resizeColumnToContents(1);
 
-    setupIdentifier(azu);
+
+//    double totalPercent = 0.0;
+//    int index = 0;
+//    QMapIterator<QString, ClassSkills> it(sMap);
+//    while (it.hasNext()) {
+//        it.next();
+
+//        ClassSkills skill = it.value();
+
+//        QTreeWidgetItem *topItem = new QTreeWidgetItem(QStringList() << it.key());
+
+//        ui->resultTreeWidget->addTopLevelItem(topItem);
+//        ui->resultTreeWidget->expandItem(topItem);
+
+//        double percent = skill.points() * 100.0 / skill.maxPoints();
+//        topItem->setText(1, QString::number(percent, 'g',3));
+
+//        QString wert = QString::number( skill.getWert(), 10 )+"%";
+//        if(sMap.size() == 1)
+//            wert.append("(100%)");
+
+//        topItem->setText(2, wert);
+
+
+//        QFont font = topItem->font(0);
+//        font.setBold(true);
+//        topItem->setFont(0,font);
+//        topItem->setFont(1,font);
+
+
+//        double tp = 0.0;
+//        if(sMap.size() == 1)
+//            tp = percent * (100/100.0);
+//        else
+//            tp = percent * (skill.getWert()/100.0);
+
+
+//        totalPercent = totalPercent + tp;
+
+//        // Set all projects as child items
+//        QMap<QString, ClassProjekt> pMap;
+//        pMap = skill.getProjektMap();
+
+//        QMapIterator<QString, ClassProjekt> ip(pMap);
+//        while (ip.hasNext()) {
+//            ip.next();
+//            ClassProjekt pro = ip.value();
+
+//            QTreeWidgetItem *childItem = new QTreeWidgetItem(QStringList() << ip.key());
+//            topItem->addChild(childItem);
+
+//            QString pers = QString::number(pro.percent(),'g' , 3);
+//            QString fact = QString::number(pro.getFactor(),'g' , 3);
+//            childItem->setText(1, pers);
+//            childItem->setText(2, fact);
+
+//            if(pro.percent() < 50.0){
+//                childItem->setTextColor(0, Qt::red);
+//                childItem->setTextColor(1, Qt::red);
+//            }else{
+
+//                childItem->setTextColor(0, Qt::black);
+//                childItem->setTextColor(1, Qt::darkGreen);
+//            }
+//        }
+
+//        index++;
+
+//    }
+
+//    // Total result from exame
+//    QTreeWidgetItem *topItem = new QTreeWidgetItem(QStringList() << "Prüfungsergebnis:");
+//    ui->resultTreeWidget->addTopLevelItem(topItem);
+//    ui->resultTreeWidget->expandItem(topItem);
+//    QFont font = topItem->font(0);
+//    font.setBold(true);
+//    topItem->setFont(0,font);
+//    topItem->setFont(1,font);
+
+//    if(totalPercent < 50.0)
+//        topItem->setTextColor(1, Qt::red);
+//    else
+//        topItem->setTextColor(1, Qt::darkGreen);
+
+
+
+//    topItem->setText(1, QString::number(totalPercent, 'g',3));
+
+
+//    ui->resultTreeWidget->resizeColumnToContents(0);
+//    ui->resultTreeWidget->resizeColumnToContents(1);
+
+//    setupIdentifier(azu);
 }
 
 void FormEvaluation::setupIdentifier(const ClassLehrling &azu)

@@ -146,9 +146,21 @@ ClassSkills::Criteria ClassSkills::convert(int index)
         cr = Criteria::projectNode;
 
     if(index == 1)
-        cr = Criteria::identifierNote;
+        cr = Criteria::identifierNode;
 
     return cr;
+}
+
+int ClassSkills::index(ClassSkills::Criteria criteria)
+{
+    int in = -1;
+
+    if(criteria == Criteria::projectNode)
+        in = 0;
+    if(criteria == Criteria::identifierNode)
+        in = 1;
+
+    return in;
 }
 
 

@@ -15,7 +15,7 @@ public:
     ClassSkills();
 
     // Evaluation criteria
-    enum Criteria{ projectNode, identifierNote };
+    enum Criteria{ projectNode, identifierNode };
 
     int getNr() const;
     void setNr(int nr);
@@ -58,6 +58,7 @@ public:
     }
 
     Criteria convert(int index);
+    int index (Criteria criteria);
 
 private:
 
