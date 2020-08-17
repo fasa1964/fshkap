@@ -387,78 +387,180 @@ void FSHKWindow::saveProjektMap(const QMap<QString, ClassProjekt> &pMap)
 
 /// !brief Update skill and azubi
 /// has to be rewrite
+/// check if project already evaluated
+/// check if user want to overwrite existing skills
 void FSHKWindow::projektChanged(const ClassProjekt &pro)
 {
 
     ClassProjekt projekt = pro;
-    QStringList skillKeyList;
-    QStringList azubiKeyList;
 
-    // Update the skill when project exist
+//    QStringList skillKeyList; // store all changed skills
+//    QStringList azubiKeyList; // store all azubis who assigned to the skills
+
+    QList<ClassSkills> skillList; // store all changed skills
+    QList<ClassLehrling> azuList; // store all changed azubis
+
+    // Update the skills when project exist
     QMapIterator<QString, ClassSkills> it(skillsMap);
     while (it.hasNext())
     {
         it.next();
-        foreach(ClassProjekt p, it.value().getProjektMap().values())
-        {
-            if(p.getKey() == projekt.getKey())
-            {
-                    ClassSkills skill = it.value();
-                    QMap<QString, ClassProjekt> spmap;
-                    spmap = skill.getProjektMap();
-                    spmap.insert(projekt.getKey(), projekt);
-                    skill.setProjektMap(spmap);
-                    skill.setCreatedDate(QDateTime::currentDateTime());
-                    skillsMap.insert(skill.getKey(), skill);
-                    saveSkillMap(skillsMap);
-                    ui->statusBar->showMessage("Die Prüfung: "+skill.name()+"."+skill.identifier()+" wurde aktualisiert!",8000);
-                    skillKeyList << skill.getKey();
+        ClassSkills skill = it.value();
+        QMap<QString, ClassProjekt> pMap;
+        pMap = skill.getProjektMap();
+
+        QMapIterator<QString, ClassProjekt> ip(pMap);
+        while (ip.hasNext()) {
+            ip.next();
+            ClassProjekt pro = ip.value();
+            if(pro.getKey() == projekt.getKey()){
+                skill.setCreatedDate(QDateTime::currentDateTime());
+                skill.insertProjekt(projekt);
+                skillsMap.insert(it.key(), skill);
+                skillList << skill;
+                saveSkillMap(skillsMap);
             }
         }
     }
+
+    foreach (ClassSkills sk, skillList) {
+         azuList << containsSkill(sk);
+    }
+
+    bool saveAzuMap = false;
+    foreach (ClassLehrling azu, azuList) {
+        QMap<QString, ClassSkills> sMap = azu.getSkillMap();
+        QMapIterator<QString, ClassSkills> it(sMap);
+        while (it.hasNext()) {
+            it.next();
+            ClassSkills sk = it.value();
+            foreach (ClassProjekt pro, sk.getProjektMap().values()) {
+                if(pro.getKey() == projekt.getKey()){
+
+                    if(pro.getEvaluated()){
+                        break;
+                    }
+
+
+                    sk.insertProjekt(projekt);
+                    sMap.insert(sk.getKey(), sk);
+                    azu.setSkillMap(sMap);
+                    azubiMap.insert(azu.getKey(), azu);
+                    saveAzuMap = true;
+                }
+            }
+        }
+    }
+
+    if(saveAzuMap)
+        saveLehrlingMap(azubiMap);
+
+
+
 
     // Update azubi when skill assigned
-    bool saveAzubi = false;
-    QMapIterator<QString, ClassLehrling> ia(azubiMap);
-    while (ia.hasNext())
-    {
-        ia.next();
-        foreach(ClassSkills skill, ia.value().getSkillMap().values())
-        {
-            if(skillKeyList.contains(skill.getKey()))
-            {
-                ClassLehrling azubi = ia.value();
-                QMap<QString, ClassSkills> aMap;
-                aMap = azubi.getSkillMap();
-                int index = skillKeyList.indexOf(skill.getKey());
-                ClassSkills ns = skillsMap.value( skillKeyList.at(index) );
-                aMap.insert(ns.getKey(), ns);
-                azubi.setSkillMap(aMap);
-                azubiMap.insert(azubi.getKey(), azubi);
-                azubiKeyList << azubi.getKey();
-                saveAzubi = true;
-            }
-        }
-    }
+    // check if project already evaluated
+//    bool saveAzubi = false;
+//    QMapIterator<QString, ClassLehrling> ia(azubiMap);
+//    while (ia.hasNext())
+//    {
+//        ia.next();
+//        ClassLehrling azu = ia.value();
+//        QMap<QString, ClassSkills> sMap;
+//        sMap = azu.getSkillMap();
+//        QMapIterator<QString, ClassSkills> it(sMap);
+//        while (it.hasNext()) {
+//            it.next();
+//            ClassSkills skill = it.value();
+//            foreach(ClassSkills ns, skillList){
+//                if(skill.getKey() == ns.getKey()){
 
-    if(saveAzubi)
-    {
-        saveLehrlingMap(azubiMap);
-        QMap<QString, ClassSkills> sMap;
-        QMap<QString, ClassLehrling> lMap;
-        foreach(QString s, skillKeyList){
-            ClassSkills skill = skillsMap.value(s);
-            sMap.insert(skill.getKey(), skill);
-        }
+//                    QMap<QString, ClassProjekt> pMap;
+//                    pMap = skill.getProjektMap();
+//                    foreach (ClassProjekt pro, pMap.values()) {
+//                        if(pro.getKey() == projekt.getKey()){
 
-        foreach(QString a, azubiKeyList){
-            ClassLehrling azu = azubiMap.value(a);
-            lMap.insert(azu.getKey(), azu);
-        }
+//                            // Compare questions text, and maxpoints
+//                            QMap<int, ClassFrage> qOldMap;
+//                            qOldMap = pro.questionMap();
 
-        FormUpdateInformation *info = new FormUpdateInformation(sMap, lMap);
-        info->show();
-    }
+//                            QMap<int, ClassFrage> qNewMap;
+//                            qNewMap = projekt.questionMap();
+
+//                            if(qOldMap.size() == qNewMap.size()){
+//                                int index = 0;
+//                                foreach (ClassFrage q, qNewMap.values()) {
+//                                    if(isDifferent(qOldMap.values().at(index), q)){
+//                                        ClassFrage oq = qOldMap.value(index);
+//                                        oq.setMaxPoints(q.maxPoints());
+//                                        oq.setQuestion(q.question());
+//                                        qOldMap.insert(oq.questionNr(), oq);
+//                                    }
+//                                }
+
+//                            }
+
+//                            if(qOldMap.size() != qNewMap.size()){
+//                                ;
+//                            }
+
+//                            pro.setQuestionMap(qOldMap);
+//                            pMap.insert(pro.getKey(),pro);
+//                            saveAzubi = true;
+//                            skill.insertProjekt(pro);
+//                            azu.insertSkill(skill);
+//                            azubiMap.insert(azu.getKey(), azu);
+//                        }
+//                    }
+//                }
+//            }
+
+//        }
+
+//        if(saveAzubi)
+//            saveLehrlingMap(azubiMap);
+
+//        foreach(ClassSkills skill, ia.value().getSkillMap().values())
+//        {
+//            if(skillKeyList.contains(skill.getKey()))
+//            {
+//                ClassLehrling azubi = ia.value();
+//                QMap<QString, ClassSkills> aMap;
+//                aMap = azubi.getSkillMap();
+//                int index = skillKeyList.indexOf(skill.getKey());
+//                ClassSkills ns = skillsMap.value( skillKeyList.at(index) );
+//                QMap<QString, ClassProjekt> pMap;
+//                pMap = ns.getProjektMap();
+//                pMap.insert(projekt.getKey(), projekt);
+
+//                ns.setProjektMap(pMap);
+//                aMap.insert(ns.getKey(), ns);
+//                azubi.setSkillMap(aMap);
+//                azubiMap.insert(azubi.getKey(), azubi);
+//                azubiKeyList << azubi.getKey();
+//                saveAzubi = true;
+//            }
+//        }
+//    }
+
+//    if(saveAzubi)
+//    {
+//        saveLehrlingMap(azubiMap);
+//        QMap<QString, ClassSkills> sMap;
+//        QMap<QString, ClassLehrling> lMap;
+//        foreach(QString s, skillKeyList){
+//            ClassSkills skill = skillsMap.value(s);
+//            sMap.insert(skill.getKey(), skill);
+//        }
+
+//        foreach(QString a, azubiKeyList){
+//            ClassLehrling azu = azubiMap.value(a);
+//            lMap.insert(azu.getKey(), azu);
+//        }
+
+//        FormUpdateInformation *info = new FormUpdateInformation(sMap, lMap);
+//        info->show();
+//    }
 }
 
 
@@ -697,6 +799,36 @@ void FSHKWindow::readDataSkills()
     }
 
     file.close();
+}
+
+bool FSHKWindow::isDifferent(ClassFrage oldQuestion, ClassFrage newQuestion)
+{
+    bool diff = false;
+
+    if(oldQuestion.question() != newQuestion.question())
+        diff = true;
+
+    if(oldQuestion.maxPoints() != newQuestion.maxPoints())
+        diff = true;
+
+    return diff;
+}
+
+QList<ClassLehrling> FSHKWindow::containsSkill(ClassSkills skill)
+{
+    QList<ClassLehrling> azuList;
+
+    QMapIterator<QString, ClassLehrling> it(azubiMap);
+    while (it.hasNext()) {
+        it.next();
+        ClassLehrling azu = it.value();
+        foreach (ClassSkills azuSkill, azu.getSkillMap().values()) {
+            if(skill.getKey() == azuSkill.getKey())
+                azuList << azu;
+        }
+    }
+
+    return azuList;
 }
 
 QDateTime FSHKWindow::lastUpdate(const QString &filename)

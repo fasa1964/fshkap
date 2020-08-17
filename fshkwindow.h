@@ -100,6 +100,11 @@ private:
     void readDataProjekte();
     void readDataSkills(); 
 
+    // Test
+    bool isDifferent(ClassFrage oldQuestion, ClassFrage newQuestion);
+    QList<ClassLehrling> containsSkill(ClassSkills skill);
+
+
     QDateTime lastUpdate(const QString &filename);
 
     void readSettings();
