@@ -129,6 +129,22 @@ int ClassSkills::points()
     return punkte;
 }
 
+bool ClassSkills::isEvaluated()
+{
+    bool status = false;
+
+    QMapIterator<QString, ClassProjekt> it(projektMap);
+    while (it.hasNext()) {
+        it.next();
+        if(it.value().getEvaluated()){
+            status = true;
+            break;
+        }
+    }
+
+    return status;
+}
+
 void ClassSkills::setCriteria(ClassSkills::Criteria criteria)
 {
     m_criteria = criteria;

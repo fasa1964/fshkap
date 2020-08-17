@@ -47,6 +47,8 @@ public:
     int maxPoints();
     int points();
 
+    bool isEvaluated();
+
     // Evaluation criteria
     void setCriteria (Criteria criteria);
     Criteria criteria() const;
