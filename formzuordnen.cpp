@@ -152,11 +152,18 @@ void FormZuordnen::updateAzubiTable(const QMap<QString, ClassLehrling> &azuMap)
     while (it.hasNext()) {
        it.next();
 
+       bool skillIsEvaluated = false;
        QString ap = "";
        if(it.value().getSkillMap().size() > 0){
 
+
            foreach(ClassSkills skill, it.value().getSkillMap().values()){
+
                 ap.append(skill.getKey());
+                if(skill.isEvaluated()){
+                    ap.append("!");
+                    skillIsEvaluated = true;
+                }
                 ap.append("\n");
            }
        }
@@ -183,8 +190,17 @@ void FormZuordnen::updateAzubiTable(const QMap<QString, ClassLehrling> &azuMap)
        else
            itemMarker->setCheckState(Qt::Unchecked);
 
+
+       if(skillIsEvaluated){
+           itemAP->setTextColor(Qt::darkGreen);
+           itemAP->setToolTip(tr("Achtung bereits ausgewertet!\nBei neuer Zuordnung gehen alle ausgewerteten Daten verloren."));
+       }else{
+           itemAP->setTextColor(Qt::black);
+           itemAP->setToolTip(tr("Zugeordente AP's"));
+       }
+
        itemAP->setData(Qt::FontRole, QFont(tableFont.family(),8));
-       itemAP->setToolTip(tr("Zugeordente AP's"));
+
 
 //       itemNr->setFlags(Qt::ItemIsEnabled);
 //       itemName->setFlags(Qt::ItemIsEnabled);
@@ -243,24 +259,30 @@ void FormZuordnen::setupSkillSortBox()
 
 void FormZuordnen::importSkillButtonClicked()
 {
-    QMap<QString, ClassLehrling> aMap;
-    aMap = getLehrjahrMap( azuIndexMap.key(ui->azubiSortBox->currentText()));
+
+    QList<ClassLehrling> azuList;
+    for(int i = 0; i < ui->azubiTable->rowCount(); i++){
+        if(ui->azubiTable->item(i,5)->checkState() == Qt::Checked){
+            QString key = ui->azubiTable->item(i,1)->text()+"."+ui->azubiTable->item(i,0)->text();
+            ClassLehrling azu = azubiMap().value(key);
+            azuList << azu;
+        }
+    }
+
+    if(azuList.isEmpty())
+        return;
 
     QMap<QString, ClassSkills> sMap = getSkillMap(ui->skillSortBox->currentText());
-
-    QMapIterator<QString, ClassLehrling> it(aMap);
-    while (it.hasNext()) {
-        it.next();
-        ClassLehrling azu = it.value();
+    foreach (ClassLehrling azu, azuList) {
         QMap<QString, ClassSkills> skillMap;
         skillMap = azu.getSkillMap();
-
         foreach(ClassSkills skill, sMap.values()){
             skillMap.insert(skill.getKey(), skill);
         }
 
         azu.setSkillMap(skillMap);
         m_azubiMap.insert(azu.getKey(), azu);
+
     }
 
     emit saveAzubiMap(azubiMap());

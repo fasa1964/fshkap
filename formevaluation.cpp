@@ -113,6 +113,8 @@ void FormEvaluation::projectBoxTextChanged(const QString &text)
     ui->percentBox->setValue(percent);
 
     setupQuestionTable(selectedProjekt);
+
+    qDebug() << selectedProjekt.createTime();
 }
 
 void FormEvaluation::evaluatedCheckBoxChanged(int status)
@@ -182,12 +184,13 @@ void FormEvaluation::questionTableCellChanged(int row, int column)
 
     selectedProjekt.setPoints(getProjectPoints(selectedProjekt));
     selectedProjekt.setPercent(pp);
+    setupProjectValue();
 
 //    // Update selected skill and selected Lehrling
 //    selectedSkill.insertProjekt(selectedProjekt);
 //    selectedLehrling.insertSkill(selectedSkill);
 //    m_azubiMap.insert(selectedLehrling.getKey(), selectedLehrling);
-    setupResultWidget(selectedLehrling);
+//    setupResultWidget(selectedLehrling);
 
 //    dirty = true;
 //    ui->saveButton->setEnabled(true);
