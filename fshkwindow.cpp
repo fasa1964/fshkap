@@ -438,7 +438,13 @@ void FSHKWindow::projektChanged(const ClassProjekt &pro)
                 if(pro.getKey() == projekt.getKey()){
 
                     if(pro.getEvaluated()){
-                        break;
+                        int result = QMessageBox::question(this, tr("Projekte ändern"),
+                                     tr("Achtung das Projekt ")+ pro.getKey() + tr("\nwurde bereits bei\n")+
+                                      azu.getKey() + tr("\nteilweise oder ganz ausgewertet\n"
+                                      "Beim Überschreiben gehen die Auswertungen vom o. g. Projekt verloren!"),
+                                      QMessageBox::Abort | QMessageBox::Ok);
+                        if(result == QMessageBox::Abort)
+                            break;
                     }
 
 
