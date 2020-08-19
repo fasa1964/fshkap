@@ -67,6 +67,7 @@ private:
     void setSkillProjektToForm(const QMap<QString, ClassProjekt> &proMap);
     ClassSkills readFromForm();
     QMap<QString, ClassProjekt> getSkillProjektMap();
+    double totalProjectFactor(const ClassSkills &skill);
 
     QMap<QString, ClassProjekt> m_projektMap;
     void setupKennungBox(const QMap<QString, ClassProjekt> &proMap);

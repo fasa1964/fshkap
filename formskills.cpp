@@ -17,8 +17,7 @@ FormSkills::FormSkills(QWidget *parent) :
     projectFactorChanged = false;
 
     selectedSkill = ClassSkills();
-//    selectedProjekt = ClassProjekt();
-//    selectedSkillProjekt = ClassProjekt();
+
 
     ui->criteriaBox->addItems(ClassSkills::supportedCriteria());
     setFormReadOnly(true);
@@ -503,6 +502,20 @@ QMap<QString, ClassProjekt> FormSkills::getSkillProjektMap()
     }
 
     return map;
+}
+
+double FormSkills::totalProjectFactor(const ClassSkills &skill)
+{
+    double factor = 0.0;
+    QMap<QString, ClassProjekt> pMap;
+    pMap = skill.getProjektMap();
+    QMapIterator<QString, ClassProjekt> it(pMap);
+    while (it.hasNext()) {
+        it.next();
+        factor += it.value().getFactor();
+
+    }
+    return factor;
 }
 
 QMap<QString, ClassProjekt> FormSkills::projektMap() const
