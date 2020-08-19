@@ -439,6 +439,19 @@ void FormEvaluation::setupResultWidget(const ClassLehrling &azu)
              QTreeWidgetItem *childItem = new QTreeWidgetItem(QStringList() << ip.key());
              topItem->addChild(childItem);
 
+             // if projekt has
+             if(!pro.identifierList().isEmpty() && skill.criteria() == ClassSkills::identifierNode){
+                QStringList list = pro.identifierList();
+                foreach (QString ids, list) {
+                    QTreeWidgetItem *cc = new QTreeWidgetItem(QStringList() << ids);
+                    childItem->addChild(cc);
+
+                    double identPercent =  getResultIdentifier(  getQuestions(pro, ids) );
+                    cc->setText(1, QString::number(identPercent, 'g', 2));
+                }
+
+             }
+
              // Set percent each project
              if(pro.percent() < 50.0){
                  childItem->setTextColor(0, Qt::red);
@@ -452,7 +465,8 @@ void FormEvaluation::setupResultWidget(const ClassLehrling &azu)
              childItem->setText(2, QString::number(pro.getFactor(), 'g', 2));
 
              // calculate the skill percent
-             if(projectNode){
+             if(projectNode)
+             {
                  double proPercent = pro.percent() * pro.getFactor();
                  skillPercent = skillPercent + proPercent;
              }
@@ -614,7 +628,8 @@ void FormEvaluation::setupIdentifier(const ClassLehrling &azu)
         return;
 
     QStringList keys = identifierMap.keys();
-    QStringList headers;
+    QStringList headers;   
+
     foreach (QString k , keys) {
 
         // Create top item
@@ -641,9 +656,6 @@ double FormEvaluation::getResultIdentifier(const QList<ClassFrage> questList)
 
     percent = points * 100.0 / maxpoints;
 
-    QString key = "test";
-    qDebug() << FSHKWindow::getValue(key).toString();
-
     return percent;
 }
 
@@ -669,6 +681,19 @@ QStringList FormEvaluation::questionsIdentifierList(const ClassLehrling &azu)
         }
     }
     return identList;
+}
+
+QList<ClassFrage> FormEvaluation::getQuestions(const ClassProjekt &pro, const QString &key)
+{
+    QList<ClassFrage> qList;
+    QMapIterator<int, ClassFrage> it(pro.questionMap());
+    while (it.hasNext()) {
+        it.next();
+        if(it.value().identifier() == key)
+            qList << it.value();
+
+    }
+    return qList;
 }
 
 double FormEvaluation::getProjectPercent(const ClassProjekt &pro)

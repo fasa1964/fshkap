@@ -62,9 +62,13 @@ private:
     // Test
     void setupResultWidget(const ClassLehrling &azu);
     void setupIdentifier(const ClassLehrling &azu);
-    double getResultIdentifier(const QList<ClassFrage> questList);
+
 
     QStringList questionsIdentifierList(const ClassLehrling &azu);
+
+    QList<ClassFrage> getQuestions(const ClassProjekt &pro, const QString &key);
+    double getResultIdentifier(const QList<ClassFrage> questList);
+
 
     double getProjectPercent(const ClassProjekt &pro);
     int getProjectMaxPoint(const ClassProjekt &pro);
